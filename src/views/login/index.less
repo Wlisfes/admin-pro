@@ -1,0 +1,23 @@
+.login {
+	flex: 1;
+	min-width: 375px;
+	background: url('~@/assets/image/login.jpg') center center / cover no-repeat;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	&-form {
+		width: 450px;
+		background-color: #ffffff;
+		box-sizing: border-box;
+		padding: 24px 24px 0 24px;
+		border-radius: 4px;
+		@media (max-width: 500px) {
+			width: 95%;
+		}
+	}
+	&-footer {
+		display: flex;
+		justify-content: space-between;
+	}
+}
