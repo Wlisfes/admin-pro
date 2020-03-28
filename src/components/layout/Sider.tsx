@@ -7,13 +7,30 @@
  */
 
 import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
+import { MixinDevice } from '@/mixins'
 import { Layout } from 'ant-design-vue'
 
+const AppModule = namespace('app')
+
 @Component
-export default class Sider extends Mixins() {
+export default class Sider extends Mixins(MixinDevice) {
 	mounted() {}
 
+	public handelbreakpoint(point: any) {
+		console.log(point)
+	}
+
 	render() {
-		return <Layout.Sider></Layout.Sider>
+		return (
+			!this.isMobile && (
+				<Layout.Sider
+					trigger={null}
+					width={256}
+					breakpoint={'lg'}
+					onBreakpoint={this.handelbreakpoint}
+				></Layout.Sider>
+			)
+		)
 	}
 }
