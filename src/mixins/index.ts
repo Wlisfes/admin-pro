@@ -1,11 +1,3 @@
-/*
- * @Date: 2020-03-27 15:57:30
- * @Author: 情雨随风
- * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-27 16:29:11
- * @Description:
- */
-
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { deviceEnquire, DEVICE_TYPE } from '@/mixins/device'
@@ -17,15 +9,15 @@ const AppModule = namespace('app')
 export class MixinDevice extends Vue {
 	@AppModule.State(state => state.device) device!: string
 
-	public isMobile() {
+	public isMobile(): boolean {
 		return this.device === DEVICE_TYPE.MOBILE
 	}
 
-	public isDesktop() {
+	public isDesktop(): boolean {
 		return this.device === DEVICE_TYPE.DESKTOP
 	}
 
-	public isTablet() {
+	public isTablet(): boolean {
 		return this.device === DEVICE_TYPE.TABLET
 	}
 }

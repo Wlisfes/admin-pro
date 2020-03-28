@@ -1,19 +1,18 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { Layout } from 'ant-design-vue'
 import Sider from './Sider'
+import Drawer from './Drawer'
+import Content from './Content'
+import './index.less'
 
 @Component
 export default class Main extends Vue {
 	render() {
 		return (
-			<Layout>
+			<Layout class="create-layout">
 				<Sider></Sider>
-				<Layout>
-					<Layout.Header></Layout.Header>
-					<Layout.Content>
-						<router-view></router-view>
-					</Layout.Content>
-				</Layout>
+				<Drawer></Drawer>
+				<Content></Content>
 			</Layout>
 		)
 	}

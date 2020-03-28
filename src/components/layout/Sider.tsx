@@ -10,26 +10,35 @@ import { Vue, Component, Mixins } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { MixinDevice } from '@/mixins'
 import { Layout } from 'ant-design-vue'
+import Menu from './Menu'
 
 const AppModule = namespace('app')
 
 @Component
 export default class Sider extends Mixins(MixinDevice) {
-	mounted() {}
+	@AppModule.State(state => state.collapsed) collapsed!: boolean
+	@AppModule.Mutation('SET_COLLAPSED') SET_COLLAPSED!: Function
 
-	public handelbreakpoint(point: any) {
-		console.log(point)
+	//监听视口更改响应式布局
+	public handelbreakpoint(point: boolean) {
+		console.log(1)
+		this.SET_COLLAPSED(point)
 	}
 
 	render() {
 		return (
-			!this.isMobile && (
+			!this.isMobile() && (
 				<Layout.Sider
 					trigger={null}
+					style={{ background: '#fff' }}
+					collapsible={true}
+					collapsed={this.collapsed}
 					width={256}
-					breakpoint={'lg'}
+					breakpoint="lg"
 					onBreakpoint={this.handelbreakpoint}
-				></Layout.Sider>
+				>
+					<Menu></Menu>
+				</Layout.Sider>
 			)
 		)
 	}
