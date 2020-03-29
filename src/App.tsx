@@ -4,7 +4,7 @@ import { AppDeviceEnquire } from '@/mixins'
 @Component
 export default class App extends Mixins(AppDeviceEnquire) {
 	private Styles = {
-		height: '100%',
+		minHeight: '100%',
 		display: 'flex',
 		flexDirection: 'column'
 	}

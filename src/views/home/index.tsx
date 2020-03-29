@@ -14,7 +14,13 @@ export default class Home extends Vue {
 	render() {
 		return (
 			<div class="home">
-				<Button type="primary">click</Button>
+				{Array(50)
+					.fill(0)
+					.map(k => (
+						<div>
+							<Button type="primary">click</Button>
+						</div>
+					))}
 			</div>
 		)
 	}

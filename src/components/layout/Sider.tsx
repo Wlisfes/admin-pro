@@ -16,12 +16,12 @@ const AppModule = namespace('app')
 
 @Component
 export default class Sider extends Mixins(MixinDevice) {
+	@AppModule.State(state => state.siderfixed) siderfixed!: boolean
 	@AppModule.State(state => state.collapsed) collapsed!: boolean
 	@AppModule.Mutation('SET_COLLAPSED') SET_COLLAPSED!: Function
 
 	//监听视口更改响应式布局
 	public handelbreakpoint(point: boolean) {
-		console.log(1)
 		this.SET_COLLAPSED(point)
 	}
 
@@ -29,6 +29,7 @@ export default class Sider extends Mixins(MixinDevice) {
 		return (
 			!this.isMobile() && (
 				<Layout.Sider
+					class={`${this.siderfixed && 'ant-fixed-sider'}`}
 					trigger={null}
 					style={{ background: '#fff' }}
 					collapsible={true}

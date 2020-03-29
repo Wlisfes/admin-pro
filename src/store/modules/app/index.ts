@@ -9,13 +9,19 @@ import { Module, MutationTree, ActionTree } from 'vuex'
 import { AppState } from './types'
 
 const createState = (): AppState => ({
+	user: null,
 	device: 'desktop', //视口
 	collapsed: false, //菜单是否收起
 	openKeys: ['home'], //初始展开的 SubMenu 菜单项 key 数组
-	selectedKeys: ['home-index'] //初始选中的 Item 菜单项 key 数组
+	selectedKeys: ['home-index'], //初始选中的 Item 菜单项 key 数组
+	siderfixed: true, //是否固定侧边栏
+	headerfixed: false //是否固定头部
 })
 
 const mutations: MutationTree<AppState> = {
+	SET_USER: (state, user) => {
+		state.user = user
+	},
 	SET_DEVICE: (state, device) => {
 		state.device = device
 	},
@@ -27,6 +33,12 @@ const mutations: MutationTree<AppState> = {
 	},
 	SET_SELECTEKEYS: (state, selectedKeys) => {
 		state.selectedKeys = selectedKeys
+	},
+	SET_SIDERFIXED: (state, siderfixed) => {
+		state.siderfixed = siderfixed
+	},
+	SET_HEADERFIXED: (state, headerfixed) => {
+		state.headerfixed = headerfixed
 	}
 }
 
