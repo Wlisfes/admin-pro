@@ -16,6 +16,8 @@ const AppModule = namespace('app')
 @Component
 export default class Header extends Mixins(MixinDevice) {
 	@AppModule.State(state => state.headerfixed) headerfixed!: boolean
+	@AppModule.State(state => state.noneheader) noneheader!: boolean
+	@AppModule.State(state => state.scrollTop) scrollTop!: number
 	@AppModule.State(state => state.collapsed) collapsed!: boolean
 	@AppModule.Mutation('SET_COLLAPSED') SET_COLLAPSED!: Function
 
@@ -35,7 +37,12 @@ export default class Header extends Mixins(MixinDevice) {
 		return (
 			<Layout.Header
 				class={`${this.headerfixed && 'ant-fixed-header'}`}
-				style={{ background: '#fff', padding: '0', width: this.calcWidth }}
+				style={{
+					background: '#fff',
+					padding: '0',
+					width: this.calcWidth,
+					opacity: this.noneheader && this.scrollTop > 120 ? '0' : '1'
+				}}
 			>
 				<Icon
 					class="trigger"

@@ -4,6 +4,31 @@ import { deviceEnquire, DEVICE_TYPE } from '@/mixins/device'
 
 const AppModule = namespace('app')
 
+@Component
+export class AppStore extends Vue {
+	@AppModule.State(state => state.noneheader) noneheader!: boolean
+	@AppModule.Mutation('SET_SCROLLTOP') SET_SCROLLTOP!: Function
+
+	//获取滚动条高度
+	private getScrollTop() {
+		var scroll_top = 0
+		if (document.documentElement && document.documentElement.scrollTop) {
+			scroll_top = document.documentElement.scrollTop
+		} else if (document.body) {
+			scroll_top = document.body.scrollTop
+		}
+		return scroll_top
+	}
+
+	mounted() {
+		this.$nextTick(() => {
+			document.addEventListener('scroll', () => {
+				this.noneheader && this.SET_SCROLLTOP(this.getScrollTop())
+			})
+		})
+	}
+}
+
 //多端监听
 @Component
 export class MixinDevice extends Vue {
@@ -43,6 +68,3 @@ export class AppDeviceEnquire extends Vue {
 		})
 	}
 }
-
-@Component
-export class AppStore extends Vue {}

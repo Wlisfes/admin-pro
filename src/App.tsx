@@ -1,8 +1,8 @@
 import { Component, Mixins } from 'vue-property-decorator'
-import { AppDeviceEnquire } from '@/mixins'
+import { AppStore, AppDeviceEnquire } from '@/mixins'
 
 @Component
-export default class App extends Mixins(AppDeviceEnquire) {
+export default class App extends Mixins(AppStore, AppDeviceEnquire) {
 	private Styles = {
 		minHeight: '100%',
 		display: 'flex',

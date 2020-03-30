@@ -1,9 +1,10 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { Layout } from 'ant-design-vue'
-import Sider from './Sider'
-import Drawer from './Drawer'
-import Content from './Content'
-import './index.less'
+import Sider from '@/components/layout/Sider'
+import Drawer from '@/components/layout/Drawer'
+import Content from '@/components/layout/Content'
+import Setting from '@/components/layout/Setting'
+import '@/components/layout/index.less'
 
 @Component
 export default class Main extends Vue {
@@ -13,6 +14,7 @@ export default class Main extends Vue {
 				<Sider></Sider>
 				<Drawer></Drawer>
 				<Content></Content>
+				<Setting></Setting>
 			</Layout>
 		)
 	}
