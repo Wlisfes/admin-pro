@@ -4,6 +4,7 @@ export interface AppState {
 	device: string
 	collapsed: boolean
 	theme: string
+	primaryColor: string
 	multiple: boolean
 	openKeys: Array<string>
 	selectedKeys: Array<string>

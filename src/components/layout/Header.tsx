@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-03-28 17:28:54
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-03-29 00:10:46
+ * @Last Modified time: 2020-03-30 21:10:35
  * @Description: 头部导航组件
  */
 
@@ -34,14 +34,16 @@ export default class Header extends Mixins(MixinDevice) {
 	}
 
 	render() {
+		const ok = this.noneheader && this.scrollTop > 240
 		return (
 			<Layout.Header
-				class={`${this.headerfixed && 'ant-fixed-header'}`}
+				class={`${this.headerfixed ? 'ant-fixed-header' : ''}`}
 				style={{
 					background: '#fff',
 					padding: '0',
 					width: this.calcWidth,
-					opacity: this.noneheader && this.scrollTop > 120 ? '0' : '1'
+					opacity: ok ? '0' : '1',
+					display: ok ? 'none' : 'block'
 				}}
 			>
 				<Icon

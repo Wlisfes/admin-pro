@@ -29,9 +29,9 @@ export default class Sider extends Mixins(MixinDevice) {
 		return (
 			!this.isMobile() && (
 				<Layout.Sider
-					class={`${this.siderfixed && 'ant-fixed-sider'}`}
+					class={`${this.siderfixed ? 'ant-fixed-sider' : ''}`}
 					trigger={null}
-					style={{ background: '#fff' }}
+					style={{ background: '#fff', boxSizing: 'border-box' }}
 					collapsible={true}
 					collapsed={this.collapsed}
 					width={256}

@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-03-28 17:14:23
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-03-29 00:01:50
+ * @Last Modified time: 2020-03-30 21:09:28
  * @Description: 右侧组件
  */
 
@@ -32,7 +32,7 @@ export default class Content extends Mixins(MixinDevice) {
 
 	render() {
 		return (
-			<Layout style={{ marginLeft: this.layoutMarginLeft, transition: 'margin 0.2s' }}>
+			<Layout style={{ marginLeft: this.layoutMarginLeft }}>
 				<Header></Header>
 				<Layout style={{ marginTop: this.headerfixed ? '64px' : '0' }}>
 					{this.multiple && <MultiTabs></MultiTabs>}

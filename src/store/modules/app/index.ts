@@ -5,6 +5,7 @@
  * @LastEditTime: 2020-03-30 17:06:00
  * @Description:
  */
+import Vue from 'vue'
 import { Module, MutationTree, ActionTree } from 'vuex'
 import { AppState } from './types'
 
@@ -14,6 +15,7 @@ const createState = (): AppState => ({
 	device: 'desktop', //视口
 	collapsed: false, //菜单是否收起
 	theme: 'light', //菜单风格
+	primaryColor: '#1890FF', //主题颜色
 	multiple: false, //是否显示多页标签
 	openKeys: ['home'], //初始展开的 SubMenu 菜单项 key 数组
 	selectedKeys: ['home-index'], //初始选中的 Item 菜单项 key 数组
@@ -37,6 +39,10 @@ const mutations: MutationTree<AppState> = {
 	},
 	SET_THEME: (state, theme) => {
 		state.theme = theme
+		Vue.ls.set('theme', theme)
+	},
+	SET_PRIMARYCOLOR: (state, primaryColor) => {
+		state.primaryColor = primaryColor
 	},
 	SET_MULTIPLE: (state, multiple) => {
 		state.multiple = multiple
@@ -49,12 +55,15 @@ const mutations: MutationTree<AppState> = {
 	},
 	SET_SIDERFIXED: (state, siderfixed) => {
 		state.siderfixed = siderfixed
+		Vue.ls.set('siderfixed', siderfixed)
 	},
 	SET_HEADERFIXED: (state, headerfixed) => {
 		state.headerfixed = headerfixed
+		Vue.ls.set('headerfixed', headerfixed)
 	},
 	SET_NONEHEADER: (state, noneheader) => {
 		state.noneheader = noneheader
+		Vue.ls.set('noneheader', noneheader)
 	}
 }
 

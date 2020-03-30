@@ -19,7 +19,7 @@
 		z-index: 99;
 		top: 0;
 		right: 0;
-		transition: width 0.2s;
+		transition: opacity 0.2s;
 	}
 
 	/***固定侧边栏菜单***************************************/
@@ -63,11 +63,30 @@
 	}
 	&-other {
 	}
+	&-theme {
+		margin-top: 16px;
+		.theme-tags {
+			height: 20px;
+		}
+		.ant-tag {
+			width: 20px;
+			height: 20px;
+			border-radius: 2px;
+			float: left;
+			cursor: pointer;
+			margin-right: 8px;
+			padding-left: 0;
+			padding-right: 0;
+			text-align: center;
+			color: #fff;
+			font-weight: 700;
+		}
+	}
 
 	.setting-drawer-toggle {
 		position: fixed;
 		top: 200px;
-		background: #1890ff; //@primary-color;
+		background: @primary-color;
 		width: 48px;
 		height: 48px;
 		display: flex;

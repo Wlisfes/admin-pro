@@ -8,11 +8,17 @@
 
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
-import { Drawer, Icon, Tooltip, List, Switch, Divider } from 'ant-design-vue'
+import { colorList, updateTheme, updateColorWeak } from '@/components/layout/settingConfig'
+import { Drawer, Icon, Tooltip, List, Switch, Divider, Tag } from 'ant-design-vue'
 import lightSvg from '@/assets/image/light.svg'
 import darkSvg from '@/assets/image/dark.svg'
 
 const AppModule = namespace('app')
+
+interface Color {
+	key: string
+	color: string
+}
 
 @Component
 export default class Setting extends Vue {
@@ -21,46 +27,68 @@ export default class Setting extends Vue {
 	@AppModule.State(state => state.headerfixed) headerfixed!: boolean
 	@AppModule.State(state => state.noneheader) noneheader!: boolean
 	@AppModule.State(state => state.multiple) multiple!: boolean
+	@AppModule.State(state => state.primaryColor) primaryColor!: string
 
 	@AppModule.Mutation('SET_THEME') SET_THEME!: Function
 	@AppModule.Mutation('SET_SIDERFIXED') SET_SIDERFIXED!: Function
 	@AppModule.Mutation('SET_HEADERFIXED') SET_HEADERFIXED!: Function
 	@AppModule.Mutation('SET_NONEHEADER') SET_NONEHEADER!: Function
 	@AppModule.Mutation('SET_MULTIPLE') SET_MULTIPLE!: Function
+	@AppModule.Mutation('SET_PRIMARYCOLOR') SET_PRIMARYCOLOR!: Function
 
 	private visible: boolean = false
-	public onClose() {
+	private colorList: Color[] = colorList
+
+	mounted() {
+		// updateTheme(this.primaryColor)
+		// if (this.colorWeak !== config.colorWeak) {
+		// 	updateColorWeak(this.colorWeak)
+		// }
+	}
+
+	public onClose(): void {
 		this.visible = false
 	}
 
 	//修改风格
 	public onClickTheme = (theme: string): void => {
 		this.SET_THEME(theme)
-		this.$ls.set('theme', theme)
 	}
 
 	//是否固定头部
 	public onChangeHeader = (header: boolean): void => {
 		this.SET_HEADERFIXED(header)
-		this.$ls.set('headerfixed', header)
 	}
 
 	//下滑是否隐藏头部
 	public onChangeNoneHeader = (header: boolean): void => {
 		this.SET_NONEHEADER(header)
-		this.$ls.set('noneheader', header)
 	}
 
 	//是否固定侧边菜单
 	public onChangeSider = (sider: boolean): void => {
 		this.SET_SIDERFIXED(sider)
-		this.$ls.set('siderfixed', sider)
+	}
+
+	//选择颜色主题
+	public onChangeColor(color: string) {
+		if (this.primaryColor !== color) {
+			this.SET_PRIMARYCOLOR(color)
+			updateTheme(color)
+		}
 	}
 
 	render() {
 		return (
 			<div class="setting-drawer">
-				<Drawer width="300" placement="right" visible={this.visible} closable={false} onClose={this.onClose}>
+				<Drawer
+					width="300"
+					placement="right"
+					keyboard={true}
+					visible={this.visible}
+					closable={false}
+					onClose={this.onClose}
+				>
 					<div class="setting-drawer-content">
 						{
 							/**整体风格设置**/
@@ -99,6 +127,30 @@ export default class Setting extends Vue {
 											)}
 										</div>
 									</Tooltip>
+								</div>
+							</div>
+						}
+
+						{
+							/**主题色**/
+							<div class="setting-drawer-theme">
+								<h2>主题色</h2>
+								<div class="theme-tags">
+									{this.colorList.map((k, i) => {
+										return (
+											<Tooltip key={i}>
+												<template slot="title">{k.key}</template>
+												<Tag
+													color={k.color}
+													onClick={() => {
+														this.onChangeColor(k.color)
+													}}
+												>
+													{this.primaryColor === k.color && <Icon type="check"></Icon>}
+												</Tag>
+											</Tooltip>
+										)
+									})}
 								</div>
 							</div>
 						}
