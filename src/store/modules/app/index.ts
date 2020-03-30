@@ -2,7 +2,7 @@
  * @Date: 2020-03-27 17:18:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-27 17:19:58
+ * @LastEditTime: 2020-03-30 10:04:54
  * @Description:
  */
 import { Module, MutationTree, ActionTree } from 'vuex'
@@ -12,10 +12,11 @@ const createState = (): AppState => ({
 	user: null,
 	device: 'desktop', //视口
 	collapsed: false, //菜单是否收起
+	theme: 'light', //菜单风格
 	openKeys: ['home'], //初始展开的 SubMenu 菜单项 key 数组
 	selectedKeys: ['home-index'], //初始选中的 Item 菜单项 key 数组
 	siderfixed: true, //是否固定侧边栏
-	headerfixed: false //是否固定头部
+	headerfixed: true //是否固定头部
 })
 
 const mutations: MutationTree<AppState> = {
@@ -27,6 +28,9 @@ const mutations: MutationTree<AppState> = {
 	},
 	SET_COLLAPSED: (state, collapsed) => {
 		state.collapsed = collapsed
+	},
+	SET_THEME: (state, theme) => {
+		state.theme = theme
 	},
 	SET_OPENKEYS: (state, openKeys) => {
 		state.openKeys = openKeys

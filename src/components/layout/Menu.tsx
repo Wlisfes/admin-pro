@@ -88,6 +88,7 @@ export default class CreateMenu extends Vue {
 	@AppModule.State(state => state.openKeys) openKeys!: Array<string>
 	@AppModule.State(state => state.selectedKeys) selectedKeys!: Array<string>
 	@AppModule.State(state => state.collapsed) collapsed!: boolean
+	@AppModule.State(state => state.theme) theme!: string
 
 	@AppModule.Mutation('SET_OPENKEYS') SET_OPENKEYS!: Function
 	@AppModule.Mutation('SET_SELECTEKEYS') SET_SELECTEKEYS!: Function
@@ -142,7 +143,7 @@ export default class CreateMenu extends Vue {
 	render() {
 		return (
 			<Menu
-				theme="light"
+				theme={this.theme}
 				mode="inline"
 				openKeys={this.MenuOpenKeys}
 				selectedKeys={this.MenuSelectedKeys}

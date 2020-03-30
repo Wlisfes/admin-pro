@@ -16,13 +16,31 @@ const AppModule = namespace('app')
 
 @Component
 export default class Content extends Mixins(MixinDevice) {
+	@AppModule.State(state => state.siderfixed) siderfixed!: boolean
+	@AppModule.State(state => state.headerfixed) headerfixed!: boolean
 	@AppModule.State(state => state.collapsed) collapsed!: boolean
+
+	//计算左外边距
+	get calcLayoutMarginLeft() {
+		if (!this.siderfixed || this.isMobile()) {
+			return '0'
+		}
+		return this.collapsed ? '80px' : '256px'
+	}
+
+	//计算Content全外边距
+	get calcContentMargin() {
+		if (!this.headerfixed) {
+			return this.isMobile() ? '24px 0' : '24px'
+		}
+		return this.isMobile() ? '90px 0 24px' : '90px 24px 24px'
+	}
 
 	render() {
 		return (
-			<Layout>
+			<Layout style={{ marginLeft: this.calcLayoutMarginLeft, transition: 'margin 0.2s' }}>
 				<Header></Header>
-				<Layout.Content style={{ background: '#fff', margin: this.isMobile() ? '24px 0' : '24px' }}>
+				<Layout.Content style={{ background: '#fff', margin: this.calcContentMargin }}>
 					<router-view></router-view>
 				</Layout.Content>
 			</Layout>
