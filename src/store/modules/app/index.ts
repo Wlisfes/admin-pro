@@ -2,7 +2,7 @@
  * @Date: 2020-03-27 17:18:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-30 17:06:00
+ * @LastEditTime: 2020-03-31 12:47:51
  * @Description:
  */
 import Vue from 'vue'
@@ -11,7 +11,6 @@ import { AppState } from './types'
 
 const createState = (): AppState => ({
 	user: null, //用户信息
-	scrollTop: 0, //页面滚动条
 	device: 'desktop', //视口
 	collapsed: false, //菜单是否收起
 	theme: 'light', //菜单风格
@@ -27,9 +26,6 @@ const createState = (): AppState => ({
 const mutations: MutationTree<AppState> = {
 	SET_USER: (state, user) => {
 		state.user = user
-	},
-	SET_SCROLLTOP: (state, scrollTop) => {
-		state.scrollTop = scrollTop
 	},
 	SET_DEVICE: (state, device) => {
 		state.device = device

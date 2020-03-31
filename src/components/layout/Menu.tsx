@@ -145,6 +145,7 @@ export default class CreateMenu extends Vue {
 			<Menu
 				theme={this.theme}
 				mode="inline"
+				style={{lineHeight: '64px'}}
 				openKeys={this.MenuOpenKeys}
 				selectedKeys={this.MenuSelectedKeys}
 				onOpenChange={this.handelMenuOpenChenge}

@@ -1,6 +1,5 @@
 export interface AppState {
 	user: any
-	scrollTop: number
 	device: string
 	collapsed: boolean
 	theme: string

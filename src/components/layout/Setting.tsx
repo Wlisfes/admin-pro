@@ -2,7 +2,7 @@
  * @Date: 2020-03-30 14:04:31
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-31 11:10:45
+ * @LastEditTime: 2020-03-31 15:14:04
  * @Description: 系统设置组件
  */
 
@@ -41,7 +41,6 @@ export default class Setting extends Vue {
 
 	mounted() {
 		updateTheme(this.primaryColor)
-
 	}
 
 	public onClose(): void {
@@ -72,7 +71,7 @@ export default class Setting extends Vue {
 	public onChangeColor(color: string) {
 		if (this.primaryColor !== color) {
 			this.SET_PRIMARYCOLOR(color)
-			updateTheme(color)
+			updateTheme(color, true)
 		}
 	}
 
@@ -171,25 +170,23 @@ export default class Setting extends Vue {
 											<div slot="title">固定 Header</div>
 										</List.Item.Meta>
 									</List.Item>
-									{false && (
-										<List.Item>
-											<Switch
-												slot="actions"
-												size="small"
-												disabled={!this.headerfixed}
-												defaultChecked={this.noneheader}
-												onChange={this.onChangeNoneHeader}
-											/>
-											<List.Item.Meta>
-												<Tooltip slot="title" placement="left">
-													<div slot="title">固定 Header 时可配置</div>
-													<div style={{ opacity: !this.headerfixed ? '0.5' : 1 }}>
-														下滑时隐藏 Header
-													</div>
-												</Tooltip>
-											</List.Item.Meta>
-										</List.Item>
-									)}
+									<List.Item>
+										<Switch
+											slot="actions"
+											size="small"
+											disabled={!this.headerfixed}
+											defaultChecked={this.noneheader}
+											onChange={this.onChangeNoneHeader}
+										/>
+										<List.Item.Meta>
+											<Tooltip slot="title" placement="left">
+												<div slot="title">固定 Header 时可配置</div>
+												<div style={{ opacity: !this.headerfixed ? '0.5' : 1 }}>
+													下滑时隐藏 Header
+												</div>
+											</Tooltip>
+										</List.Item.Meta>
+									</List.Item>
 									<List.Item>
 										<Switch
 											slot="actions"

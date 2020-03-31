@@ -36,7 +36,7 @@ export default class Content extends Mixins(MixinDevice) {
 				<Header></Header>
 				<Layout style={{ marginTop: this.headerfixed ? '64px' : '0' }}>
 					{this.multiple && <MultiTabs></MultiTabs>}
-					<Layout.Content style={{ background: '#fff', margin: this.isMobile() ? '24px 0' : '24px' }}>
+					<Layout.Content style={{ margin: this.isMobile() ? '24px 0' : '24px' }}>
 						<router-view></router-view>
 					</Layout.Content>
 				</Layout>

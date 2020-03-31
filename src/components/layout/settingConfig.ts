@@ -60,11 +60,11 @@ export const colorList = [
 	}
 ]
 
-export const updateTheme = (newPrimaryColor: string) => {
-	const hideMessage = message.loading('正在切换主题！', 0)
+export const updateTheme = (newPrimaryColor: string, popups?: boolean) => {
+	const hideMessage = popups && message.loading('正在切换主题！', 0)
 	themeColor.changeColor(newPrimaryColor).finally(() => {
 		setTimeout(() => {
-			hideMessage()
+			hideMessage && hideMessage()
 		})
 	})
 }

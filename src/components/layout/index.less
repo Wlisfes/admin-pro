@@ -1,4 +1,6 @@
 .create-layout {
+	height: auto;
+	overflow-x: hidden;
 	.trigger {
 		font-size: 18px;
 		line-height: 64px;
@@ -12,27 +14,51 @@
 	.ant-menu {
 		height: 100%;
 	}
+}
 
-	/***固定头部***************************************/
-	.ant-fixed-header {
+/***侧边栏菜单***************************************/
+.ant-layout-sider {
+	z-index: 9;
+}
+.ant-layout-sider.ant-fixed-sider {
+	overflow: auto;
+	height: 100vh;
+	position: fixed;
+	left: 0;
+}
+
+/***头部导航***************************************/
+.create-header {
+	position: relative;
+	// z-index: 105;
+	&-fixed {
 		position: fixed;
-		z-index: 99;
+		z-index: 1;
 		top: 0;
 		right: 0;
-		transition: opacity 0.2s;
+		width: 100%;
+		height: 64px;
+		transform: translate3d(0, 0, 0);
 	}
-
-	/***固定侧边栏菜单***************************************/
-	.ant-fixed-sider {
-		position: fixed;
-		height: 100%;
-		z-index: 99;
+	&-transition {
+		transition: width 0.2s;
+	}
+	&-fixed-100 {
+		width: 100%;
+	}
+	&-fixed-80 {
+		width: calc(100% - 80px);
+	}
+	&-fixed-256 {
+		width: calc(100% - 256px);
 	}
 }
 
+/***手机端菜单***************************************/
 .create-drawer {
 	.ant-drawer-body {
 		padding: 0;
+		height: 100%;
 	}
 	.ant-menu {
 		height: 100%;
@@ -59,10 +85,6 @@
 			height: 100%;
 		}
 	}
-	&-header {
-	}
-	&-other {
-	}
 	&-theme {
 		margin-top: 16px;
 		.theme-tags {
@@ -86,7 +108,7 @@
 	.setting-drawer-toggle {
 		position: fixed;
 		top: 200px;
-		background: @primary-color;
+		background: #1890ff;
 		width: 48px;
 		height: 48px;
 		display: flex;
@@ -104,4 +126,15 @@
 			font-size: 20px;
 		}
 	}
+}
+
+.showHeader-enter-active {
+	transition: all 0.25s ease;
+}
+.showHeader-leave-active {
+	transition: all 0.5s ease;
+}
+.showHeader-enter,
+.showHeader-leave-to {
+	opacity: 0;
 }

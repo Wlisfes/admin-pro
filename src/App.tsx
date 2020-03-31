@@ -1,17 +1,11 @@
 import { Component, Mixins } from 'vue-property-decorator'
-import { AppStore, AppDeviceEnquire } from '@/mixins'
+import { AppDeviceEnquire } from '@/mixins'
 
 @Component
-export default class App extends Mixins(AppStore, AppDeviceEnquire) {
-	private Styles = {
-		height: '100%',
-		display: 'flex',
-		flexDirection: 'column'
-	}
-
+export default class App extends Mixins(AppDeviceEnquire) {
 	render() {
 		return (
-			<div id="app" style={this.Styles}>
+			<div id="app" style={{ height: '100%' }}>
 				<router-view></router-view>
 			</div>
 		)

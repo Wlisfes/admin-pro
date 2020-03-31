@@ -9,6 +9,4 @@ export default function bootstrap() {
 	store.commit('app/SET_SIDERFIXED', Vue.ls.get('siderfixed') || false)
 	store.commit('app/SET_HEADERFIXED', Vue.ls.get('headerfixed') || false)
 	store.commit('app/SET_NONEHEADER', Vue.ls.get('noneheader') || false)
-
-	console.log('start created')
 }
