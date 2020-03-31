@@ -1,4 +1,5 @@
 const path = require('path')
+const createThemeColorReplacerPlugin = require('./themeColor/themeColorReplacer')
 const resolve = dir => path.join(__dirname, dir)
 
 module.exports = {
@@ -17,6 +18,7 @@ module.exports = {
 		})
 	},
 	configureWebpack: config => {
+		config.plugins.push(createThemeColorReplacerPlugin())
 		if (process.env.NODE_ENV === 'production') {
 			config.optimization.minimizer[0].options.terserOptions.compress.warnings = false
 			config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
@@ -27,9 +29,9 @@ module.exports = {
 	css: {
 		loaderOptions: {
 			less: {
-				modifyVars: {
-					'primary-color': '#13C2C2'
-				},
+				// modifyVars: {
+				// 	'primary-color': '#1890FF'
+				// },
 				javascriptEnabled: true
 			}
 		},

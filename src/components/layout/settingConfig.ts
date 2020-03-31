@@ -4,7 +4,7 @@ import generate from '@ant-design/colors/lib/generate'
 import { message } from 'ant-design-vue'
 
 const themeColor = {
-	getAntdSerials(color: any) {
+	getAntdSerials(color: string) {
 		// 淡化（即less的tint）
 		const lightens = new Array(9).fill(null).map((t, i) => {
 			return client.varyColor.lighten(color, i / 10)
@@ -14,10 +14,10 @@ const themeColor = {
 		const rgb = client.varyColor.toNum3(color.replace('#', '')).join(',')
 		return lightens.concat(colorPalettes).concat(rgb)
 	},
-	changeColor(newColor: any) {
+	changeColor(newColor: string) {
 		var options = {
 			newColors: this.getAntdSerials(newColor),
-			changeUrl(cssUrl: any) {
+			changeUrl(cssUrl: string) {
 				return `/${cssUrl}`
 			}
 		}
