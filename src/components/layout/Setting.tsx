@@ -2,7 +2,7 @@
  * @Date: 2020-03-30 14:04:31
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-31 15:14:04
+ * @LastEditTime: 2020-03-31 15:27:40
  * @Description: 系统设置组件
  */
 
@@ -210,7 +210,12 @@ export default class Setting extends Vue {
 								<h2>其他设置</h2>
 								<List split={false}>
 									<List.Item>
-										<Switch slot="actions" size="small" defaultChecked={this.multiple} />
+										<Switch
+											slot="actions"
+											size="small"
+											disabled={true}
+											defaultChecked={this.multiple}
+										/>
 										<List.Item.Meta>
 											<div slot="title">多页签模式</div>
 										</List.Item.Meta>

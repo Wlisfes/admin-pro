@@ -2,7 +2,7 @@
  * @Date: 2020-03-27 17:18:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-31 12:47:51
+ * @LastEditTime: 2020-03-31 16:16:10
  * @Description:
  */
 import Vue from 'vue'
@@ -63,7 +63,20 @@ const mutations: MutationTree<AppState> = {
 	}
 }
 
-const actions: ActionTree<AppState, any> = {}
+const actions: ActionTree<AppState, any> = {
+	asnycUser: ({ commit }, form: { username: string; password: string }) => {
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				console.log(form)
+				if (form.username === 'admin' && form.password === 'admin') {
+					Vue.ls.set('user', JSON.stringify(form), 6 * 3600 * 1000)
+					resolve(true)
+				}
+				resolve(false)
+			}, 1500)
+		})
+	}
+}
 
 const app: Module<AppState, any> = {
 	namespaced: true,

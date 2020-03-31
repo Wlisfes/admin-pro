@@ -1,4 +1,4 @@
-import { message } from 'ant-design-vue'
+import { message, notification } from 'ant-design-vue'
 
 import Vue from 'vue'
 import App from '@/App'
@@ -11,6 +11,7 @@ import '@/permission'
 
 Vue.config.productionTip = false
 Vue.prototype.$message = message
+Vue.prototype.$notification = notification
 Vue.use(Storage, {
 	namespace: 'admin__pro__',
 	name: 'ls',

@@ -2,13 +2,16 @@
  * @Date: 2020-03-27 13:14:26
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-27 14:26:23
+ * @LastEditTime: 2020-03-31 16:16:48
  * @Description: 登陆界面
  */
 
 import { Vue, Component } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
 import { Form, Input, Icon, Button, Checkbox } from 'ant-design-vue'
 import './index.less'
+
+const AppModule = namespace('app')
 
 @Component({
 	props: {
@@ -18,6 +21,8 @@ import './index.less'
 	}
 })
 class Login extends Vue {
+	@AppModule.Action('asnycUser') asnycUser!: Function
+
 	private form: any
 	private loading: boolean = false
 	private remember: boolean = false
@@ -26,12 +31,29 @@ class Login extends Vue {
 	async onSubmit(e: Event) {
 		e.preventDefault()
 		this.loading = true
-		this.form.validateFields(async (err: any, value: { username: string; password: string }) => {
+		this.form.validateFields(async (err: any, form: { username: string; password: string }) => {
 			if (err) {
 				setTimeout(() => {
 					this.loading = false
 				}, 600)
 				return
+			}
+
+			const rules = await this.asnycUser(form)
+			if (rules) {
+				this.$notification.success({
+					message: '欢迎',
+					description: '登陆成功'
+				})
+				this.$router.push('/')
+			} else {
+				this.$notification.error({
+					message: '错误',
+					description: '账户或密码错误'
+				})
+				setTimeout(() => {
+					this.loading = false
+				}, 600)
 			}
 		})
 	}
@@ -53,7 +75,7 @@ class Login extends Vue {
 								rules: [{ required: true, message: '请输入帐户名' }],
 								validateTrigger: 'change'
 							})(
-								<Input size="large" type="text" placeholder="username">
+								<Input size="large" type="text" placeholder="admin">
 									<Icon slot="prefix" type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
 								</Input>
 							)}
@@ -63,7 +85,7 @@ class Login extends Vue {
 								rules: [{ required: true, message: '请输入密码' }],
 								validateTrigger: 'blur'
 							})(
-								<Input size="large" type="password" placeholder="password">
+								<Input size="large" type="password" placeholder="admin">
 									<Icon slot="prefix" type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
 								</Input>
 							)}
