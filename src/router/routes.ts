@@ -20,6 +20,23 @@ const routes: RouteConfig[] = [
 				path: '/home',
 				name: 'home',
 				component: () => import('@/views/home')
+			},
+
+			/**管理员/权限******************************************************/
+			{
+				path: '/admin-user',
+				name: 'admin-user',
+				component: () => import('@/views/user/User')
+			},
+			{
+				path: '/admin-role',
+				name: 'admin-role',
+				component: () => import('@/views/user/Role')
+			},
+			{
+				path: '/admin-apply',
+				name: 'admin-apply',
+				component: () => import('@/views/user/Apply')
 			}
 		]
 	},

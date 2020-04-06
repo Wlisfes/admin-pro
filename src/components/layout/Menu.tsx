@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-03-28 18:09:21
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-03-28 18:51:25
+ * @Last Modified time: 2020-04-06 13:26:18
  * @Description: 菜单组件
  */
 
@@ -31,19 +31,19 @@ const menu = [
 		title: '管理员/权限',
 		children: [
 			{
-				key: 'admin-register',
-				title: '用户注册',
-				path: '/user'
+				key: 'admin-user',
+				title: '用户管理',
+				path: '/admin-user'
 			},
 			{
 				key: 'admin-role',
 				title: '角色管理',
-				path: '/'
+				path: '/admin-role'
 			},
 			{
-				key: 'admin-access',
-				title: '权限管理',
-				path: '/'
+				key: 'admin-apply',
+				title: '模块权限管理',
+				path: '/admin-apply'
 			}
 		]
 	},
@@ -145,7 +145,7 @@ export default class CreateMenu extends Vue {
 			<Menu
 				theme={this.theme}
 				mode="inline"
-				style={{lineHeight: '64px'}}
+				style={{ lineHeight: '64px' }}
 				openKeys={this.MenuOpenKeys}
 				selectedKeys={this.MenuSelectedKeys}
 				onOpenChange={this.handelMenuOpenChenge}
