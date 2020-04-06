@@ -47,10 +47,6 @@ class Login extends Vue {
 				})
 				this.$router.push('/')
 			} else {
-				this.$notification.error({
-					message: '错误',
-					description: '账户或密码错误'
-				})
 				setTimeout(() => {
 					this.loading = false
 				}, 600)

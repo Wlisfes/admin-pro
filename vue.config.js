@@ -43,7 +43,7 @@ module.exports = {
 		open: true,
 		proxy: {
 			'/api': {
-				target: 'http://m.lisfes.cn',
+				target: 'http://localhost:3000',
 				ws: false,
 				changeOrigin: true,
 				pathRewrite: {

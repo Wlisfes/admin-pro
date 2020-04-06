@@ -8,6 +8,7 @@
 import Vue from 'vue'
 import { Module, MutationTree, ActionTree } from 'vuex'
 import { AppState } from './types'
+import { login } from '@/api'
 
 const createState = (): AppState => ({
 	user: null, //用户信息
@@ -65,15 +66,14 @@ const mutations: MutationTree<AppState> = {
 
 const actions: ActionTree<AppState, any> = {
 	asnycUser: ({ commit }, form: { username: string; password: string }) => {
-		return new Promise((resolve, reject) => {
-			setTimeout(() => {
-				console.log(form)
-				if (form.username === 'admin' && form.password === 'admin') {
-					Vue.ls.set('user', JSON.stringify(form), 6 * 3600 * 1000)
-					resolve(true)
-				}
-				resolve(false)
-			}, 1500)
+		return new Promise(async (resolve, reject) => {
+			const response = await login({
+				username: form.username,
+				password: form.password
+			})
+
+			resolve(false)
+			// Vue.ls.set('user', JSON.stringify(response), 6 * 3600 * 1000)
 		})
 	}
 }
