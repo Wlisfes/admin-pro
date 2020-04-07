@@ -41,9 +41,9 @@ const menu = [
 				path: '/admin-role'
 			},
 			{
-				key: 'admin-apply',
+				key: 'admin-permission',
 				title: '模块权限管理',
-				path: '/admin-apply'
+				path: '/admin-permission'
 			}
 		]
 	},

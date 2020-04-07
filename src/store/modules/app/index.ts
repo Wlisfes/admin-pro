@@ -8,7 +8,7 @@
 import Vue from 'vue'
 import { Module, MutationTree, ActionTree } from 'vuex'
 import { AppState } from './types'
-import { login } from '@/api'
+import { login } from '@/api/user'
 
 const createState = (): AppState => ({
 	user: null, //用户信息

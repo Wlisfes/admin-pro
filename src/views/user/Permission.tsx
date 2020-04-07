@@ -2,13 +2,15 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:19:01
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-06 20:53:28
+ * @Last Modified time: 2020-04-08 00:15:18
  * @Description: 模块权限管理
  */
 import './less/permission.less'
 
 import { Vue, Component } from 'vue-property-decorator'
 import { Form, Table, Button, Modal, Input, Select } from 'ant-design-vue'
+import { applyAll, createPermission } from '@/api/user'
+import { PermissionCereateModalType } from '@/interface/user'
 
 @Component({
 	props: {
@@ -59,7 +61,7 @@ class Permission extends Vue {
 		// }
 	]
 
-	private modal = {
+	private cereateModal: PermissionCereateModalType = {
 		title: '新增', //标题
 		okText: '确定', //确定按钮文字
 		cancelText: '取消', //取消按钮文字
@@ -67,7 +69,7 @@ class Permission extends Vue {
 		centered: true, //是否垂直居中
 		width: 800, //弹窗宽度
 		destroyOnClose: true, //关闭时销毁弹窗
-		createloading: true, //弹窗加载loading
+		createloading: false, //弹窗loading是否加载完毕
 		closeloading: false, //弹窗关闭loading
 		labelCol: {
 			xs: { span: 24 },
@@ -79,19 +81,47 @@ class Permission extends Vue {
 		},
 		onCancel: () => {
 			//弹窗关闭回调
-			this.modal.visible = false
-		}
+			this.cereateModal.visible = false
+			this.cereateModal.closeloading = false
+			this.cereateModal.createloading = false
+		},
+
+		permission: [] //所有操作类型
 	}
 
 	//新增模块权限
-	async createModal() {
-		this.modal.visible = true
+	async handelCreateModal() {
+		this.cereateModal.visible = true
+
+		const response = await applyAll()
+		if (response.code === 200) {
+			this.cereateModal.permission = response.data
+		}
+		this.cereateModal.createloading = true
 	}
 
 	//弹窗确定回调
-	async closeModal() {
+	async handelCloseModal() {
+		this.cereateModal.closeloading = true
 		this.form.validateFields(async (err: any, form: any) => {
-			console.log(form)
+			if (err) {
+				setTimeout(() => {
+					this.cereateModal.closeloading = false
+				}, 600)
+				return
+			}
+			const permission = form.permission.map((id: string) => {
+				return this.cereateModal.permission.find(v => v.id === id)
+			})
+			const response = await createPermission({
+				permission_id: form.permission_id,
+				permission_name: form.permission_name,
+				description: form.description,
+				disable: Boolean(form.disable),
+				permission: permission
+			})
+
+			this.cereateModal.onCancel()
 		})
 	}
 
@@ -101,7 +131,7 @@ class Permission extends Vue {
 		return (
 			<div class="admin-permission">
 				<div class="admin-permission-header">
-					<Button type="primary" onClick={this.createModal}>
+					<Button type="primary" onClick={this.handelCreateModal}>
 						新增
 					</Button>
 				</div>
@@ -125,22 +155,23 @@ class Permission extends Vue {
 				></Table>
 
 				<Modal
-					title={this.modal.title}
-					visible={this.modal.visible}
-					centered={this.modal.centered}
-					width={this.modal.width}
-					destroyOnClose={this.modal.destroyOnClose}
-					okText={this.modal.okText}
-					cancelText={this.modal.cancelText}
-					onCancel={this.modal.onCancel}
-					onOk={this.closeModal}
+					title={this.cereateModal.title}
+					visible={this.cereateModal.visible}
+					centered={this.cereateModal.centered}
+					width={this.cereateModal.width}
+					destroyOnClose={this.cereateModal.destroyOnClose}
+					confirmLoading={this.cereateModal.closeloading}
+					okText={this.cereateModal.okText}
+					cancelText={this.cereateModal.cancelText}
+					onCancel={this.cereateModal.onCancel}
+					onOk={this.handelCloseModal}
 				>
 					<Form ref="form" layout="horizontal">
 						<Form.Item
 							label="权限模块唯一识别码"
 							hasFeedback={true}
-							labelCol={this.modal.labelCol}
-							wrapperCol={this.modal.wrapperCol}
+							labelCol={this.cereateModal.labelCol}
+							wrapperCol={this.cereateModal.wrapperCol}
 						>
 							{getFieldDecorator('permission_id', {
 								rules: [{ required: true, message: '请输入权限模块唯一识别码' }],
@@ -150,8 +181,8 @@ class Permission extends Vue {
 						<Form.Item
 							label="权限模块名称"
 							hasFeedback={true}
-							labelCol={this.modal.labelCol}
-							wrapperCol={this.modal.wrapperCol}
+							labelCol={this.cereateModal.labelCol}
+							wrapperCol={this.cereateModal.wrapperCol}
 						>
 							{getFieldDecorator('permission_name', {
 								rules: [{ required: true, message: '请输入权限模块名称' }],
@@ -161,8 +192,8 @@ class Permission extends Vue {
 						<Form.Item
 							label="状态"
 							hasFeedback={true}
-							labelCol={this.modal.labelCol}
-							wrapperCol={this.modal.wrapperCol}
+							labelCol={this.cereateModal.labelCol}
+							wrapperCol={this.cereateModal.wrapperCol}
 						>
 							{getFieldDecorator('disable', {
 								initialValue: 0,
@@ -178,8 +209,8 @@ class Permission extends Vue {
 						<Form.Item
 							label="描述"
 							hasFeedback={true}
-							labelCol={this.modal.labelCol}
-							wrapperCol={this.modal.wrapperCol}
+							labelCol={this.cereateModal.labelCol}
+							wrapperCol={this.cereateModal.wrapperCol}
 						>
 							{getFieldDecorator('description', {
 								rules: [{ required: true, message: '请输入权限模块描述' }],
@@ -189,16 +220,21 @@ class Permission extends Vue {
 						<Form.Item
 							label="赋予权限"
 							hasFeedback={true}
-							labelCol={this.modal.labelCol}
-							wrapperCol={this.modal.wrapperCol}
+							labelCol={this.cereateModal.labelCol}
+							wrapperCol={this.cereateModal.wrapperCol}
 						>
 							{getFieldDecorator('permission', {
-								initialValue: ['false', 'true'],
+								initialValue: [],
 								validateTrigger: 'change'
 							})(
-								<Select mode="multiple">
-									<Select.Option value={'false'}>正常</Select.Option>
-									<Select.Option value={'true'}>禁用</Select.Option>
+								<Select mode="multiple" loading={!this.cereateModal.createloading}>
+									{this.cereateModal.permission.map(k => {
+										return (
+											<Select.Option key={k.action} value={k.id} disabled={k.disable}>
+												{k.name}
+											</Select.Option>
+										)
+									})}
 								</Select>
 							)}
 						</Form.Item>
