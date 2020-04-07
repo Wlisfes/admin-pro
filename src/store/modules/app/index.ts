@@ -2,7 +2,7 @@
  * @Date: 2020-03-27 17:18:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-31 16:16:10
+ * @LastEditTime: 2020-04-07 17:28:06
  * @Description:
  */
 import Vue from 'vue'
@@ -72,8 +72,11 @@ const actions: ActionTree<AppState, any> = {
 				password: form.password
 			})
 
-			resolve(false)
-			// Vue.ls.set('user', JSON.stringify(response), 6 * 3600 * 1000)
+			if (response.code === 200) {
+				commit('SET_USER', response.data)
+				Vue.ls.set('user', JSON.stringify(response.data), 6 * 3600 * 1000)
+			}
+			resolve(response.code === 200)
 		})
 	}
 }

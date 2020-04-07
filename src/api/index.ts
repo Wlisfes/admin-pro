@@ -6,11 +6,10 @@
  * @Description: 全局api接口
  */
 
-import { AxiosPromise } from 'axios'
-import http, { Response } from '@/utils/request'
+import http from '@/utils/request'
 
 //登录
-export const login = (params: { username: string; password: string }): AxiosPromise<Response> => {
+export const login = (params: { username: string; password: string }) => {
 	return http({
 		url: `/api/user/login`,
 		method: 'POST',

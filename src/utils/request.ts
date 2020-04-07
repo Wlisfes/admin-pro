@@ -3,16 +3,6 @@ import { notification } from 'ant-design-vue'
 import router from '@/router'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 
-export interface Response<T = any> extends AxiosResponse {
-	data: T
-	timestamp: string
-	message: string
-	code: number
-	url?: string
-	method?: string
-	[key: string]: any
-}
-
 const service: AxiosInstance = axios.create({
 	baseURL: `/api`,
 	timeout: 30000
