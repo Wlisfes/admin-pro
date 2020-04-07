@@ -34,9 +34,9 @@ const routes: RouteConfig[] = [
 				component: () => import('@/views/user/Role')
 			},
 			{
-				path: '/admin-apply',
-				name: 'admin-apply',
-				component: () => import('@/views/user/Apply')
+				path: '/admin-permission',
+				name: 'admin-permission',
+				component: () => import('@/views/user/Permission')
 			}
 		]
 	},

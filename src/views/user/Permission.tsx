@@ -5,7 +5,7 @@
  * @Last Modified time: 2020-04-06 20:53:28
  * @Description: 模块权限管理
  */
-import './less/apply.less'
+import './less/permission.less'
 
 import { Vue, Component } from 'vue-property-decorator'
 import { Form, Table, Button, Modal, Input, Select } from 'ant-design-vue'
@@ -17,7 +17,7 @@ import { Form, Table, Button, Modal, Input, Select } from 'ant-design-vue'
 		}
 	}
 })
-class Apply extends Vue {
+class Permission extends Vue {
 	private form: any
 
 	//表头
@@ -99,8 +99,8 @@ class Apply extends Vue {
 		const { getFieldDecorator } = this.form
 
 		return (
-			<div class="admin-apply">
-				<div class="admin-apply-header">
+			<div class="admin-permission">
+				<div class="admin-permission-header">
 					<Button type="primary" onClick={this.createModal}>
 						新增
 					</Button>
@@ -165,13 +165,13 @@ class Apply extends Vue {
 							wrapperCol={this.modal.wrapperCol}
 						>
 							{getFieldDecorator('disable', {
-								initialValue: 'false',
+								initialValue: 0,
 								rules: [{ required: true, message: '请输入权限模块描述' }],
 								validateTrigger: 'change'
 							})(
 								<Select>
-									<Select.Option value={'false'}>正常</Select.Option>
-									<Select.Option value={'true'}>禁用</Select.Option>
+									<Select.Option value={0}>正常</Select.Option>
+									<Select.Option value={1}>禁用</Select.Option>
 								</Select>
 							)}
 						</Form.Item>
@@ -209,4 +209,4 @@ class Apply extends Vue {
 	}
 }
 
-export default Form.create({})(Apply)
+export default Form.create({})(Permission)

@@ -74,7 +74,7 @@ const actions: ActionTree<AppState, any> = {
 
 			if (response.code === 200) {
 				commit('SET_USER', response.data)
-				Vue.ls.set('user', JSON.stringify(response.data), 6 * 3600 * 1000)
+				Vue.ls.set('user', response.data, 6 * 3600 * 1000)
 			}
 			resolve(response.code === 200)
 		})
