@@ -2,16 +2,17 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:19:01
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-08 00:15:18
+ * @Last Modified time: 2020-04-08 22:45:41
  * @Description: 模块权限管理
  */
+
 import './less/permission.less'
 
 import { Vue, Component } from 'vue-property-decorator'
-import { Form, Table, Button, Modal, Input, Select, Tag, Dropdown, Tooltip, Divider, Icon, Menu } from 'ant-design-vue'
+import { Form, Table, Button, Modal, Input, Select, Tag, Tooltip } from 'ant-design-vue'
+import { Actions } from '@/components/common'
 import { applyAll, createPermission, permissionAll } from '@/api/user'
 import { PermissionCereateModalType } from '@/interface/user'
-import { Color } from '@/interface'
 
 @Component({
 	props: {
@@ -178,8 +179,8 @@ class Permission extends Vue {
 	}
 
 	//操作
-	async handelActionEvent(key: string, props: any) {
-		console.log(key, props)
+	async handelAction(params: { key: string }) {
+		console.log(params)
 	}
 
 	render() {
@@ -222,49 +223,14 @@ class Permission extends Vue {
 								)
 							},
 							disable: (disable: boolean) => {
-								return <Tag color={disable ? 'pink' : 'green'}>{disable ? '已禁用' : '正常'}</Tag>
+								return (
+									<Tag style={{ marginRight: 0 }} color={disable ? 'pink' : 'green'}>
+										{disable ? '已禁用' : '正常'}
+									</Tag>
+								)
 							},
 							action: (action: any, props: any) => {
-								const IconStyle = { fontSize: '14px', margin: '0 0 0 4px' }
-								return (
-									<div>
-										<a onClick={() => this.handelActionEvent('update', props)}>编辑</a>
-										<Divider type="vertical"></Divider>
-										<Dropdown>
-											<a>
-												更多
-												<Icon type="down" />
-											</a>
-											<Menu
-												slot="overlay"
-												onClick={({ key }: { key: string }) => {
-													this.handelActionEvent(key, props)
-												}}
-											>
-												<Menu.Item key="update">
-													<span style={{ color: Color.info }}>编辑</span>
-													<Icon type="setting" style={{ ...IconStyle, color: Color.info }} />
-												</Menu.Item>
-												<Menu.Item key={props.disable ? 'open' : 'close'}>
-													<span style={{ color: props.disable ? Color.ok : Color.warn }}>
-														{props.disable ? '打开' : '关闭'}
-													</span>
-													<Icon
-														type={props.disable ? 'stop' : 'check-circle'}
-														style={{
-															...IconStyle,
-															color: props.disable ? Color.ok : Color.warn
-														}}
-													/>
-												</Menu.Item>
-												<Menu.Item key="delete">
-													<span style={{ color: Color.err }}>删除</span>
-													<Icon type="rest" style={{ ...IconStyle, color: Color.err }} />
-												</Menu.Item>
-											</Menu>
-										</Dropdown>
-									</div>
-								)
+								return <Actions params={props} onActions={this.handelAction}></Actions>
 							}
 						}
 					}}

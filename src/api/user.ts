@@ -18,6 +18,15 @@ export const login = (params: { username: string; password: string }) => {
 	})
 }
 
+//获取所有用户列表
+export const userAll = (params?: any) => {
+	return http({
+		url: `/api/user/all`,
+		method: 'GET',
+		params
+	})
+}
+
 //获取所有操作类型
 export const applyAll = (params?: any) => {
 	return http({

@@ -7,16 +7,13 @@ export interface ApplyType {
 	[key: string]: any
 }
 
-export interface PermissionCereateModalType {
+interface ModalType {
 	title: string
 	okText: string
 	cancelText: string
 	visible: boolean
 	centered: boolean
 	width: number
-	destroyOnClose: boolean
-	createloading: boolean
-	closeloading: boolean
 	labelCol: {
 		xs: { span: number }
 		sm: { span: number }
@@ -26,6 +23,13 @@ export interface PermissionCereateModalType {
 		sm: { span: number }
 	}
 	onCancel: () => void
+}
+
+export interface PermissionCereateModalType extends ModalType {
+	destroyOnClose: boolean
+	createloading: boolean
+	closeloading: boolean
+
 	apply: ApplyType[]
 
 	permission: ApplyType[]
@@ -33,4 +37,10 @@ export interface PermissionCereateModalType {
 	permission_name: string
 	disable: boolean | number
 	description: string
+}
+
+export interface UserModalType extends ModalType {
+	username: string
+	nick_name: string
+	disable: string | number
 }
