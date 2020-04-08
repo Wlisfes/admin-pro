@@ -27,6 +27,15 @@ export const applyAll = (params?: any) => {
 	})
 }
 
+//获取所有权限模块列表
+export const permissionAll = (params?: any) => {
+	return http({
+		url: `/api/permission/all`,
+		method: 'GET',
+		params
+	})
+}
+
 //创建权限模块
 export const createPermission = (params: {
 	permission_id: string

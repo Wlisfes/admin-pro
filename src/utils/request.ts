@@ -38,6 +38,10 @@ const err = (error: AxiosError<any>) => {
 
 //请求拦截
 service.interceptors.request.use((config: AxiosRequestConfig) => {
+	const user = Vue.ls.get('user')
+	if (user) {
+		config.headers['access_token'] = user.access_token
+	}
 	return config
 }, err)
 

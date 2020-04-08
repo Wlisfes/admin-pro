@@ -8,6 +8,7 @@ import Storage from 'vue-ls'
 
 import bootstrap from '@/utils/bootstrap'
 import '@/permission'
+import '@/assets/style/index.less'
 
 Vue.config.productionTip = false
 Vue.prototype.$message = message

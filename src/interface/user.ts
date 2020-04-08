@@ -26,5 +26,11 @@ export interface PermissionCereateModalType {
 		sm: { span: number }
 	}
 	onCancel: () => void
+	apply: ApplyType[]
+
 	permission: ApplyType[]
+	permission_id: string
+	permission_name: string
+	disable: boolean | number
+	description: string
 }
