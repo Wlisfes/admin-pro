@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:04:05
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-08 22:58:48
+ * @Last Modified time: 2020-04-09 19:27:21
  * @Description: 角色管理界面
  */
 
@@ -17,7 +17,6 @@ export default class Role extends Vue {
 		return (
 			<div class="admin-role">
 				<Button>上传</Button>
-				<Upload listType="picture-card"></Upload>
 			</div>
 		)
 	}

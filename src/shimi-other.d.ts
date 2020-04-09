@@ -22,3 +22,8 @@ declare module '*.gif' {
 	const png: any
 	export default gif
 }
+
+declare module 'vue-cropper' {
+	const VueCropper: any
+	export { VueCropper }
+}

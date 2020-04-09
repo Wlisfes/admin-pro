@@ -2,16 +2,16 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-08 23:39:49
+ * @Last Modified time: 2020-04-09 23:47:57
  * @Description: 角色管理界面
  */
 
 import './less/user.less'
 
 import { Vue, Component } from 'vue-property-decorator'
-import { Form, Table, Tag, Avatar, Modal, Input, Select, Divider, Upload } from 'ant-design-vue'
-import { Actions } from '@/components/common'
-import { userAll } from '@/api/user'
+import { Form, Table, Tag, Avatar, Modal, Input, Select, Divider } from 'ant-design-vue'
+import { Actions, AvaterUpload } from '@/components/common'
+import { userAll, updateUser } from '@/api/user'
 import { UserModalType } from '@/interface/user'
 
 @Component({
@@ -31,8 +31,8 @@ class User extends Vue {
 			{
 				title: '用户名',
 				dataIndex: 'username',
-				align: 'center',
-				width: 140
+				align: 'center'
+				// width: 140
 			},
 			{
 				title: '用户头像',
@@ -45,8 +45,8 @@ class User extends Vue {
 			{
 				title: '昵称',
 				dataIndex: 'nick_name',
-				align: 'center',
-				width: 140
+				align: 'center'
+				// width: 140
 			},
 			{
 				title: '角色类型',
@@ -80,6 +80,14 @@ class User extends Vue {
 
 		//列表数据
 		dataSource: []
+	}
+
+	private uploadModel = {
+		visible: false,
+		id: '',
+		onCancel: () => {
+			this.uploadModel.visible = false
+		}
 	}
 
 	private userModal: UserModalType = {
@@ -130,14 +138,24 @@ class User extends Vue {
 		}
 	}
 
-	//头像上传change事件
-	handelUploadChange(info: any) {
-		console.log(info, 222)
-	}
+	//upload上传回调
+	async onSubmit(params: { id: string; response: { code: number; data: any } }) {
+		console.log(params)
+		if (params.response.code === 200) {
+			const response = await updateUser({
+				id: params.id,
+				avatar: params.response.data.url
+			})
 
-	uploadBeforeUpload(file: any) {
-		console.log(file, 111)
-		return false
+			if (response.code === 200) {
+				this.uploadModel.visible = false
+				this.userAll()
+				this.$notification.success({
+					message: '成功',
+					description: '头像修改成功'
+				})
+			}
+		}
 	}
 
 	render() {
@@ -152,22 +170,31 @@ class User extends Vue {
 					loading={this.table.loading}
 					rowKey={(record: any) => record.id}
 					locale={{ emptyText: '暂无数据' }}
-					scroll={{ x: 920 }}
+					scroll={{ x: 780 }}
 					{...{
 						scopedSlots: {
-							avatar: (avatar: string) => {
+							avatar: (avatar: string, props: any) => {
 								return avatar ? (
 									<Avatar
 										size={50}
 										shape="square"
-										src="https://lisfes.cn/assets/album/0bc087d84ae4a.png"
+										src={props.avatar}
+										style={{ cursor: 'pointer' }}
+										onClick={() => {
+											this.uploadModel.id = props.id
+											this.uploadModel.visible = true
+										}}
 									></Avatar>
 								) : (
 									<Avatar
 										size={50}
 										shape="square"
 										icon="user"
-										style={{ backgroundColor: '#fde3cf' }}
+										style={{ cursor: 'pointer', backgroundColor: '#fde3cf' }}
+										onClick={() => {
+											this.uploadModel.id = props.id
+											this.uploadModel.visible = true
+										}}
 									></Avatar>
 								)
 							},
@@ -184,6 +211,13 @@ class User extends Vue {
 						}
 					}}
 				></Table>
+
+				<AvaterUpload
+					id={this.uploadModel.id}
+					visible={this.uploadModel.visible}
+					onCancel={this.uploadModel.onCancel}
+					onSubmit={this.onSubmit}
+				></AvaterUpload>
 
 				<Modal
 					title={this.userModal.title}
@@ -236,38 +270,7 @@ class User extends Vue {
 								</Select>
 							)}
 						</Form.Item>
-						<Form.Item
-							label="用户头像"
-							hasFeedback={false}
-							labelCol={this.userModal.labelCol}
-							wrapperCol={this.userModal.wrapperCol}
-						>
-							<div class="upload-container">
-								<div>
-									{getFieldDecorator(
-										'avatar',
-										{}
-									)(
-										<Upload
-											name="avatar"
-											listType="picture-card"
-											class="avatar-uploader"
-											showUploadList={false}
-											action="/api/api/upload"
-											onChange={this.handelUploadChange}
-											beforeUpload={this.uploadBeforeUpload}
-										>
-											{false ? (
-												<img src={''} alt="avatar" />
-											) : (
-												<div class="ant-upload-text">Upload</div>
-											)}
-										</Upload>
-									)}
-								</div>
-								<div class="upload-container-crop">12313</div>
-							</div>
-						</Form.Item>
+
 						<Divider></Divider>
 					</Form>
 				</Modal>

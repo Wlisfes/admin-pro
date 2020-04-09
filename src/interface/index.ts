@@ -12,3 +12,12 @@ export enum Color {
 	info = '#1890ff',
 	warn = '#faad14'
 }
+
+export interface VueCropperOptions {
+	img: string
+	autoCrop: boolean
+	autoCropWidth: number
+	autoCropHeight: number
+	fixedBox: boolean
+	info: boolean
+}

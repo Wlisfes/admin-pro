@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-07 22:33:10
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-07 22:42:51
+ * @Last Modified time: 2020-04-09 23:35:13
  * @Description: 用户模块接口
  */
 
@@ -24,6 +24,15 @@ export const userAll = (params?: any) => {
 		url: `/api/user/all`,
 		method: 'GET',
 		params
+	})
+}
+
+//修改用户信息
+export const updateUser = (params: any) => {
+	return http({
+		url: `/api/user/update`,
+		method: 'PUT',
+		data: params
 	})
 }
 
