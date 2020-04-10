@@ -85,6 +85,7 @@ class User extends Vue {
 	private uploadModel = {
 		visible: false,
 		id: '',
+		picUrl: '',
 		onCancel: () => {
 			this.uploadModel.visible = false
 		}
@@ -183,6 +184,7 @@ class User extends Vue {
 										onClick={() => {
 											this.uploadModel.id = props.id
 											this.uploadModel.visible = true
+											this.uploadModel.picUrl = props.avatar
 										}}
 									></Avatar>
 								) : (
@@ -216,6 +218,7 @@ class User extends Vue {
 					id={this.uploadModel.id}
 					visible={this.uploadModel.visible}
 					onCancel={this.uploadModel.onCancel}
+					picUrl={this.uploadModel.picUrl}
 					onSubmit={this.onSubmit}
 				></AvaterUpload>
 

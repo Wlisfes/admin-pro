@@ -8,7 +8,7 @@
 
 import '../less/avaterUpload.less'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Modal, Row, Col, Upload, Button } from 'ant-design-vue'
+import { Modal, Upload, Button } from 'ant-design-vue'
 import { VueCropper } from 'vue-cropper'
 import { upload } from '@/api'
 import { VueCropperOptions } from '@/interface'
@@ -17,6 +17,8 @@ import { VueCropperOptions } from '@/interface'
 export default class AvaterUpload extends Vue {
 	@Prop(Boolean) visible!: boolean
 	@Prop(String) id!: string
+	@Prop({ default: '头像修改' }) title!: string
+	@Prop({ default: '' }) picUrl!: string
 
 	private centered: boolean = true
 	private width: number = 800
@@ -82,7 +84,7 @@ export default class AvaterUpload extends Vue {
 	render() {
 		return (
 			<Modal
-				title="头像修改"
+				title={this.title}
 				visible={this.visible}
 				centered={this.centered}
 				width={this.width}
@@ -116,15 +118,20 @@ export default class AvaterUpload extends Vue {
 						<div class="avater-modal-container">
 							<div>
 								<div class="previews">
-									{this.previews.url && (
+									{(this.previews.url || this.picUrl) && (
 										<img
-											src={this.previews.url}
-											style={{
-												height: '100%',
-												width: '100%',
-												display: 'block',
-												...this.previews.img
-											}}
+											src={this.previews.url || this.picUrl}
+											style={
+												this.previews.url
+													? this.previews.img
+													: { height: '100%', width: '100%', display: 'block' }
+											}
+											// style={{
+											// 	height: '100%',
+											// 	width: '100%',
+											// 	display: 'block',
+											// 	...this.previews.img
+											// }}
 										/>
 									)}
 								</div>
