@@ -6,6 +6,7 @@
  * @Description: 头像裁剪组件
  */
 
+import '../less/avaterUpload.less'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Modal, Row, Col, Upload, Button } from 'ant-design-vue'
 import { VueCropper } from 'vue-cropper'
@@ -81,6 +82,7 @@ export default class AvaterUpload extends Vue {
 	render() {
 		return (
 			<Modal
+				title="头像修改"
 				visible={this.visible}
 				centered={this.centered}
 				width={this.width}
@@ -91,70 +93,69 @@ export default class AvaterUpload extends Vue {
 					this.$emit('cancel')
 				}}
 			>
-				<Row>
-					<Col xs={24} md={12} style={{ height: '350px' }}>
-						<VueCropper
-							ref="cropper"
-							mode="cover"
-							img={this.vueCropperOptions.img}
-							info={this.vueCropperOptions.info}
-							autoCrop={this.vueCropperOptions.autoCrop}
-							autoCropWidth={this.vueCropperOptions.autoCropWidth}
-							autoCropHeight={this.vueCropperOptions.autoCropHeight}
-							fixedBox={this.vueCropperOptions.fixedBox}
-							onRealTime={(data: { img: any; url: string }) => {
-								this.previews.url = data.url
-								this.previews.img = data.img
-							}}
-						></VueCropper>
-					</Col>
-					<Col xs={24} md={12} style={{ height: '350px' }}>
-						<div
-							style={{
-								position: 'absolute',
-								top: '50%',
-								left: '50%',
-								transform: 'translate(-50%, -50%)',
-								width: '240px',
-								height: '240px',
-								borderRadius: '50%',
-								boxShadow: '0 0 4px #ccc',
-								overflow: 'hidden'
-							}}
-						>
-							{this.previews.url && (
-								<img
-									src={this.previews.url}
-									style={{ height: '100%', width: '100%', display: 'block', ...this.previews.img }}
-								/>
-							)}
+				<div class="avater-modal">
+					<div class="avater-modal-cropper">
+						<div class="avater-modal-container">
+							<div>
+								<VueCropper
+									ref="cropper"
+									mode="cover"
+									img={this.vueCropperOptions.img}
+									info={this.vueCropperOptions.info}
+									autoCrop={this.vueCropperOptions.autoCrop}
+									autoCropWidth={this.vueCropperOptions.autoCropWidth}
+									autoCropHeight={this.vueCropperOptions.autoCropHeight}
+									fixedBox={this.vueCropperOptions.fixedBox}
+									onRealTime={(data: { img: any; url: string }) => {
+										this.previews.url = data.url
+										this.previews.img = data.img
+									}}
+								></VueCropper>
+							</div>
 						</div>
-					</Col>
-				</Row>
-				<Row style={{ marginTop: '24px' }}>
-					<Col lg={2} md={2}>
-						<Upload name="file" showUploadList={false} beforeUpload={this.onBeforeUpload}>
-							<Button icon="upload">选择图片</Button>
-						</Upload>
-					</Col>
-					<Col lg={{ span: 1, offset: 2 }} md={2}>
-						<Button icon="plus" onClick={() => this.changeScale(1)} />
-					</Col>
-					<Col lg={{ span: 1, offset: 1 }} md={2}>
-						<Button icon="minus" onClick={() => this.changeScale(-1)} />
-					</Col>
-					<Col lg={{ span: 1, offset: 1 }} md={2}>
-						<Button icon="undo" onClick={() => this.rotate('rotateLeft')} />
-					</Col>
-					<Col lg={{ span: 1, offset: 1 }} md={2}>
-						<Button icon="redo" onClick={() => this.rotate('rotateRight')} />
-					</Col>
-					<Col lg={{ span: 2, offset: 6 }} md={2}>
-						<Button type="primary" loading={this.loading} onClick={this.onSubmit}>
-							上传
-						</Button>
-					</Col>
-				</Row>
+						<div class="avater-modal-container">
+							<div>
+								<div class="previews">
+									{this.previews.url && (
+										<img
+											src={this.previews.url}
+											style={{
+												height: '100%',
+												width: '100%',
+												display: 'block',
+												...this.previews.img
+											}}
+										/>
+									)}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="avater-modal-footer">
+						<div>
+							<Upload name="file" showUploadList={false} beforeUpload={this.onBeforeUpload}>
+								<Button icon="upload">选择图片</Button>
+							</Upload>
+						</div>
+						<div>
+							<Button icon="plus" onClick={() => this.changeScale(1)} />
+						</div>
+						<div>
+							<Button icon="minus" onClick={() => this.changeScale(-1)} />
+						</div>
+						<div>
+							<Button icon="undo" onClick={() => this.rotate('rotateLeft')} />
+						</div>
+						<div>
+							<Button icon="redo" onClick={() => this.rotate('rotateRight')} />
+						</div>
+						<div>
+							<Button type="primary" loading={this.loading} onClick={this.onSubmit}>
+								上传
+							</Button>
+						</div>
+					</div>
+				</div>
 			</Modal>
 		)
 	}
