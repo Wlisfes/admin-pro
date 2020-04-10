@@ -93,6 +93,10 @@ export default class AvaterUpload extends Vue {
 				destroyOnClose={this.destroyOnClose}
 				onCancel={() => {
 					this.$emit('cancel')
+					this.vueCropperOptions.img = ''
+					this.previews.url = ''
+					this.previews.img = {}
+					this.previews.name = ''
 				}}
 			>
 				<div class="avater-modal">
@@ -126,12 +130,6 @@ export default class AvaterUpload extends Vue {
 													? this.previews.img
 													: { height: '100%', width: '100%', display: 'block' }
 											}
-											// style={{
-											// 	height: '100%',
-											// 	width: '100%',
-											// 	display: 'block',
-											// 	...this.previews.img
-											// }}
 										/>
 									)}
 								</div>
