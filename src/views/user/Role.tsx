@@ -14,10 +14,6 @@ import { Upload, Button } from 'ant-design-vue'
 @Component
 export default class Role extends Vue {
 	render() {
-		return (
-			<div class="admin-role">
-				<Button>上传</Button>
-			</div>
-		)
+		return <div class="admin-role"></div>
 	}
 }

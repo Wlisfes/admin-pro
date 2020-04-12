@@ -40,7 +40,11 @@ export interface PermissionCereateModalType extends ModalType {
 }
 
 export interface UserModalType extends ModalType {
+	id: string
 	username: string
 	nick_name: string
 	disable: string | number
+
+	loading: boolean
+	destroyOnClose: boolean
 }

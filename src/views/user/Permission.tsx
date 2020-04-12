@@ -11,7 +11,7 @@ import './less/permission.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { Form, Table, Button, Modal, Input, Select, Tag, Tooltip } from 'ant-design-vue'
 import { Actions } from '@/components/common'
-import { applyAll, createPermission, permissionAll } from '@/api/user'
+import { applyAll, createPermission, permissionAll, deletePermission } from '@/api/user'
 import { PermissionCereateModalType } from '@/interface/user'
 
 @Component({
@@ -150,9 +150,10 @@ class Permission extends Vue {
 			}
 			//查找选中的permission数据
 			const permission = form.permission.map((id: string) => {
-				return this.cereateModal.permission.find(v => v.id === id)
+				return this.cereateModal.apply.find(v => v.id === id)
 			})
 
+			console.log(form, permission)
 			// for (let index = 1; index < 100; index++) {
 			// 	const response = await createPermission({
 			// 		permission_id: `${form.permission_id}-${index}`,
@@ -179,7 +180,13 @@ class Permission extends Vue {
 	}
 
 	//操作
-	async handelAction(params: { key: string }) {
+	async handelAction(params: { key: string; id: string }) {
+		if (params.key === 'delete') {
+			const response = await deletePermission({ id: params.id })
+
+			console.log(response)
+		}
+		this.permissionAll()
 		console.log(params)
 	}
 

@@ -17,7 +17,7 @@ const err = (error: AxiosError<any>) => {
 				message: '管道拦截',
 				description: data.message
 			})
-		} else if (error.response.status === 401 || error.response.status === 403) {
+		} else if (error.response.status === 401) {
 			notification.error({
 				message: '守卫拦截',
 				description: data.message
@@ -25,6 +25,14 @@ const err = (error: AxiosError<any>) => {
 			if (!Vue.ls.get('user')) {
 				//未登录
 			}
+		} else if (error.response.status === 403) {
+			//权限不足、账号被禁用、密码更换
+			notification.error({
+				message: '账号异常',
+				description: data.message
+			})
+			// Vue.ls.remove('user')
+			// router.replace('/login')
 		} else {
 			notification.error({
 				message: '服务器开了小个差',

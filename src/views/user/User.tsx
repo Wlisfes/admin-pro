@@ -11,7 +11,7 @@ import './less/user.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { Form, Table, Tag, Avatar, Modal, Input, Select, Divider } from 'ant-design-vue'
 import { Actions, AvaterUpload } from '@/components/common'
-import { userAll, updateUser } from '@/api/user'
+import { allUser, updateUser, removeUser } from '@/api/user'
 import { UserModalType } from '@/interface/user'
 
 @Component({
@@ -57,7 +57,7 @@ class User extends Vue {
 				title: '注册时间',
 				dataIndex: 'create_time',
 				align: 'center',
-				width: 160
+				width: 180
 			},
 			{
 				title: '状态',
@@ -98,6 +98,7 @@ class User extends Vue {
 		visible: false, //是否显示弹窗
 		centered: true, //是否垂直居中
 		width: 800, //弹窗宽度
+		destroyOnClose: true, //关闭时销毁
 		labelCol: {
 			xs: { span: 24 },
 			sm: { span: 5 }
@@ -108,20 +109,23 @@ class User extends Vue {
 		},
 		onCancel: () => {
 			this.userModal.visible = false
+			this.userModal.loading = false
 		},
+		loading: false,
 
+		id: '',
 		username: '',
 		nick_name: '',
 		disable: 0
 	}
 
 	created() {
-		this.userAll()
+		this.allUser()
 	}
 
 	//获取所有用户列表
-	async userAll() {
-		const response = await userAll()
+	async allUser() {
+		const response = await allUser()
 		if (response.code === 200) {
 			this.table.dataSource = response.data
 		}
@@ -132,16 +136,30 @@ class User extends Vue {
 	async handelAction(params: any) {
 		if (params.key === 'update') {
 			this.userModal.visible = true
+			this.userModal.id = params.id
 			this.userModal.username = params.username
 			this.userModal.nick_name = params.nick_name
 			this.userModal.disable = Number(params.disable)
-			console.log(params)
+		} else if (params.key === 'delete') {
+			const response = await removeUser({ id: params.id })
+
+			if (response.code === 200) {
+				this.allUser()
+			}
+		} else if (params.key === 'close' || params.key === 'open') {
+			const response = await updateUser({
+				id: params.id,
+				disable: !params.disable
+			})
+
+			if (response.code === 200) {
+				this.allUser()
+			}
 		}
 	}
 
-	//upload上传回调
-	async onSubmit(params: { id: string; response: { code: number; data: any } }) {
-		console.log(params)
+	//头像上传
+	async onSubmitUpload(params: { id: string; response: { code: number; data: { url: string } } }) {
 		if (params.response.code === 200) {
 			const response = await updateUser({
 				id: params.id,
@@ -150,13 +168,37 @@ class User extends Vue {
 
 			if (response.code === 200) {
 				this.uploadModel.visible = false
-				this.userAll()
-				this.$notification.success({
-					message: '成功',
-					description: '头像修改成功'
-				})
+				this.allUser()
 			}
 		}
+	}
+
+	//更新用户信息
+	async onSubmitUser() {
+		this.userModal.loading = true
+		this.form.validateFields(
+			async (err: any, form: { id: string; username: string; nick_name: string; disable: number }) => {
+				if (err) {
+					setTimeout(() => {
+						this.userModal.loading = false
+					}, 600)
+					return
+				}
+
+				const response = await updateUser({
+					id: form.id,
+					username: form.username,
+					nick_name: form.nick_name,
+					disable: Boolean(form.disable),
+					password: '3633'
+				})
+
+				if (response.code === 200) {
+					this.allUser()
+				}
+				this.userModal.onCancel()
+			}
+		)
 	}
 
 	render() {
@@ -219,7 +261,7 @@ class User extends Vue {
 					visible={this.uploadModel.visible}
 					onCancel={this.uploadModel.onCancel}
 					picUrl={this.uploadModel.picUrl}
-					onSubmit={this.onSubmit}
+					onSubmit={this.onSubmitUpload}
 				></AvaterUpload>
 
 				<Modal
@@ -229,9 +271,23 @@ class User extends Vue {
 					width={this.userModal.width}
 					okText={this.userModal.okText}
 					cancelText={this.userModal.cancelText}
+					confirmLoading={this.userModal.loading}
+					destroyOnClose={this.userModal.destroyOnClose}
 					onCancel={this.userModal.onCancel}
+					onOk={this.onSubmitUser}
 				>
 					<Form layout="horizontal">
+						<Form.Item
+							style={{ display: 'none' }}
+							hasFeedback={true}
+							labelCol={this.userModal.labelCol}
+							wrapperCol={this.userModal.wrapperCol}
+						>
+							{getFieldDecorator('id', {
+								initialValue: this.userModal.id,
+								validateTrigger: 'change'
+							})(<Input type="text" disabled />)}
+						</Form.Item>
 						<Form.Item
 							label="用户名"
 							hasFeedback={true}
@@ -264,7 +320,7 @@ class User extends Vue {
 						>
 							{getFieldDecorator('disable', {
 								initialValue: this.userModal.disable,
-								rules: [{ required: true, message: '请输入权限模块描述' }],
+								rules: [{ required: true, message: '请选择权限模块状态' }],
 								validateTrigger: 'change'
 							})(
 								<Select>

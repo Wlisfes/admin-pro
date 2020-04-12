@@ -19,7 +19,7 @@ export const login = (params: { username: string; password: string }) => {
 }
 
 //获取所有用户列表
-export const userAll = (params?: any) => {
+export const allUser = (params?: any) => {
 	return http({
 		url: `/api/user/all`,
 		method: 'GET',
@@ -28,11 +28,27 @@ export const userAll = (params?: any) => {
 }
 
 //修改用户信息
-export const updateUser = (params: any) => {
+export const updateUser = (params: {
+	id: string
+	username?: string
+	nick_name?: string
+	disable?: boolean
+	avatar?: string
+	password?: string
+}) => {
 	return http({
 		url: `/api/user/update`,
 		method: 'PUT',
 		data: params
+	})
+}
+
+//删除用户
+export const removeUser = (params: { id: string }) => {
+	return http({
+		url: `/api/user/remove`,
+		method: 'DELETE',
+		params
 	})
 }
 
@@ -66,5 +82,14 @@ export const createPermission = (params: {
 		url: `/api/permission/create`,
 		method: 'POST',
 		data: params
+	})
+}
+
+//删除权限模块
+export const deletePermission = (params: {}) => {
+	return http({
+		url: `/api/permission/delete`,
+		method: 'DELETE',
+		params
 	})
 }
