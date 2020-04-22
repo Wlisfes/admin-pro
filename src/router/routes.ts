@@ -2,7 +2,7 @@
  * @Date: 2020-03-31 15:16:00
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-31 15:19:14
+ * @LastEditTime: 2020-04-22 14:20:35
  * @Description: page配置
  */
 
@@ -34,9 +34,9 @@ const routes: RouteConfig[] = [
 				component: () => import('@/views/user/Role')
 			},
 			{
-				path: '/admin-permission',
-				name: 'admin-permission',
-				component: () => import('@/views/user/Permission')
+				path: '/admin-auth',
+				name: 'admin-auth',
+				component: () => import('@/views/user/Auth')
 			}
 		]
 	},

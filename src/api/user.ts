@@ -93,3 +93,12 @@ export const deletePermission = (params: {}) => {
 		params
 	})
 }
+
+//获取所有权限模块列表
+export const authAll = (params?: any) => {
+	return http({
+		url: `/api/auth/all`,
+		method: 'GET',
+		params
+	})
+}
