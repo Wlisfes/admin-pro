@@ -6,7 +6,7 @@
  * @Description: 菜单组件
  */
 
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component, Watch, Emit } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { Menu, Icon } from 'ant-design-vue'
 
@@ -140,6 +140,9 @@ export default class CreateMenu extends Vue {
 		}
 	}
 
+	@Emit('menuClick')
+	menuClick() {}
+
 	render() {
 		return (
 			<Menu
@@ -158,7 +161,7 @@ export default class CreateMenu extends Vue {
 							<span>{ele.title}</span>
 						</span>
 						{ele.children.map(chil => (
-							<Menu.Item key={chil.key}>
+							<Menu.Item key={chil.key} onClick={this.menuClick}>
 								<router-link to={chil.path}>{chil.title}</router-link>
 							</Menu.Item>
 						))}

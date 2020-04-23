@@ -29,17 +29,23 @@ export default class CreateDrawer extends Mixins(MixinDevice) {
 		this.SET_COLLAPSED(!this.collapsed)
 	}
 
+	//小屏幕点击菜单后需要关闭Drawer组件
+	public onMenuClick() {
+		this.isMobile() && this.onClose()
+	}
+
 	render() {
 		return (
 			this.isMobile() && (
 				<Drawer
+					zIndex={1002}
 					wrapClassName="create-drawer"
 					placement="left"
 					closable={false}
 					visible={!this.collapsed}
 					onClose={this.onClose}
 				>
-					<Menu></Menu>
+					<Menu onMenuClick={this.onMenuClick}></Menu>
 				</Drawer>
 			)
 		)
