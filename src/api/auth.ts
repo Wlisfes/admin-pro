@@ -35,10 +35,19 @@ export const deleteAuth = (params: { id: string }) => {
 	})
 }
 
-//
+//切换权限模块状态
 export const changeAuth = (params: { id: string; status: number }) => {
 	return http({
 		url: `/api/auth/change`,
+		method: 'PUT',
+		data: params
+	})
+}
+
+//修改权限模块
+export const updateAuth = (params: any) => {
+	return http({
+		url: `/api/auth/update`,
 		method: 'PUT',
 		data: params
 	})

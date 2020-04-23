@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:19:01
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-08 22:45:41
+ * @Last Modified time: 2020-04-23 20:46:54
  * @Description: 模块权限管理
  */
 
@@ -11,7 +11,6 @@ import './less/permission.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { Form, Table, Button, Modal, Input, Select, Tag, Tooltip } from 'ant-design-vue'
 import { Actions } from '@/components/common'
-import { applyAll, createPermission, permissionAll, deletePermission } from '@/api/user'
 import { PermissionCereateModalType } from '@/interface/user'
 
 @Component({
@@ -115,24 +114,11 @@ class Permission extends Vue {
 	}
 
 	//获取所有权限模块列表
-	async permissionAll() {
-		const response = await permissionAll()
-
-		if (response.code === 200) {
-			this.table.dataSource = response.data
-		}
-		this.table.loading = false
-	}
+	async permissionAll() {}
 
 	//新增模块权限
 	async handelCreateModal() {
 		this.cereateModal.visible = true
-
-		const response = await applyAll()
-		if (response.code === 200) {
-			this.cereateModal.apply = response.data
-		}
-		this.cereateModal.createloading = true
 	}
 
 	//编辑模块权限
@@ -152,43 +138,11 @@ class Permission extends Vue {
 			const permission = form.permission.map((id: string) => {
 				return this.cereateModal.apply.find(v => v.id === id)
 			})
-
-			console.log(form, permission)
-			// for (let index = 1; index < 100; index++) {
-			// 	const response = await createPermission({
-			// 		permission_id: `${form.permission_id}-${index}`,
-			// 		permission_name: form.permission_name,
-			// 		description: form.description,
-			// 		disable: Boolean(form.disable),
-			// 		permission: permission
-			// 	})
-			// }
-			const response = await createPermission({
-				permission_id: form.permission_id,
-				permission_name: form.permission_name,
-				description: form.description,
-				disable: Boolean(form.disable),
-				permission: permission
-			})
-
-			if (response.code === 200) {
-				this.table.loading = true
-				this.permissionAll()
-			}
-			this.cereateModal.onCancel()
 		})
 	}
 
 	//操作
-	async handelAction(params: { key: string; id: string }) {
-		if (params.key === 'delete') {
-			const response = await deletePermission({ id: params.id })
-
-			console.log(response)
-		}
-		this.permissionAll()
-		console.log(params)
-	}
+	async handelAction(params: { key: string; id: string }) {}
 
 	render() {
 		const { getFieldDecorator } = this.form
