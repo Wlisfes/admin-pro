@@ -21,7 +21,7 @@ export default class CreateDrawer extends Mixins(MixinDevice) {
 	@AppModule.Mutation('SET_COLLAPSED') SET_COLLAPSED!: Function
 
 	created() {
-		this.isMobile() && this.onClose()
+		// this.isMobile() && this.onClose()
 	}
 
 	//关闭侧边栏

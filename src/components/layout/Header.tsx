@@ -18,6 +18,7 @@ export default class Header extends Mixins(MixinDevice) {
 	@AppModule.State(state => state.headerfixed) headerfixed!: boolean
 	@AppModule.State(state => state.noneheader) noneheader!: boolean
 	@AppModule.State(state => state.collapsed) collapsed!: boolean
+
 	@AppModule.Mutation('SET_COLLAPSED') SET_COLLAPSED!: Function
 
 	private visible: boolean = true
