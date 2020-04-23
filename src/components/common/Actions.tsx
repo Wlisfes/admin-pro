@@ -42,7 +42,7 @@ export default class Actions extends Vue {
 							<span style={{ color: Color.info }}>编辑</span>
 							<Icon type="setting" style={{ ...IconStyle, color: Color.info }} />
 						</Menu.Item>
-						<Menu.Item key={Boolean(this.params.status) ? 'close' : 'open'}>
+						<Menu.Item key={this.params.status ? 'close' : 'open'}>
 							<span style={{ color: Boolean(this.params.status) ? Color.warn : Color.ok }}>
 								{Boolean(this.params.status) ? '禁用' : '开放'}
 							</span>

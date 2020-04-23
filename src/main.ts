@@ -10,6 +10,9 @@ import bootstrap from '@/utils/bootstrap'
 import '@/permission'
 import '@/assets/style/index.less'
 
+message.config({ duration: 2 })
+notification.config({ duration: 2 })
+
 Vue.config.productionTip = false
 Vue.prototype.$message = message
 Vue.prototype.$notification = notification
