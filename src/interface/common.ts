@@ -21,8 +21,19 @@ export enum Color {
 	export = 'purple'
 }
 
+//可操作权限列表
+export const Apply = [
+	{ apply_name: '新增', apply_key: 'create', status: 0 },
+	{ apply_name: '删除', apply_key: 'delete', status: 0 },
+	{ apply_name: '修改', apply_key: 'update', status: 0 },
+	{ apply_name: '查询', apply_key: 'query', status: 0 },
+	{ apply_name: '详情', apply_key: 'get', status: 0 },
+	{ apply_name: '导入', apply_key: 'import', status: 0 },
+	{ apply_name: '导出', apply_key: 'export', status: 0 }
+]
+
 //共弹窗配置
-export const CommonModalConf = {
+export const CommonModal = {
 	visible: false,
 	okText: '确定',
 	cancelText: '取消',

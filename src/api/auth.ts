@@ -2,14 +2,30 @@
  * @Date: 2020-04-23 14:10:39
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-04-23 15:57:09
+ * @LastEditTime: 2020-04-24 16:42:50
  * @Description: 权限模块接口
  */
 
 import http from '@/utils/request'
 
+export interface Apply {
+	status: number
+	apply_key: string
+	apply_name: string
+}
+export interface AuthInter {
+	id?: string
+	auth_key: string
+	auth_name: string
+	apply: Array<Apply>
+	all: boolean
+	status: number
+	key?: string
+	[key: string]: any
+}
+
 //获取所有权限模块列表
-export const authAll = (params?: any) => {
+export const authAll = (params?: AuthInter | any) => {
 	return http({
 		url: `/api/auth/all`,
 		method: 'GET',
@@ -18,7 +34,7 @@ export const authAll = (params?: any) => {
 }
 
 //新增权限模块
-export const createAuth = (params: any) => {
+export const createAuth = (params: AuthInter) => {
 	return http({
 		url: `/api/auth/create`,
 		method: 'POST',
@@ -45,7 +61,7 @@ export const changeAuth = (params: { id: string; status: number }) => {
 }
 
 //修改权限模块
-export const updateAuth = (params: any) => {
+export const updateAuth = (params: AuthInter) => {
 	return http({
 		url: `/api/auth/update`,
 		method: 'PUT',
