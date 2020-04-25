@@ -14,18 +14,27 @@ export interface Apply {
 	apply_name: string
 }
 export interface AuthInter {
-	id?: string
+	id: string
 	auth_key: string
 	auth_name: string
 	apply: Array<Apply>
 	all: boolean
 	status: number
+	[key: string]: any
+}
+export interface IsAuthInter {
+	id?: string
+	auth_key?: string
+	auth_name?: string
+	apply?: Array<Apply>
+	all?: boolean
+	status?: number
 	key?: string
 	[key: string]: any
 }
 
 //获取所有权限模块列表
-export const authAll = (params?: AuthInter | any) => {
+export const authAll = (params?: IsAuthInter) => {
 	return http({
 		url: `/api/auth/all`,
 		method: 'GET',
@@ -34,10 +43,19 @@ export const authAll = (params?: AuthInter | any) => {
 }
 
 //新增权限模块
-export const createAuth = (params: AuthInter) => {
+export const createAuth = (params: IsAuthInter) => {
 	return http({
 		url: `/api/auth/create`,
 		method: 'POST',
+		data: params
+	})
+}
+
+//修改权限模块
+export const updateAuth = (params: IsAuthInter) => {
+	return http({
+		url: `/api/auth/update`,
+		method: 'PUT',
 		data: params
 	})
 }
@@ -55,15 +73,6 @@ export const deleteAuth = (params: { id: string }) => {
 export const changeAuth = (params: { id: string; status: number }) => {
 	return http({
 		url: `/api/auth/change`,
-		method: 'PUT',
-		data: params
-	})
-}
-
-//修改权限模块
-export const updateAuth = (params: AuthInter) => {
-	return http({
-		url: `/api/auth/update`,
 		method: 'PUT',
 		data: params
 	})

@@ -149,7 +149,11 @@ export default class Auth extends Vue {
 								<div>
 									{apply.map(k =>
 										k.status ? (
-											<Tag key={k.apply_key} color={(Color as any)[k.apply_key]}>
+											<Tag
+												key={k.apply_key}
+												color={(Color as any)[k.apply_key]}
+												style={{ cursor: 'pointer' }}
+											>
 												{k.apply_name}
 											</Tag>
 										) : null
@@ -157,7 +161,7 @@ export default class Auth extends Vue {
 								</div>
 							),
 							status: (status: number) => (
-								<Tag style={{ marginRight: 0 }} color={status ? 'green' : 'pink'}>
+								<Tag style={{ marginRight: 0, cursor: 'pointer' }} color={status ? 'green' : 'pink'}>
 									{status ? '正常' : '已禁用'}
 								</Tag>
 							),
