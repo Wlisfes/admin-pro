@@ -11,6 +11,7 @@ import './less/user.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { Form, Table, Tag, Avatar, Modal, Input, Select, Divider } from 'ant-design-vue'
 import { Actions, AvaterUpload } from '@/components/common'
+import { UpdateUserModal } from './modules'
 import { allUser, updateUser, removeUser } from '@/api/user'
 
 @Component
@@ -37,6 +38,16 @@ export default class User extends Vue {
 		dataSource: []
 	}
 
+	private updateUserModal = {
+		visible: false,
+		onCancel: () => {
+			this.updateUserModal.visible = false
+		},
+		onSubmit: () => {
+			this.updateUserModal.visible = false
+		}
+	}
+
 	created() {
 		this.allUser()
 	}
@@ -53,9 +64,10 @@ export default class User extends Vue {
 	//操作
 	async handelAction(params: any) {
 		if (params.key === 'update') {
+			console.log(params)
+			this.updateUserModal.visible = true
 		} else if (params.key === 'delete') {
 			const response = await removeUser({ id: params.id })
-
 			if (response.code === 200) {
 				this.allUser()
 			}
@@ -89,6 +101,8 @@ export default class User extends Vue {
 	render() {
 		return (
 			<div class="admin-user">
+				{<UpdateUserModal {...{ props: this.updateUserModal }}></UpdateUserModal>}
+
 				<Table
 					bordered={false}
 					columns={this.table.columns}
