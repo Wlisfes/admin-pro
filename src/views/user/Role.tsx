@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-25 19:26:29
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-25 19:58:51
+ * @Last Modified time: 2020-05-05 22:02:16
  * @Description: 新增角色弹窗
  */
 
@@ -46,6 +46,7 @@ export default class Role extends Vue {
 			this.updateRoleModal.visible = false
 		},
 		onSubmit: () => {
+			this.table.loading = true
 			this.roleAll()
 			this.updateRoleModal.visible = false
 		}
@@ -58,6 +59,7 @@ export default class Role extends Vue {
 			this.createRoleModal.visible = false
 		},
 		onSubmit: () => {
+			this.table.loading = true
 			this.roleAll()
 			this.createRoleModal.visible = false
 		}
@@ -79,6 +81,7 @@ export default class Role extends Vue {
 
 	//操作
 	async onAction(params: RoleInter) {
+		this.table.loading = true
 		if (params.key === 'update') {
 			this.updateRoleModal.id = params.id as string
 			this.updateRoleModal.auth = params.auth as []
@@ -86,21 +89,20 @@ export default class Role extends Vue {
 			this.updateRoleModal.role_name = params.role_name as string
 			this.updateRoleModal.status = params.status as number
 			this.updateRoleModal.visible = true
-			return
 		} else if (params.key === 'delete') {
-			this.table.loading = true
 			const response = await deleteRole({ id: params.id as string })
+
 			if (response.code === 200) {
-				this.$notification.success({ message: '成功', description: '删除成功' })
+				this.$notification.success({ message: '删除成功', description: '' })
 				this.roleAll()
 				return
 			}
 		} else {
-			this.table.loading = true
 			const response = await changeRole({
 				id: params.id as string,
 				status: params.key === 'open' ? 1 : 0
 			})
+
 			if (response.code === 200) {
 				this.roleAll()
 				return

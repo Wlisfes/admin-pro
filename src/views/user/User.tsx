@@ -2,17 +2,18 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-09 23:47:57
+ * @Last Modified time: 2020-05-05 23:00:13
  * @Description: 角色管理界面
  */
 
 import './less/user.less'
 
 import { Vue, Component } from 'vue-property-decorator'
-import { Form, Table, Tag, Avatar, Modal, Input, Select, Divider } from 'ant-design-vue'
+import { Table, Tag, Avatar } from 'ant-design-vue'
 import { Actions, AvaterUpload } from '@/components/common'
 import { UpdateUserModal } from './modules'
-import { allUser, updateUser, removeUser } from '@/api/user'
+import { allUser, updateUser, deleteUser, changeUser } from '@/api/user'
+import moment from 'moment'
 
 @Component
 export default class User extends Vue {
@@ -38,12 +39,52 @@ export default class User extends Vue {
 		dataSource: []
 	}
 
+	//头像上传组件配置
+	private uploadModel = {
+		id: '',
+		picUrl: '',
+		visible: false,
+		onCancel: () => {
+			this.uploadModel.visible = false
+		},
+		//头像上传
+		onSubmit: async (params: {
+			id: string
+			timeout: Function
+			response: { code: number; data: { url: string } }
+		}) => {
+			params.timeout()
+			this.uploadModel.visible = false
+
+			if (params.response.code === 200) {
+				const response = await updateUser({
+					id: params.id,
+					avatar: params.response.data.url
+				})
+				if (response.code === 200) {
+					this.table.loading = true
+					this.allUser()
+				}
+			}
+		}
+	}
+
+	//用户信息修改配置
 	private updateUserModal = {
 		visible: false,
+		id: '',
+		username: '',
+		nickname: '',
+		email: '',
+		mobile: '',
+		status: 1,
+		roles: null,
 		onCancel: () => {
 			this.updateUserModal.visible = false
 		},
 		onSubmit: () => {
+			this.table.loading = true
+			this.allUser()
 			this.updateUserModal.visible = false
 		}
 	}
@@ -63,45 +104,59 @@ export default class User extends Vue {
 
 	//操作
 	async handelAction(params: any) {
-		if (params.key === 'update') {
-			console.log(params)
+		this.table.loading = true
+		if (params.key === 'auth') {
+		} else if (params.key === 'update') {
+			this.updateUserModal.id = params.id
+			this.updateUserModal.username = params.username
+			this.updateUserModal.nickname = params.nickname
+			this.updateUserModal.email = params.email
+			this.updateUserModal.mobile = params.mobile
+			this.updateUserModal.status = params.status
+			this.updateUserModal.roles = params.roles
 			this.updateUserModal.visible = true
 		} else if (params.key === 'delete') {
-			const response = await removeUser({ id: params.id })
+			const response = await deleteUser({ id: params.id })
+
 			if (response.code === 200) {
+				this.$notification.success({ message: '删除成功', description: '' })
 				this.allUser()
+				return
 			}
 		} else if (params.key === 'close' || params.key === 'open') {
-			const response = await updateUser({
+			const response = await changeUser({
 				id: params.id,
-				disable: !params.disable
+				status: params.key === 'open' ? 1 : 0
 			})
 
 			if (response.code === 200) {
 				this.allUser()
+				return
 			}
 		}
-	}
-
-	//头像上传
-	async onSubmitUpload(params: { id: string; response: { code: number; data: { url: string } } }) {
-		if (params.response.code === 200) {
-			const response = await updateUser({
-				id: params.id,
-				avatar: params.response.data.url
-			})
-
-			// if (response.code === 200) {
-			// 	this.uploadModel.visible = false
-			// 	this.allUser()
-			// }
-		}
+		this.table.loading = false
 	}
 
 	render() {
 		return (
 			<div class="admin-user">
-				{<UpdateUserModal {...{ props: this.updateUserModal }}></UpdateUserModal>}
+				{
+					/**用户信息修改组件**/
+					<UpdateUserModal
+						{...{ props: this.updateUserModal }}
+						onCancel={this.updateUserModal.onCancel}
+						onSubmit={this.updateUserModal.onSubmit}
+					></UpdateUserModal>
+				}
+
+				{
+					/**头像上传组件**/
+					<AvaterUpload
+						{...{ props: this.uploadModel }}
+						onCancel={this.uploadModel.onCancel}
+						onSubmit={this.uploadModel.onSubmit}
+					></AvaterUpload>
+				}
 
 				<Table
 					bordered={false}
@@ -120,9 +175,9 @@ export default class User extends Vue {
 										src={props.avatar}
 										style={{ cursor: 'pointer' }}
 										onClick={() => {
-											// this.uploadModel.id = props.id
-											// this.uploadModel.visible = true
-											// this.uploadModel.picUrl = props.avatar
+											this.uploadModel.id = props.id
+											this.uploadModel.visible = true
+											this.uploadModel.picUrl = props.avatar
 										}}
 									></Avatar>
 								) : (
@@ -132,16 +187,16 @@ export default class User extends Vue {
 										icon="user"
 										style={{ cursor: 'pointer', backgroundColor: '#fde3cf' }}
 										onClick={() => {
-											// this.uploadModel.id = props.id
-											// this.uploadModel.visible = true
+											this.uploadModel.id = props.id
+											this.uploadModel.visible = true
 										}}
 									></Avatar>
 								)
 							},
-							email: (email: string | null) => <div>876451336</div>,
-							mobile: (mobile: number | null) => <div>18888888888</div>,
-							roles: (roles: any) => <div>超级管理员</div>,
-							createtime: (createtime: string) => <div>2020-04-27</div>,
+							email: (email: any, props: any) => <div>{props.email || '------'}</div>,
+							mobile: (mobile: any, props: any) => <div>{props.mobile || '------'}</div>,
+							roles: (roles: any) => <div>{roles.role_name || '游客'}</div>,
+							createtime: (createtime: string) => <div>{moment(createtime).format('YYYY-MM-DD')}</div>,
 							status: (status: number) => {
 								return (
 									<Tag style={{ marginRight: 0 }} color={status ? 'green' : 'pink'}>
@@ -155,14 +210,6 @@ export default class User extends Vue {
 						}
 					}}
 				></Table>
-
-				{/* <AvaterUpload
-					id={this.uploadModel.id}
-					visible={this.uploadModel.visible}
-					onCancel={this.uploadModel.onCancel}
-					picUrl={this.uploadModel.picUrl}
-					onSubmit={this.onSubmitUpload}
-				></AvaterUpload> */}
 			</div>
 		)
 	}

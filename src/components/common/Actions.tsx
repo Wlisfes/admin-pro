@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-08 20:29:26
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-08 20:42:48
+ * @Last Modified time: 2020-05-05 21:44:51
  * @Description: 表格操作部分插槽组件
  */
 
@@ -13,6 +13,8 @@ import { Color } from '@/interface'
 @Component
 export default class Actions extends Vue {
 	@Prop() params!: any
+	@Prop({ default: 'update' }) acKey!: string
+	@Prop({ default: '编辑' }) acText!: string
 
 	handelActionEvent(key: string) {
 		this.$emit('actions', {
@@ -25,7 +27,7 @@ export default class Actions extends Vue {
 		const IconStyle = { fontSize: '14px', margin: '0 0 0 4px' }
 		return (
 			<div>
-				<a onClick={() => this.handelActionEvent('update')}>编辑</a>
+				<a onClick={() => this.handelActionEvent(this.acKey)}>{this.acText}</a>
 				<Divider type="vertical"></Divider>
 				<Dropdown>
 					<a>

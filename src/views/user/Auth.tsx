@@ -48,6 +48,7 @@ export default class Auth extends Vue {
 			this.updateAuthModal.visible = false
 		},
 		onSubmit: () => {
+			this.table.loading = true
 			this.authAll()
 			this.updateAuthModal.visible = false
 		}
@@ -60,6 +61,7 @@ export default class Auth extends Vue {
 			this.createAuthModal.visible = false
 		},
 		onSubmit: () => {
+			this.table.loading = true
 			this.authAll()
 			this.createAuthModal.visible = false
 		}
@@ -80,6 +82,7 @@ export default class Auth extends Vue {
 
 	//操作
 	async onAction(params: AuthInter) {
+		this.table.loading = true
 		if (params.key === 'update') {
 			this.updateAuthModal.visible = true
 			this.updateAuthModal.apply = params.apply as []
@@ -87,21 +90,20 @@ export default class Auth extends Vue {
 			this.updateAuthModal.status = params.status
 			this.updateAuthModal.auth_key = params.auth_key
 			this.updateAuthModal.auth_name = params.auth_name
-			return
 		} else if (params.key === 'delete') {
-			this.table.loading = true
 			const response = await deleteAuth({ id: params.id as string })
+
 			if (response.code === 200) {
 				this.$notification.success({ message: '成功', description: '删除成功' })
 				this.authAll()
 				return
 			}
 		} else {
-			this.table.loading = true
 			const response = await changeAuth({
 				id: params.id as string,
 				status: params.key === 'open' ? 1 : 0
 			})
+
 			if (response.code === 200) {
 				this.authAll()
 				return

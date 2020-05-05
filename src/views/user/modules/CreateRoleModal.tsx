@@ -66,7 +66,7 @@ class CreateAuthModal extends Vue {
 			})
 
 			if (response.code === 200) {
-				this.$notification.success({ message: '成功', description: '添加成功' })
+				this.$notification.success({ message: '添加成功', description: '' })
 				this.$emit('submit')
 			}
 			this.modal.loading = false
@@ -107,7 +107,7 @@ class CreateAuthModal extends Vue {
 						})(<Input type="text" placeholder="请输入唯一标识码" />)}
 					</Form.Item>
 					<Form.Item
-						label="权限名称"
+						label="角色名称"
 						hasFeedback={true}
 						labelCol={this.modal.labelCol}
 						wrapperCol={this.modal.wrapperCol}

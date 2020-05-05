@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-25 12:49:40
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-25 18:02:10
+ * @Last Modified time: 2020-05-05 22:00:11
  * @Description: Role编辑弹窗
  */
 
@@ -54,7 +54,7 @@ class UpdateRoleModal extends Vue {
 			})
 
 			if (response.code === 200) {
-				this.$notification.success({ message: '成功', description: '修改成功' })
+				this.$notification.success({ message: '修改成功', description: '' })
 				this.$emit('submit')
 			}
 			this.modal.loading = false

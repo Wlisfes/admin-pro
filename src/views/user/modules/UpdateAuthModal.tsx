@@ -56,7 +56,7 @@ class UpdateAuthModal extends Vue {
 				all: apply.every((k: Apply) => k.status === 1)
 			})
 			if (response.code === 200) {
-				this.$notification.success({ message: '成功', description: '修改成功' })
+				this.$notification.success({ message: '修改成功', description: '' })
 				this.$emit('submit')
 			}
 			this.modal.loading = false

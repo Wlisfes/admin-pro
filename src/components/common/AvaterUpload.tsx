@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-09 19:54:03
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-04-09 23:28:43
+ * @Last Modified time: 2020-05-05 20:33:14
  * @Description: 头像裁剪组件
  */
 
@@ -11,7 +11,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Modal, Upload, Button } from 'ant-design-vue'
 import { VueCropper } from 'vue-cropper'
 import { upload } from '@/api'
-import { VueCropperOptions } from '@/interface'
 
 @Component
 export default class AvaterUpload extends Vue {
@@ -22,7 +21,7 @@ export default class AvaterUpload extends Vue {
 
 	private centered: boolean = true
 	private width: number = 800
-	private destroyOnClose: boolean = true
+	private destroyOnClose: boolean = false
 	private maskClosable: boolean = false
 	private loading: boolean = false
 
@@ -32,7 +31,7 @@ export default class AvaterUpload extends Vue {
 		name: ''
 	}
 
-	private vueCropperOptions: VueCropperOptions = {
+	private vueCropperOptions = {
 		img: '',
 		autoCrop: true,
 		autoCropWidth: 240,
@@ -56,6 +55,7 @@ export default class AvaterUpload extends Vue {
 		this.cropper[key]()
 	}
 
+	//Upload组件生命周期 获取图片信息
 	public onBeforeUpload(file: File) {
 		const reader = new FileReader()
 		reader.readAsDataURL(file)
@@ -76,7 +76,16 @@ export default class AvaterUpload extends Vue {
 
 			this.$emit('submit', {
 				id: this.id,
-				response: response
+				response: response,
+				timeout: () => {
+					setTimeout(() => {
+						this.vueCropperOptions.img = ''
+						this.previews.url = ''
+						this.previews.img = {}
+						this.previews.name = ''
+						this.loading = false
+					}, 500)
+				}
 			})
 		})
 	}
@@ -143,19 +152,40 @@ export default class AvaterUpload extends Vue {
 							</Upload>
 						</div>
 						<div>
-							<Button icon="plus" onClick={() => this.changeScale(1)} />
+							<Button
+								icon="plus"
+								disabled={!this.vueCropperOptions.img}
+								onClick={() => this.changeScale(1)}
+							/>
 						</div>
 						<div>
-							<Button icon="minus" onClick={() => this.changeScale(-1)} />
+							<Button
+								icon="minus"
+								disabled={!this.vueCropperOptions.img}
+								onClick={() => this.changeScale(-1)}
+							/>
 						</div>
 						<div>
-							<Button icon="undo" onClick={() => this.rotate('rotateLeft')} />
+							<Button
+								icon="undo"
+								disabled={!this.vueCropperOptions.img}
+								onClick={() => this.rotate('rotateLeft')}
+							/>
 						</div>
 						<div>
-							<Button icon="redo" onClick={() => this.rotate('rotateRight')} />
+							<Button
+								icon="redo"
+								disabled={!this.vueCropperOptions.img}
+								onClick={() => this.rotate('rotateRight')}
+							/>
 						</div>
 						<div>
-							<Button type="primary" loading={this.loading} onClick={this.onSubmit}>
+							<Button
+								type="primary"
+								loading={this.loading}
+								onClick={this.onSubmit}
+								disabled={!this.vueCropperOptions.img}
+							>
 								上传
 							</Button>
 						</div>
