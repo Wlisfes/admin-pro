@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-05 23:00:13
+ * @Last Modified time: 2020-05-10 23:53:53
  * @Description: 角色管理界面
  */
 
@@ -12,7 +12,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Avatar } from 'ant-design-vue'
 import { Actions, AvaterUpload } from '@/components/common'
 import { UpdateUserModal } from './modules'
-import { allUser, updateUser, deleteUser, changeUser } from '@/api/user'
+import { allUser, updateUser, deleteUser, changeUser, updateUserAvatar } from '@/api/user'
 import moment from 'moment'
 
 @Component
@@ -57,7 +57,7 @@ export default class User extends Vue {
 			this.uploadModel.visible = false
 
 			if (params.response.code === 200) {
-				const response = await updateUser({
+				const response = await updateUserAvatar({
 					id: params.id,
 					avatar: params.response.data.url
 				})
@@ -73,12 +73,6 @@ export default class User extends Vue {
 	private updateUserModal = {
 		visible: false,
 		id: '',
-		username: '',
-		nickname: '',
-		email: '',
-		mobile: '',
-		status: 1,
-		roles: null,
 		onCancel: () => {
 			this.updateUserModal.visible = false
 		},
@@ -108,12 +102,6 @@ export default class User extends Vue {
 		if (params.key === 'auth') {
 		} else if (params.key === 'update') {
 			this.updateUserModal.id = params.id
-			this.updateUserModal.username = params.username
-			this.updateUserModal.nickname = params.nickname
-			this.updateUserModal.email = params.email
-			this.updateUserModal.mobile = params.mobile
-			this.updateUserModal.status = params.status
-			this.updateUserModal.roles = params.roles
 			this.updateUserModal.visible = true
 		} else if (params.key === 'delete') {
 			const response = await deleteUser({ id: params.id })
@@ -140,14 +128,14 @@ export default class User extends Vue {
 	render() {
 		return (
 			<div class="admin-user">
-				{
-					/**用户信息修改组件**/
+				{/**用户信息修改组件**/
+				this.updateUserModal.visible && (
 					<UpdateUserModal
 						{...{ props: this.updateUserModal }}
 						onCancel={this.updateUserModal.onCancel}
 						onSubmit={this.updateUserModal.onSubmit}
 					></UpdateUserModal>
-				}
+				)}
 
 				{
 					/**头像上传组件**/

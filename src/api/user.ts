@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-07 22:33:10
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-05 18:01:00
+ * @Last Modified time: 2020-05-11 00:06:16
  * @Description: 用户模块接口
  */
 
@@ -27,6 +27,15 @@ export const allUser = (params?: any) => {
 	})
 }
 
+//获取用户信息
+export const userInfo = (params: { id: string }) => {
+	return http({
+		url: `/api/user/info`,
+		method: 'GET',
+		params
+	})
+}
+
 //切换权限模块状态
 export const changeUser = (params: { id: string; status: number }) => {
 	return http({
@@ -39,13 +48,31 @@ export const changeUser = (params: { id: string; status: number }) => {
 //修改用户信息
 export const updateUser = (params: {
 	id: string
-	nickname?: string
-	avatar?: string
+	nickname: string
 	mobile?: number
 	email?: string
+	status: number
+	roles?: {
+		id?: string
+		status?: number
+		role_uid?: string
+		role_key?: string
+		role_name?: string
+		auth?: Array<any>
+		[key: string]: any
+	}
 }) => {
 	return http({
 		url: `/api/user/update`,
+		method: 'PUT',
+		data: params
+	})
+}
+
+//修改用户头像
+export const updateUserAvatar = (params: { id: string; avatar: string }) => {
+	return http({
+		url: `/api/user/update/avatar`,
 		method: 'PUT',
 		data: params
 	})
