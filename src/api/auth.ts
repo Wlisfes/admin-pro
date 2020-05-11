@@ -77,3 +77,12 @@ export const changeAuth = (params: { id: string; status: number }) => {
 		data: params
 	})
 }
+
+//获取权限模块信息
+export const roleInfo = (params: { id: string }) => {
+	return http({
+		url: `/api/auth/info`,
+		method: 'GET',
+		params
+	})
+}

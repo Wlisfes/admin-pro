@@ -60,7 +60,7 @@ export const createRole = (params: IsRoleInter) => {
 export const updateRole = (params: IsRoleInter) => {
 	return http({
 		url: `/api/role/update`,
-		method: 'put',
+		method: 'PUT',
 		data: params
 	})
 }
@@ -79,6 +79,15 @@ export const deleteRole = (params: { id: string }) => {
 	return http({
 		url: `/api/role/delete`,
 		method: 'DELETE',
+		params
+	})
+}
+
+//获取角色信息
+export const roleInfo = (params: { id: string }) => {
+	return http({
+		url: `/api/role/info`,
+		method: 'GET',
 		params
 	})
 }

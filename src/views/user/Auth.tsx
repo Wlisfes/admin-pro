@@ -39,11 +39,6 @@ export default class Auth extends Vue {
 	private updateAuthModal = {
 		visible: false,
 		id: '',
-		all: false,
-		apply: [],
-		auth_key: '',
-		auth_name: '',
-		status: 1,
 		onCancel: () => {
 			this.updateAuthModal.visible = false
 		},
@@ -85,13 +80,9 @@ export default class Auth extends Vue {
 		this.table.loading = true
 		if (params.key === 'update') {
 			this.updateAuthModal.visible = true
-			this.updateAuthModal.apply = params.apply as []
-			this.updateAuthModal.id = params.id as string
-			this.updateAuthModal.status = params.status
-			this.updateAuthModal.auth_key = params.auth_key
-			this.updateAuthModal.auth_name = params.auth_name
+			this.updateAuthModal.id = params.id
 		} else if (params.key === 'delete') {
-			const response = await deleteAuth({ id: params.id as string })
+			const response = await deleteAuth({ id: params.id })
 
 			if (response.code === 200) {
 				this.$notification.success({ message: '成功', description: '删除成功' })
@@ -100,7 +91,7 @@ export default class Auth extends Vue {
 			}
 		} else {
 			const response = await changeAuth({
-				id: params.id as string,
+				id: params.id,
 				status: params.key === 'open' ? 1 : 0
 			})
 
@@ -115,27 +106,27 @@ export default class Auth extends Vue {
 	render() {
 		return (
 			<div class="admin-auth">
-				{
-					/**
-					 *新增权限弹窗
-					 */
+				{/**
+				 *新增权限弹窗
+				 */
+				this.createAuthModal.visible && (
 					<CreateAuthModal
 						{...{ props: this.createAuthModal }}
 						onCancel={this.createAuthModal.onCancel}
 						onSubmit={this.createAuthModal.onSubmit}
 					></CreateAuthModal>
-				}
+				)}
 
-				{
-					/**
-					 * 编辑权限弹窗
-					 */
+				{/**
+				 * 编辑权限弹窗
+				 */
+				this.updateAuthModal.visible && (
 					<UpdateAuthModal
 						{...{ props: this.updateAuthModal }}
 						onCancel={this.updateAuthModal.onCancel}
 						onSubmit={this.updateAuthModal.onSubmit}
 					></UpdateAuthModal>
-				}
+				)}
 
 				<Button onClick={() => (this.createAuthModal.visible = true)}>新增</Button>
 				<Table

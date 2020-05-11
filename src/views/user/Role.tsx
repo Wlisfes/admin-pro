@@ -38,10 +38,6 @@ export default class Role extends Vue {
 	private updateRoleModal = {
 		visible: false,
 		id: '',
-		role_key: '',
-		role_name: '',
-		status: 1,
-		auth: [],
 		onCancel: () => {
 			this.updateRoleModal.visible = false
 		},
@@ -83,14 +79,10 @@ export default class Role extends Vue {
 	async onAction(params: RoleInter) {
 		this.table.loading = true
 		if (params.key === 'update') {
-			this.updateRoleModal.id = params.id as string
-			this.updateRoleModal.auth = params.auth as []
-			this.updateRoleModal.role_key = params.role_key as string
-			this.updateRoleModal.role_name = params.role_name as string
-			this.updateRoleModal.status = params.status as number
+			this.updateRoleModal.id = params.id
 			this.updateRoleModal.visible = true
 		} else if (params.key === 'delete') {
-			const response = await deleteRole({ id: params.id as string })
+			const response = await deleteRole({ id: params.id })
 
 			if (response.code === 200) {
 				this.$notification.success({ message: '删除成功', description: '' })
@@ -99,7 +91,7 @@ export default class Role extends Vue {
 			}
 		} else {
 			const response = await changeRole({
-				id: params.id as string,
+				id: params.id,
 				status: params.key === 'open' ? 1 : 0
 			})
 
@@ -114,27 +106,27 @@ export default class Role extends Vue {
 	render() {
 		return (
 			<div class="admin-role">
-				{
-					/**
-					 * 新增角色弹窗
-					 */
+				{/**
+				 * 新增角色弹窗
+				 */
+				this.createRoleModal.visible && (
 					<CreateRoleModal
 						{...{ props: this.createRoleModal }}
 						onCancel={this.createRoleModal.onCancel}
 						onSubmit={this.createRoleModal.onSubmit}
 					></CreateRoleModal>
-				}
+				)}
 
-				{
-					/**
-					 * 编辑角色弹窗
-					 */
+				{/**
+				 * 编辑角色弹窗
+				 */
+				this.updateRoleModal.visible && (
 					<UpdateRoleModal
 						{...{ props: this.updateRoleModal }}
 						onCancel={this.updateRoleModal.onCancel}
 						onSubmit={this.updateRoleModal.onSubmit}
 					></UpdateRoleModal>
-				}
+				)}
 
 				<Button onClick={() => (this.createRoleModal.visible = true)}>新增</Button>
 				<Table
