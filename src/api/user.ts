@@ -2,15 +2,14 @@
  * @Author: 情雨随风
  * @Date: 2020-04-07 22:33:10
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-11 00:06:16
+ * @Last Modified time: 2020-05-31 14:43:17
  * @Description: 用户模块接口
  */
 
 import http from '@/utils/request'
-import { ApplyType } from '@/interface/user'
 
 //登录
-export const login = (params: { username: string; password: string }) => {
+export const login = (params: { username?: string; email?: string; mobile?: string | number; password: string }) => {
 	return http({
 		url: `/api/user/login`,
 		method: 'POST',
@@ -28,7 +27,7 @@ export const allUser = (params?: any) => {
 }
 
 //获取用户信息
-export const userInfo = (params: { id: string }) => {
+export const getUser = (params: { uid: number }) => {
 	return http({
 		url: `/api/user/info`,
 		method: 'GET',
@@ -37,30 +36,21 @@ export const userInfo = (params: { id: string }) => {
 }
 
 //切换权限模块状态
-export const changeUser = (params: { id: string; status: number }) => {
+export const cutoverUser = (params: { uid: number }) => {
 	return http({
-		url: `/api/user/change`,
+		url: `/api/user/cutover`,
 		method: 'PUT',
-		data: params
+		params
 	})
 }
 
 //修改用户信息
 export const updateUser = (params: {
-	id: string
+	uid: number
 	nickname: string
+	status: number
 	mobile?: number
 	email?: string
-	status: number
-	roles?: {
-		id?: string
-		status?: number
-		role_uid?: string
-		role_key?: string
-		role_name?: string
-		auth?: Array<any>
-		[key: string]: any
-	}
 }) => {
 	return http({
 		url: `/api/user/update`,
@@ -70,7 +60,7 @@ export const updateUser = (params: {
 }
 
 //修改用户头像
-export const updateUserAvatar = (params: { id: string; avatar: string }) => {
+export const updateUserAvatar = (params: { uid: number; avatar: string }) => {
 	return http({
 		url: `/api/user/update/avatar`,
 		method: 'PUT',
@@ -79,7 +69,7 @@ export const updateUserAvatar = (params: { id: string; avatar: string }) => {
 }
 
 //删除用户
-export const deleteUser = (params: { id: string }) => {
+export const deleteUser = (params: { uid: number }) => {
 	return http({
 		url: `/api/user/delete`,
 		method: 'DELETE',

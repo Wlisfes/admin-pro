@@ -2,90 +2,75 @@
  * @Author: 情雨随风
  * @Date: 2020-04-25 12:49:40
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-05 22:00:11
+ * @Last Modified time: 2020-05-31 17:15:21
  * @Description: Role编辑弹窗
  */
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Form, Input, Modal, Checkbox, Radio, Spin } from 'ant-design-vue'
 import { CommonModal } from '@/interface/common'
-import { AuthInter, updateRole, roleInfo } from '@/api/role'
-
-interface Role {
-	role_key: string
-	role_name: string
-	status: number
-	auth: Array<AuthInter>
-	loading: boolean
-}
+import { updateRole, getRole } from '@/api/role'
 
 @Component({
 	props: { form: { type: Object } }
 })
 class UpdateRoleModal extends Vue {
 	@Prop(Boolean) visible!: boolean
-	@Prop(String) id!: string
+	@Prop(Number) id!: number
 
 	private form: any
 	private modal = {
 		...CommonModal,
 		title: '编辑角色'
 	}
-	private role: Role = {
+	private role = {
 		role_key: '',
 		role_name: '',
-		status: -1,
-		auth: [],
+		status: 0,
+		createTime: '',
 		loading: true
 	}
 
 	created() {
-		this.roleInfo()
+		this.getRole()
 	}
 
-	async roleInfo() {
-		const response = await roleInfo({ id: this.id })
+	async getRole() {
+		const response = await getRole({ id: this.id })
 		if (response.code === 200) {
 			const data = response.data
 			this.role.role_key = data.role_key
 			this.role.role_name = data.role_name
 			this.role.status = data.status
-			this.role.auth = data.auth
+			this.role.createTime = data.createTime
 			this.role.loading = false
 		}
 	}
 
 	onSubmit() {
 		this.modal.loading = true
-		this.form.validateFields(async (err: any, form: any) => {
-			if (err) {
-				setTimeout(() => {
-					this.modal.loading = false
-				}, 600)
-				return
-			}
+		this.form.validateFields(
+			async (err: any, form: { id: number; role_key: string; role_name: string; status: number }) => {
+				if (err) {
+					setTimeout(() => {
+						this.modal.loading = false
+					}, 600)
+					return
+				}
+				const response = await updateRole({
+					id: form.id,
+					role_key: form.role_key,
+					role_name: form.role_name,
+					status: form.status
+				})
 
-			const auth = this.role.auth.map(k => ({
-				...k,
-				apply: k.apply.map(v => ({
-					...v,
-					status: Number(form[k.auth_key].includes(v.apply_key))
-				}))
-			}))
-			const response = await updateRole({
-				id: form.id,
-				role_key: form.role_key,
-				role_name: form.role_name,
-				status: form.status,
-				auth: auth
-			})
-
-			if (response.code === 200) {
-				this.$notification.success({ message: '修改成功', description: '' })
-				this.$emit('submit')
+				if (response.code === 200) {
+					this.$notification.success({ message: '修改成功', description: '' })
+					this.$emit('submit')
+				}
+				this.modal.loading = false
 			}
-			this.modal.loading = false
-		})
+		)
 	}
 
 	onCancel() {
@@ -158,30 +143,6 @@ class UpdateRoleModal extends Vue {
 								</Radio.Group>
 							)}
 						</Form.Item>
-
-						{this.role.auth.map(k => {
-							return (
-								<Form.Item
-									key={k.auth_key}
-									label={k.auth_name}
-									labelCol={this.modal.labelCol}
-									wrapperCol={this.modal.wrapperCol}
-								>
-									{getFieldDecorator(k.auth_key, {
-										initialValue: k.apply.filter(k => k.status).map(k => k.apply_key),
-										validateTrigger: 'change'
-									})(
-										<Checkbox.Group>
-											{k.apply.map(v => (
-												<Checkbox key={v.apply_key} value={v.apply_key}>
-													{v.apply_name}
-												</Checkbox>
-											))}
-										</Checkbox.Group>
-									)}
-								</Form.Item>
-							)
-						})}
 					</Form>
 				</Spin>
 			</Modal>
@@ -192,6 +153,6 @@ class UpdateRoleModal extends Vue {
 export default Form.create({
 	props: {
 		visible: { type: Boolean, default: () => false },
-		id: { type: String, default: () => '' }
+		id: { type: Number, default: () => '' }
 	}
 })(UpdateRoleModal)

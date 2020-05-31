@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-09 19:54:03
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-05 20:33:14
+ * @Last Modified time: 2020-05-31 14:47:07
  * @Description: 头像裁剪组件
  */
 
@@ -10,12 +10,12 @@ import '../less/avaterUpload.less'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Modal, Upload, Button } from 'ant-design-vue'
 import { VueCropper } from 'vue-cropper'
-import { upload } from '@/api'
+import { uploadFile } from '@/api'
 
 @Component
 export default class AvaterUpload extends Vue {
 	@Prop(Boolean) visible!: boolean
-	@Prop(String) id!: string
+	@Prop() uid!: number | string
 	@Prop({ default: '头像修改' }) title!: string
 	@Prop({ default: '' }) picUrl!: string
 
@@ -72,10 +72,10 @@ export default class AvaterUpload extends Vue {
 		const formData = new FormData()
 		this.cropper.getCropBlob(async (data: any) => {
 			formData.append('file', data, this.previews.name)
-			const response = await upload(formData)
+			const response = await uploadFile(formData)
 
 			this.$emit('submit', {
-				id: this.id,
+				uid: this.uid,
 				response: response,
 				timeout: () => {
 					setTimeout(() => {

@@ -7,9 +7,8 @@
  */
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Form, Input, Modal, Checkbox, Radio } from 'ant-design-vue'
-import { authAll, AuthInter } from '@/api/auth'
-import { createRole, IsRoleInter } from '@/api/role'
+import { Form, Input, Modal, Radio } from 'ant-design-vue'
+import { createRole } from '@/api/role'
 import { CommonModal } from '@/interface/common'
 
 @Component({
@@ -23,46 +22,21 @@ class CreateAuthModal extends Vue {
 		...CommonModal,
 		title: '新增权限'
 	}
-	private auth = {
-		dataSource: [],
-		loading: true
-	}
-
-	created() {
-		this.authAll()
-	}
-
-	//获取所有权限模块列表
-	async authAll() {
-		const response = await authAll()
-		if (response.code === 200) {
-			this.auth.dataSource = response.data
-		}
-		this.auth.loading = false
-	}
 
 	onSubmit() {
 		this.modal.loading = true
-		this.form.validateFields(async (err: any, form: IsRoleInter) => {
+		this.form.validateFields(async (err: any, form: { role_key: string; role_name: string; status: number }) => {
 			if (err) {
 				setTimeout(() => {
 					this.modal.loading = false
 				}, 600)
 				return
 			}
-			const auth = this.auth.dataSource.map((k: AuthInter) => {
-				const apply = k.apply.map(v => ({ ...v, status: Number(form[k.auth_key].includes(v.apply_key)) }))
-				return {
-					...k,
-					apply,
-					all: apply.every(k => k.status)
-				}
-			})
+			console.log(form)
 			const response = await createRole({
 				role_key: form.role_key,
 				role_name: form.role_name,
-				status: form.status,
-				auth: auth
+				status: form.status
 			})
 
 			if (response.code === 200) {
@@ -128,27 +102,6 @@ class CreateAuthModal extends Vue {
 							</Radio.Group>
 						)}
 					</Form.Item>
-					{this.auth.dataSource.map((k: any) => (
-						<Form.Item
-							key={k.auth_key}
-							label={k.auth_name}
-							labelCol={this.modal.labelCol}
-							wrapperCol={this.modal.wrapperCol}
-						>
-							{getFieldDecorator(k.auth_key, {
-								initialValue: [],
-								validateTrigger: 'change'
-							})(
-								<Checkbox.Group disabled={!Boolean(k.status)}>
-									{k.apply.map((v: any) => (
-										<Checkbox key={v.apply_key} value={v.apply_key}>
-											{v.apply_name}
-										</Checkbox>
-									))}
-								</Checkbox.Group>
-							)}
-						</Form.Item>
-					))}
 				</Form>
 			</Modal>
 		)

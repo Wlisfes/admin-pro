@@ -20,32 +20,33 @@ class CreateAuthModal extends Vue {
 	private form: any
 	private modal = {
 		...CommonModal,
-		title: '新增权限'
+		title: '新增权限模块'
 	}
 
 	onSubmit() {
 		this.modal.loading = true
-		this.form.validateFields(async (err: any, form: any) => {
-			if (err) {
-				setTimeout(() => {
-					this.modal.loading = false
-				}, 600)
-				return
+		this.form.validateFields(
+			async (err: any, form: { auth_key: string; auth_name: string; status: number; apply: string[] }) => {
+				if (err) {
+					setTimeout(() => {
+						this.modal.loading = false
+					}, 600)
+					return
+				}
+				const apply = Apply.filter(k => form.apply.includes(k.key)).map(k => ({ ...k, status: 1 }))
+				const response = await createAuth({
+					auth_key: form.auth_key,
+					auth_name: form.auth_name,
+					apply: apply,
+					status: form.status
+				})
+				if (response.code === 200) {
+					this.$notification.success({ message: '添加成功', description: '' })
+					this.$emit('submit')
+				}
+				this.modal.loading = false
 			}
-			const apply = Apply.map(k => ({ ...k, status: Number(form.apply.includes(k.apply_key)) }))
-			const response = await createAuth({
-				auth_key: form.auth_key,
-				auth_name: form.auth_name,
-				apply: apply,
-				status: form.status,
-				all: apply.every(k => k.status === 1)
-			})
-			if (response.code === 200) {
-				this.$notification.success({ message: '添加成功', description: '' })
-				this.$emit('submit')
-			}
-			this.modal.loading = false
-		})
+		)
 	}
 
 	onCancel() {
@@ -54,7 +55,8 @@ class CreateAuthModal extends Vue {
 	}
 
 	render() {
-		const { getFieldDecorator } = this.form
+		const { getFieldDecorator, getFieldValue, setFieldsValue } = this.form
+		const len = ((getFieldValue('apply') as []) || []).filter(k => k).length
 		return (
 			<Modal
 				getContainer={() => document.querySelector('.admin-auth')}
@@ -104,13 +106,22 @@ class CreateAuthModal extends Vue {
 						)}
 					</Form.Item>
 					<Form.Item label="可操作权限" labelCol={this.modal.labelCol} wrapperCol={this.modal.wrapperCol}>
+						<Checkbox
+							checked={len === Apply.length}
+							indeterminate={!!len && len < Apply.length}
+							onClick={(e: any) => {
+								setFieldsValue({ apply: e.target.checked ? Apply.map(k => k.key) : [] })
+							}}
+						>
+							全选
+						</Checkbox>
 						{getFieldDecorator('apply', {
 							initialValue: [],
 							validateTrigger: 'change'
 						})(
 							<Checkbox.Group>
 								{Apply.map(k => {
-									return <Checkbox value={k.apply_key}>{k.apply_name}</Checkbox>
+									return <Checkbox value={k.key}>{k.name}</Checkbox>
 								})}
 							</Checkbox.Group>
 						)}

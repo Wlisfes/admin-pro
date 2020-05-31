@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-10 23:53:53
+ * @Last Modified time: 2020-05-31 15:21:10
  * @Description: 角色管理界面
  */
 
@@ -10,9 +10,11 @@ import './less/user.less'
 
 import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Avatar } from 'ant-design-vue'
-import { Actions, AvaterUpload } from '@/components/common'
-import { UpdateUserModal } from './modules'
-import { allUser, updateUser, deleteUser, changeUser, updateUserAvatar } from '@/api/user'
+import { AvaterUpload, CommEdit } from '@/components/common'
+import { UpdateUserModal, UpdateUserAuthModal } from './modules'
+import { allUser, deleteUser, cutoverUser, updateUserAvatar } from '@/api/user'
+import { Color } from '@/interface'
+import { UserTypes } from '@/interface/user.type'
 import moment from 'moment'
 
 @Component
@@ -25,9 +27,9 @@ export default class User extends Vue {
 			{ title: '用户名', width: '9%', dataIndex: 'username' },
 			{ title: '昵称', width: '9%', dataIndex: 'nickname' },
 			{ title: '邮箱', dataindex: 'email', scopedSlots: { customRender: 'email' } },
-			{ title: '手机', width: '14%', dataindex: 'mobile', scopedSlots: { customRender: 'mobile' } },
-			{ title: '角色类型', width: '11%', dataIndex: 'roles', scopedSlots: { customRender: 'roles' } },
-			{ title: '注册时间', width: '12%', dataIndex: 'create_time', scopedSlots: { customRender: 'createtime' } },
+			{ title: '手机', width: '12%', dataindex: 'mobile', scopedSlots: { customRender: 'mobile' } },
+			{ title: '角色类型', width: '11%', dataIndex: 'role', scopedSlots: { customRender: 'role' } },
+			{ title: '注册时间', width: '12%', dataIndex: 'createTime', scopedSlots: { customRender: 'createTime' } },
 			{ title: '状态', width: '9%', dataIndex: 'status', scopedSlots: { customRender: 'status' } },
 			{ title: '操作', width: 130, dataIndex: 'action', scopedSlots: { customRender: 'action' } }
 		],
@@ -41,7 +43,7 @@ export default class User extends Vue {
 
 	//头像上传组件配置
 	private uploadModel = {
-		id: '',
+		uid: 0,
 		picUrl: '',
 		visible: false,
 		onCancel: () => {
@@ -49,20 +51,19 @@ export default class User extends Vue {
 		},
 		//头像上传
 		onSubmit: async (params: {
-			id: string
+			uid: number
 			timeout: Function
-			response: { code: number; data: { url: string } }
+			response: { code: number; data: { path: string } }
 		}) => {
 			params.timeout()
 			this.uploadModel.visible = false
-
 			if (params.response.code === 200) {
+				this.table.loading = true
 				const response = await updateUserAvatar({
-					id: params.id,
-					avatar: params.response.data.url
+					uid: params.uid,
+					avatar: params.response.data.path
 				})
 				if (response.code === 200) {
-					this.table.loading = true
 					this.allUser()
 				}
 			}
@@ -72,7 +73,7 @@ export default class User extends Vue {
 	//用户信息修改配置
 	private updateUserModal = {
 		visible: false,
-		id: '',
+		uid: 0,
 		onCancel: () => {
 			this.updateUserModal.visible = false
 		},
@@ -80,6 +81,20 @@ export default class User extends Vue {
 			this.table.loading = true
 			this.allUser()
 			this.updateUserModal.visible = false
+		}
+	}
+
+	//用户权限修改配置
+	private updateUserAuthModal = {
+		visible: false,
+		uid: 0,
+		onCancel: () => {
+			this.updateUserAuthModal.visible = false
+		},
+		onSubmit: () => {
+			this.table.loading = true
+			this.allUser()
+			this.updateUserAuthModal.visible = false
 		}
 	}
 
@@ -91,32 +106,40 @@ export default class User extends Vue {
 	async allUser() {
 		const response = await allUser()
 		if (response.code === 200) {
+			console.log(response.data)
 			this.table.dataSource = response.data
 		}
 		this.table.loading = false
 	}
 
 	//操作
-	async handelAction(params: any) {
+	async onChange({ key, props }: { key: string; props: UserTypes }) {
 		this.table.loading = true
-		if (params.key === 'auth') {
-		} else if (params.key === 'update') {
-			this.updateUserModal.id = params.id
-			this.updateUserModal.visible = true
-		} else if (params.key === 'delete') {
-			const response = await deleteUser({ id: params.id })
 
+		//修改用户信息
+		if (key === 'update') {
+			this.updateUserModal.uid = props.uid
+			this.updateUserModal.visible = true
+		}
+
+		//修改用户权限
+		if (key === 'auth') {
+			this.updateUserAuthModal.uid = props.uid
+			this.updateUserAuthModal.visible = true
+		}
+
+		//切换状态
+		if (key === 'status') {
+			const response = await cutoverUser({ uid: props.uid })
 			if (response.code === 200) {
-				this.$notification.success({ message: '删除成功', description: '' })
 				this.allUser()
 				return
 			}
-		} else if (params.key === 'close' || params.key === 'open') {
-			const response = await changeUser({
-				id: params.id,
-				status: params.key === 'open' ? 1 : 0
-			})
+		}
 
+		//删除
+		if (key === 'delete') {
+			const response = await deleteUser({ uid: props.uid })
 			if (response.code === 200) {
 				this.allUser()
 				return
@@ -134,7 +157,16 @@ export default class User extends Vue {
 						{...{ props: this.updateUserModal }}
 						onCancel={this.updateUserModal.onCancel}
 						onSubmit={this.updateUserModal.onSubmit}
-					></UpdateUserModal>
+					/>
+				)}
+
+				{/**用户权限修改组件**/
+				this.updateUserAuthModal.visible && (
+					<UpdateUserAuthModal
+						{...{ props: this.updateUserAuthModal }}
+						onCancel={this.updateUserAuthModal.onCancel}
+						onSubmit={this.updateUserAuthModal.onSubmit}
+					/>
 				)}
 
 				{
@@ -143,7 +175,7 @@ export default class User extends Vue {
 						{...{ props: this.uploadModel }}
 						onCancel={this.uploadModel.onCancel}
 						onSubmit={this.uploadModel.onSubmit}
-					></AvaterUpload>
+					/>
 				}
 
 				<Table
@@ -155,7 +187,7 @@ export default class User extends Vue {
 					scroll={{ x: 1000 }}
 					{...{
 						scopedSlots: {
-							avatar: (avatar: string, props: any) => {
+							avatar: (avatar: string, props: UserTypes) => {
 								return avatar ? (
 									<Avatar
 										size={50}
@@ -163,9 +195,9 @@ export default class User extends Vue {
 										src={props.avatar}
 										style={{ cursor: 'pointer' }}
 										onClick={() => {
-											this.uploadModel.id = props.id
+											this.uploadModel.uid = props.uid
 											this.uploadModel.visible = true
-											this.uploadModel.picUrl = props.avatar
+											this.uploadModel.picUrl = props.avatar || ''
 										}}
 									></Avatar>
 								) : (
@@ -175,16 +207,18 @@ export default class User extends Vue {
 										icon="user"
 										style={{ cursor: 'pointer', backgroundColor: '#fde3cf' }}
 										onClick={() => {
-											this.uploadModel.id = props.id
+											this.uploadModel.uid = props.uid
 											this.uploadModel.visible = true
 										}}
 									></Avatar>
 								)
 							},
-							email: (email: any, props: any) => <div>{props.email || '------'}</div>,
-							mobile: (mobile: any, props: any) => <div>{props.mobile || '------'}</div>,
-							roles: (roles: any) => <div>{roles.role_name || '游客'}</div>,
-							createtime: (createtime: string) => <div>{moment(createtime).format('YYYY-MM-DD')}</div>,
+							email: (email: any, props: UserTypes) => (
+								<div style={{ marginRight: '-16px' }}>{props.email || '------'}</div>
+							),
+							mobile: (mobile: any, props: UserTypes) => <div>{props.mobile || '------'}</div>,
+							role: (role: any, props: UserTypes) => <div>{props.role?.role_name || '游客'}</div>,
+							createTime: (createTime: string) => <div>{moment(createTime).format('YYYY-MM-DD')}</div>,
 							status: (status: number) => {
 								return (
 									<Tag style={{ marginRight: 0 }} color={status ? 'green' : 'pink'}>
@@ -192,8 +226,27 @@ export default class User extends Vue {
 									</Tag>
 								)
 							},
-							action: (action: any, props: any) => {
-								return <Actions params={props} onActions={this.handelAction}></Actions>
+							action: (action: any, props: UserTypes) => {
+								return (
+									<CommEdit
+										params={{
+											props,
+											first: { key: 'update', name: '编辑' },
+											last: { key: 'more', name: '更多', more: true },
+											menu: [
+												{ key: 'auth', name: '权限', icon: 'setting', color: Color.info },
+												{
+													key: 'status',
+													name: props.status ? '禁用' : '开放',
+													icon: props.status ? 'stop' : 'check-circle',
+													color: props.status ? Color.warn : Color.ok
+												},
+												{ key: 'delete', name: '删除', icon: 'rest', color: Color.delete }
+											]
+										}}
+										onChange={this.onChange}
+									/>
+								)
 							}
 						}
 					}}

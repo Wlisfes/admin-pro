@@ -8,42 +8,28 @@
 
 import http from '@/utils/request'
 
-export interface Apply {
+interface Apply {
+	key: string
+	name: string
 	status: number
-	apply_key: string
-	apply_name: string
 }
-export interface AuthInter {
-	id: string
+interface Auth {
 	auth_key: string
 	auth_name: string
-	apply: Array<Apply>
-	all: boolean
 	status: number
-	[key: string]: any
-}
-export interface IsAuthInter {
-	id?: string
-	auth_key?: string
-	auth_name?: string
-	apply?: Array<Apply>
-	all?: boolean
-	status?: number
-	key?: string
-	[key: string]: any
+	apply: Apply[]
 }
 
 //获取所有权限模块列表
-export const authAll = (params?: IsAuthInter) => {
+export const authAll = () => {
 	return http({
 		url: `/api/auth/all`,
-		method: 'GET',
-		params
+		method: 'GET'
 	})
 }
 
 //新增权限模块
-export const createAuth = (params: IsAuthInter) => {
+export const createAuth = (params: Auth) => {
 	return http({
 		url: `/api/auth/create`,
 		method: 'POST',
@@ -52,7 +38,7 @@ export const createAuth = (params: IsAuthInter) => {
 }
 
 //修改权限模块
-export const updateAuth = (params: IsAuthInter) => {
+export const updateAuth = (params: any) => {
 	return http({
 		url: `/api/auth/update`,
 		method: 'PUT',

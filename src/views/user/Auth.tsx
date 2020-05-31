@@ -12,7 +12,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Button } from 'ant-design-vue'
 import { Actions } from '@/components/common'
 import { UpdateAuthModal, CreateAuthModal } from './modules'
-import { authAll, deleteAuth, changeAuth, AuthInter, Apply } from '@/api/auth'
+import { authAll, deleteAuth, changeAuth } from '@/api/auth'
 import { Color } from '@/interface/common'
 
 @Component
@@ -76,7 +76,7 @@ export default class Auth extends Vue {
 	}
 
 	//操作
-	async onAction(params: AuthInter) {
+	async onAction(params: any) {
 		this.table.loading = true
 		if (params.key === 'update') {
 			this.updateAuthModal.visible = true
@@ -138,7 +138,7 @@ export default class Auth extends Vue {
 					scroll={{ x: 800 }}
 					{...{
 						scopedSlots: {
-							apply: (apply: Array<Apply>) => (
+							apply: (apply: Array<any>) => (
 								<div>
 									{apply.map(k =>
 										k.status ? (
