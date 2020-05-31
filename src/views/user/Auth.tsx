@@ -10,10 +10,11 @@ import './less/auth.less'
 
 import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Button } from 'ant-design-vue'
-import { Actions } from '@/components/common'
+import { CommEdit } from '@/components/common'
 import { UpdateAuthModal, CreateAuthModal } from './modules'
-import { authAll, deleteAuth, changeAuth } from '@/api/auth'
+import { authAll, deleteAuth, cutoverAuth } from '@/api/auth'
 import { Color } from '@/interface/common'
+import { AuthType, ApplyType } from '@/interface/user.type'
 
 @Component
 export default class Auth extends Vue {
@@ -38,7 +39,7 @@ export default class Auth extends Vue {
 	//编辑弹窗配置
 	private updateAuthModal = {
 		visible: false,
-		id: '',
+		id: 0,
 		onCancel: () => {
 			this.updateAuthModal.visible = false
 		},
@@ -76,56 +77,55 @@ export default class Auth extends Vue {
 	}
 
 	//操作
-	async onAction(params: any) {
+	async onChange({ key, props }: { key: string; props: AuthType }) {
 		this.table.loading = true
-		if (params.key === 'update') {
+
+		//修改
+		if (key === 'update') {
+			this.updateAuthModal.id = props.id
 			this.updateAuthModal.visible = true
-			this.updateAuthModal.id = params.id
-		} else if (params.key === 'delete') {
-			const response = await deleteAuth({ id: params.id })
+		}
 
-			if (response.code === 200) {
-				this.$notification.success({ message: '成功', description: '删除成功' })
-				this.authAll()
-				return
-			}
-		} else {
-			const response = await changeAuth({
-				id: params.id,
-				status: params.key === 'open' ? 1 : 0
-			})
-
+		//切换状态
+		if (key === 'status') {
+			const response = await cutoverAuth({ id: props.id })
 			if (response.code === 200) {
 				this.authAll()
 				return
 			}
 		}
+
+		//删除
+		if (key === 'delete') {
+			const response = await deleteAuth({ id: props.id })
+			if (response.code === 200) {
+				this.authAll()
+				return
+			}
+		}
+
 		this.table.loading = false
 	}
 
 	render() {
 		return (
 			<div class="admin-auth">
-				{/**
-				 *新增权限弹窗
-				 */
+				{/**新增权限弹窗**/
 				this.createAuthModal.visible && (
 					<CreateAuthModal
 						{...{ props: this.createAuthModal }}
 						onCancel={this.createAuthModal.onCancel}
 						onSubmit={this.createAuthModal.onSubmit}
-					></CreateAuthModal>
+					/>
 				)}
 
-				{/**
-				 * 编辑权限弹窗
-				 */
+				{/**编辑权限弹窗**/
 				this.updateAuthModal.visible && (
 					<UpdateAuthModal
 						{...{ props: this.updateAuthModal }}
 						onCancel={this.updateAuthModal.onCancel}
 						onSubmit={this.updateAuthModal.onSubmit}
-					></UpdateAuthModal>
+					/>
 				)}
 
 				<Button onClick={() => (this.createAuthModal.visible = true)}>新增</Button>
@@ -138,16 +138,16 @@ export default class Auth extends Vue {
 					scroll={{ x: 800 }}
 					{...{
 						scopedSlots: {
-							apply: (apply: Array<any>) => (
+							apply: (apply: ApplyType[]) => (
 								<div>
 									{apply.map(k =>
 										k.status ? (
 											<Tag
-												key={k.apply_key}
-												color={(Color as any)[k.apply_key]}
+												key={k.key}
+												color={(Color as any)[k.key]}
 												style={{ cursor: 'pointer' }}
 											>
-												{k.apply_name}
+												{k.name}
 											</Tag>
 										) : null
 									)}
@@ -158,8 +158,24 @@ export default class Auth extends Vue {
 									{status ? '正常' : '已禁用'}
 								</Tag>
 							),
-							action: (action: any, props: any) => (
-								<Actions params={props} onActions={this.onAction}></Actions>
+							action: (action: any, props: AuthType) => (
+								<CommEdit
+									params={{
+										props,
+										first: { key: 'update', name: '编辑' },
+										last: { key: 'more', name: '更多', more: true },
+										menu: [
+											{
+												key: 'status',
+												name: props.status ? '禁用' : '开放',
+												icon: props.status ? 'stop' : 'check-circle',
+												color: props.status ? Color.warn : Color.ok
+											},
+											{ key: 'delete', name: '删除', icon: 'rest', color: Color.delete }
+										]
+									}}
+									onChange={this.onChange}
+								/>
 							)
 						}
 					}}

@@ -47,7 +47,7 @@ export const updateAuth = (params: any) => {
 }
 
 //删除权限模块
-export const deleteAuth = (params: { id: string }) => {
+export const deleteAuth = (params: { id: number }) => {
 	return http({
 		url: `/api/auth/delete`,
 		method: 'DELETE',
@@ -56,16 +56,16 @@ export const deleteAuth = (params: { id: string }) => {
 }
 
 //切换权限模块状态
-export const changeAuth = (params: { id: string; status: number }) => {
+export const cutoverAuth = (params: { id: number }) => {
 	return http({
-		url: `/api/auth/change`,
+		url: `/api/auth/cutover`,
 		method: 'PUT',
-		data: params
+		params
 	})
 }
 
 //获取权限模块信息
-export const roleInfo = (params: { id: string }) => {
+export const getAuth = (params: { id: number }) => {
 	return http({
 		url: `/api/auth/info`,
 		method: 'GET',

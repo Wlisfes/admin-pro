@@ -8,47 +8,36 @@
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Form, Input, Modal, Checkbox, Radio, Spin } from 'ant-design-vue'
-import { updateAuth, roleInfo } from '@/api/auth'
-import { CommonModal } from '@/interface/common'
-
-interface Auth {
-	auth_key: string
-	auth_name: string
-	status: number
-	loading: boolean
-	apply: Array<{
-		status: number
-		apply_key: string
-		apply_name: string
-	}>
-}
+import { updateAuth, getAuth } from '@/api/auth'
+import { CommonModal, Apply } from '@/interface/common'
+import { AuthType } from '@/interface/user.type'
 
 @Component({
 	props: { form: { type: Object } }
 })
 class UpdateAuthModal extends Vue {
 	@Prop(Boolean) visible!: boolean
-	@Prop(String) id!: string
+	@Prop(Number) id!: number
 
 	private form: any
 	private modal = {
 		...CommonModal,
 		title: '编辑权限'
 	}
-	private auth: Auth = {
+	private auth = {
 		auth_key: '',
 		auth_name: '',
-		status: -1,
+		status: 0,
 		apply: [],
 		loading: true
 	}
 
 	created() {
-		this.roleInfo()
+		this.getAuth()
 	}
 
-	async roleInfo() {
-		const response = await roleInfo({ id: this.id })
+	async getAuth() {
+		const response = await getAuth({ id: this.id })
 		if (response.code === 200) {
 			const data = response.data
 			this.auth.auth_key = data.auth_key
@@ -61,31 +50,32 @@ class UpdateAuthModal extends Vue {
 
 	onSubmit() {
 		this.modal.loading = true
-		this.form.validateFields(async (err: any, form: any) => {
-			if (err) {
-				setTimeout(() => {
-					this.modal.loading = false
-				}, 600)
-				return
+		this.form.validateFields(
+			async (err: any, form: { auth_key: string; auth_name: string; status: number; apply: string[] }) => {
+				if (err) {
+					setTimeout(() => {
+						this.modal.loading = false
+					}, 600)
+					return
+				}
+
+				console.log(form)
+				const apply = Apply.filter(k => form.apply.includes(k.key)).map(k => ({ ...k, status: 1 }))
+				// const response = await updateAuth({
+				// 	id: form.id,
+				// 	auth_key: form.auth_key,
+				// 	auth_name: form.auth_name,
+				// 	apply: apply,
+				// 	status: form.status,
+				// 	all: apply.every(k => k.status === 1)
+				// })
+				// if (response.code === 200) {
+				// 	this.$notification.success({ message: '修改成功', description: '' })
+				// 	this.$emit('submit')
+				// }
+				this.modal.loading = false
 			}
-			const apply = this.auth.apply.map(k => {
-				const status = (form.apply as []).some((key: string) => key === k.apply_key)
-				return { ...k, status: Number(status) }
-			})
-			const response = await updateAuth({
-				id: form.id,
-				auth_key: form.auth_key,
-				auth_name: form.auth_name,
-				apply: apply,
-				status: form.status,
-				all: apply.every(k => k.status === 1)
-			})
-			if (response.code === 200) {
-				this.$notification.success({ message: '修改成功', description: '' })
-				this.$emit('submit')
-			}
-			this.modal.loading = false
-		})
+		)
 	}
 
 	onCancel() {
@@ -94,7 +84,8 @@ class UpdateAuthModal extends Vue {
 	}
 
 	render() {
-		const { getFieldDecorator } = this.form
+		const { getFieldDecorator, getFieldValue, setFieldsValue } = this.form
+		const len = ((getFieldValue('apply') as []) || []).filter(k => k).length
 		return (
 			<Modal
 				getContainer={() => document.querySelector('.admin-auth')}
@@ -112,17 +103,6 @@ class UpdateAuthModal extends Vue {
 			>
 				<Spin size="large" spinning={this.auth.loading}>
 					<Form layout="horizontal">
-						<Form.Item
-							style={{ display: 'none' }}
-							hasFeedback={true}
-							labelCol={this.modal.labelCol}
-							wrapperCol={this.modal.wrapperCol}
-						>
-							{getFieldDecorator('id', {
-								initialValue: this.id,
-								validateTrigger: 'change'
-							})(<Input type="text" disabled />)}
-						</Form.Item>
 						<Form.Item
 							label="唯一标识码"
 							hasFeedback={true}
@@ -159,13 +139,22 @@ class UpdateAuthModal extends Vue {
 							)}
 						</Form.Item>
 						<Form.Item label="可操作权限" labelCol={this.modal.labelCol} wrapperCol={this.modal.wrapperCol}>
+							<Checkbox
+								checked={len === Apply.length}
+								indeterminate={!!len && len < Apply.length}
+								onClick={(e: any) => {
+									setFieldsValue({ apply: e.target.checked ? Apply.map(k => k.key) : [] })
+								}}
+							>
+								全选
+							</Checkbox>
 							{getFieldDecorator('apply', {
-								initialValue: this.auth.apply.filter(k => k.status).map(k => k.apply_key),
+								initialValue: this.auth.apply.map((k: any) => k.key),
 								validateTrigger: 'change'
 							})(
 								<Checkbox.Group>
-									{this.auth.apply.map(k => {
-										return <Checkbox value={k.apply_key}>{k.apply_name}</Checkbox>
+									{Apply.map(k => {
+										return <Checkbox value={k.key}>{k.name}</Checkbox>
 									})}
 								</Checkbox.Group>
 							)}
@@ -180,10 +169,6 @@ class UpdateAuthModal extends Vue {
 export default Form.create({
 	props: {
 		visible: { type: Boolean, default: () => false },
-		id: { type: String, default: () => '' },
-		auth_key: { type: String, default: () => '' },
-		auth_name: { type: String, default: () => '' },
-		status: { type: Number, default: () => 0 },
-		apply: { type: Array, default: () => [] }
+		id: { type: Number, default: () => '' }
 	}
 })(UpdateAuthModal)
