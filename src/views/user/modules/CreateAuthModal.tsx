@@ -106,15 +106,17 @@ class CreateAuthModal extends Vue {
 						)}
 					</Form.Item>
 					<Form.Item label="可操作权限" labelCol={this.modal.labelCol} wrapperCol={this.modal.wrapperCol}>
-						<Checkbox
-							checked={len === Apply.length}
-							indeterminate={!!len && len < Apply.length}
-							onClick={(e: any) => {
-								setFieldsValue({ apply: e.target.checked ? Apply.map(k => k.key) : [] })
-							}}
-						>
-							全选
-						</Checkbox>
+						<Checkbox.Group>
+							<Checkbox
+								checked={len === Apply.length}
+								indeterminate={!!len && len < Apply.length}
+								onClick={(e: any) => {
+									setFieldsValue({ apply: e.target.checked ? Apply.map(k => k.key) : [] })
+								}}
+							>
+								全选
+							</Checkbox>
+						</Checkbox.Group>
 						{getFieldDecorator('apply', {
 							initialValue: [],
 							validateTrigger: 'change'

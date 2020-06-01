@@ -19,6 +19,12 @@ interface Auth {
 	status: number
 	apply: Apply[]
 }
+interface UpAuth {
+	id: number
+	auth_name: string
+	status: number
+	apply: Apply[]
+}
 
 //获取所有权限模块列表
 export const authAll = () => {
@@ -38,7 +44,7 @@ export const createAuth = (params: Auth) => {
 }
 
 //修改权限模块
-export const updateAuth = (params: any) => {
+export const updateAuth = (params: UpAuth) => {
 	return http({
 		url: `/api/auth/update`,
 		method: 'PUT',
