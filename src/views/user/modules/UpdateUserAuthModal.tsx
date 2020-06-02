@@ -9,20 +9,17 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Form, Input, Modal, Checkbox, Spin, Select } from 'ant-design-vue'
 import { CommonModal, Apply } from '@/interface/common'
-import { getUser } from '@/api/user'
+import { getUser, updateUserAuth } from '@/api/user'
 import { roleAll } from '@/api/role'
 import { authAll } from '@/api/auth'
 import { RoleType, AuthType } from '@/interface/user.type'
 
-interface AuthTypeAll extends AuthType {
-	len: number
-}
 interface UserProp {
 	status: number
 	roleAll: RoleType[]
 	role: RoleType | null
 	auth: AuthType[]
-	authAll: AuthTypeAll[]
+	authAll: AuthType[]
 	loading: boolean
 }
 
@@ -58,17 +55,21 @@ class UpdateUserAuthModal extends Vue {
 		const roles = await this.roleAll()
 		const auths = await this.authAll()
 		if (response.code === 200) {
-			const { auth, status } = response.data as { auth: AuthType[] | null; status: number }
+			const { auth, status, role } = response.data as {
+				auth: AuthType[] | null
+				role: RoleType | null
+				status: number
+			}
 			this.user.roleAll = roles
-			this.user.authAll = auths.map(k => ({
-				...k,
-				len: (auth || []).find(u => u.auth_key === k.auth_key)?.apply.length || 0
-			}))
+			this.user.authAll = auths.map(k => {
+				const all = (auth && auth.find(u => u.auth_key === k.auth_key)?.all) || 0
+				return { ...k, all }
+			})
+			this.user.role = role
 			this.user.auth = auth || []
 			this.user.status = status
 			this.user.loading = false
 		}
-		console.log(this.user)
 	}
 
 	//获取所有角色
@@ -98,18 +99,31 @@ class UpdateUserAuthModal extends Vue {
 				}, 600)
 				return
 			}
+			console.log(form)
 
-			// const response = await updateUser({
-			// 	uid: form.uid,
-			// 	nickname: form.nickname,
-			// 	mobile: form.mobile || null,
-			// 	email: form.email || null,
-			// 	status: form.status
-			// })
-			// if (response.code === 200) {
-			// 	this.$notification.success({ message: '修改成功', description: '' })
-			// 	this.$emit('submit')
-			// }
+			const auth = []
+			const role = this.user.roleAll.find(k => k.role_key === form.roles) || null //筛选角色
+			for (const key in form) {
+				const u = this.user.authAll.find(k => k.auth_key === key) || null
+				if (u) {
+					const h = u.apply.filter(k => form[key].includes(k.key))
+					h.length > 0 &&
+						auth.push({
+							...u,
+							apply: h
+						})
+				}
+			}
+			console.log(role, auth)
+			const response = await updateUserAuth({
+				uid: form.uid,
+				role,
+				auth
+			})
+			if (response.code === 200) {
+				this.$notification.success({ message: '修改成功', description: '' })
+				this.$emit('submit')
+			}
 			this.modal.loading = false
 		})
 	}
@@ -138,7 +152,7 @@ class UpdateUserAuthModal extends Vue {
 				onOk={this.onSubmit}
 			>
 				<Spin size="large" spinning={this.user.loading}>
-					<Form layout="horizontal" style={{ height: '500px' }}>
+					<Form layout="horizontal" style={{ minHeight: '400px' }}>
 						<Form.Item
 							style={{ display: 'none' }}
 							hasFeedback={true}
@@ -151,44 +165,47 @@ class UpdateUserAuthModal extends Vue {
 							})(<Input type="text" disabled />)}
 						</Form.Item>
 						<Form.Item
-							label="用户名"
+							label="角色"
 							hasFeedback={true}
 							labelCol={this.modal.labelCol}
 							wrapperCol={this.modal.wrapperCol}
 						>
-							{getFieldDecorator('username', {
-								initialValue: 1,
+							{getFieldDecorator('roles', {
+								initialValue: this.user.role?.role_key || null,
 								validateTrigger: 'change'
 							})(
-								<Select placeholder="请选择角色">
+								<Select mode="default" placeholder="请选择角色">
 									{this.user.roleAll.map(k => (
-										<Select.Option value={k.id}>{k.role_name}</Select.Option>
+										<Select.Option disabled={!k.status} value={k.role_key}>
+											{k.role_name}
+										</Select.Option>
 									))}
 								</Select>
 							)}
 						</Form.Item>
 						{this.user.authAll.map((k, index) => {
 							const auth = this.user.auth.find(u => u.auth_key === k.auth_key)
-							const applyKey = auth?.apply.map(u => u.key)
+							const applyKey = auth?.apply.map(u => u.key) || []
 							return (
 								<Form.Item
 									label={k.auth_name}
 									labelCol={this.modal.labelCol}
 									wrapperCol={this.modal.wrapperCol}
 								>
-									<Checkbox.Group>
+									<div class="ant-checkbox-group checkbox-all">
 										<Checkbox
-											checked={k.len === Apply.length}
-											indeterminate={!!k.len && k.len < Apply.length}
+											checked={k.all === Apply.length}
+											indeterminate={!!k.all && k.all < Apply.length}
 											onClick={(e: any) => {
 												const apply = e.target.checked ? Apply : []
 												setFieldsValue({ [k.auth_key]: apply.map(u => u.key) })
-												this.user.authAll[index].len = apply.length
+												this.user.authAll[index].all = apply.length
 											}}
 										>
 											全选
 										</Checkbox>
-									</Checkbox.Group>
+									</div>
+
 									{getFieldDecorator(k.auth_key, {
 										initialValue: applyKey,
 										validateTrigger: 'change'
@@ -200,10 +217,9 @@ class UpdateUserAuthModal extends Vue {
 														value={v.key}
 														onChange={(e: Event) => {
 															setTimeout(() => {
-																const apply = (getFieldValue(k.auth_key) as []) || []
-																this.user.authAll[index].len = apply.length
-																console.log(k.len, Apply.length)
-																console.log(apply)
+																this.user.authAll[index].all = getFieldValue(
+																	k.auth_key
+																).length
 															}, 20)
 														}}
 													>

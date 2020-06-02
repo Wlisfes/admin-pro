@@ -27,6 +27,7 @@ export interface AuthType {
 	status: number
 	createTime: string
 	apply: ApplyType[]
+	all: number
 }
 
 export interface UserTypes {

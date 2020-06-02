@@ -2,7 +2,7 @@
  * @Date: 2020-04-24 15:49:54
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-04-24 16:46:26
+ * @LastEditTime: 2020-06-02 16:11:58
  * @Description: Auth新增弹窗
  */
 
@@ -20,7 +20,8 @@ class CreateAuthModal extends Vue {
 	private form: any
 	private modal = {
 		...CommonModal,
-		title: '新增权限模块'
+		title: '新增权限模块',
+		all: 0
 	}
 
 	onSubmit() {
@@ -106,24 +107,39 @@ class CreateAuthModal extends Vue {
 						)}
 					</Form.Item>
 					<Form.Item label="可操作权限" labelCol={this.modal.labelCol} wrapperCol={this.modal.wrapperCol}>
-						<Checkbox.Group>
+						<div class="ant-checkbox-group checkbox-all">
 							<Checkbox
-								checked={len === Apply.length}
-								indeterminate={!!len && len < Apply.length}
+								ref="all"
+								checked={this.modal.all == Apply.length}
+								indeterminate={!!this.modal.all && this.modal.all < Apply.length}
 								onClick={(e: any) => {
-									setFieldsValue({ apply: e.target.checked ? Apply.map(k => k.key) : [] })
+									const apply = e.target.checked ? Apply.map(k => k.key) : []
+									setFieldsValue({ apply })
+									this.modal.all = apply.length
 								}}
 							>
 								全选
 							</Checkbox>
-						</Checkbox.Group>
+						</div>
+
 						{getFieldDecorator('apply', {
 							initialValue: [],
 							validateTrigger: 'change'
 						})(
 							<Checkbox.Group>
 								{Apply.map(k => {
-									return <Checkbox value={k.key}>{k.name}</Checkbox>
+									return (
+										<Checkbox
+											value={k.key}
+											onClick={() => {
+												setTimeout(() => {
+													this.modal.all = getFieldValue('apply').length
+												}, 20)
+											}}
+										>
+											{k.name}
+										</Checkbox>
+									)
 								})}
 							</Checkbox.Group>
 						)}

@@ -32,9 +32,9 @@ export default class Content extends Mixins(MixinDevice) {
 
 	render() {
 		return (
-			<Layout style={{ marginLeft: this.layoutMarginLeft }}>
+			<Layout style={{ marginLeft: this.layoutMarginLeft, backgroundColor: '#ededed' }}>
 				<Header></Header>
-				<Layout style={{ marginTop: this.headerfixed ? '64px' : '0' }}>
+				<Layout style={{ marginTop: this.headerfixed ? '64px' : '0', backgroundColor: '#ededed' }}>
 					{this.multiple && <MultiTabs></MultiTabs>}
 					<Layout.Content
 						style={{

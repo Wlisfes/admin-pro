@@ -137,7 +137,12 @@ export default class AvaterUpload extends Vue {
 											style={
 												this.previews.url
 													? this.previews.img
-													: { height: '100%', width: '100%', display: 'block' }
+													: {
+															height: '100%',
+															width: '100%',
+															display: 'block',
+															borderRadius: '50%'
+													  }
 											}
 										/>
 									)}

@@ -2,7 +2,7 @@
  * @Date: 2020-04-24 14:46:09
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-04-24 16:07:52
+ * @LastEditTime: 2020-06-02 16:11:12
  * @Description: Auth编辑弹窗
  */
 
@@ -28,7 +28,7 @@ class UpdateAuthModal extends Vue {
 		auth_name: '',
 		status: 0,
 		apply: [],
-		len: 0,
+		all: 0,
 		loading: true
 	}
 
@@ -44,7 +44,7 @@ class UpdateAuthModal extends Vue {
 			this.auth.auth_name = data.auth_name
 			this.auth.status = data.status
 			this.auth.apply = data.apply
-			this.auth.len = data.apply.length
+			this.auth.all = data.all
 			this.auth.loading = false
 		}
 	}
@@ -147,19 +147,21 @@ class UpdateAuthModal extends Vue {
 							)}
 						</Form.Item>
 						<Form.Item label="可操作权限" labelCol={this.modal.labelCol} wrapperCol={this.modal.wrapperCol}>
-							<Checkbox.Group>
+							<div class="ant-checkbox-group checkbox-all">
 								<Checkbox
-									checked={this.auth.len === Apply.length}
-									indeterminate={!!this.auth.len && this.auth.len < Apply.length}
+									ref="all"
+									checked={this.auth.all === Apply.length}
+									indeterminate={!!this.auth.all && this.auth.all < Apply.length}
 									onClick={(e: any) => {
 										const apply = e.target.checked ? Apply.map(k => k.key) : []
 										setFieldsValue({ apply })
-										this.auth.len = apply.length
+										this.auth.all = apply.length
 									}}
 								>
 									全选
 								</Checkbox>
-							</Checkbox.Group>
+							</div>
+
 							{getFieldDecorator('apply', {
 								initialValue: this.auth.apply.map((k: any) => k.key),
 								validateTrigger: 'change'
@@ -169,10 +171,9 @@ class UpdateAuthModal extends Vue {
 										return (
 											<Checkbox
 												value={k.key}
-												onChange={(e: Event) => {
+												onChange={() => {
 													setTimeout(() => {
-														const apply = (getFieldValue('apply') as []) || []
-														this.auth.len = apply.length
+														this.auth.all = getFieldValue('apply').length
 													}, 20)
 												}}
 											>

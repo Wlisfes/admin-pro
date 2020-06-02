@@ -59,6 +59,15 @@ export const updateUser = (params: {
 	})
 }
 
+//修改用户权限
+export const updateUserAuth = (params: any) => {
+	return http({
+		url: `/api/user/update/role`,
+		method: 'PUT',
+		data: params
+	})
+}
+
 //修改用户头像
 export const updateUserAvatar = (params: { uid: number; avatar: string }) => {
 	return http({

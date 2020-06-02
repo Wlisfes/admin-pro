@@ -27,7 +27,7 @@ export default class User extends Vue {
 			{ title: '用户名', width: '9%', dataIndex: 'username' },
 			{ title: '昵称', width: '9%', dataIndex: 'nickname' },
 			{ title: '邮箱', dataindex: 'email', scopedSlots: { customRender: 'email' } },
-			{ title: '手机', width: '12%', dataindex: 'mobile', scopedSlots: { customRender: 'mobile' } },
+			{ title: '手机', width: '14%', dataindex: 'mobile', scopedSlots: { customRender: 'mobile' } },
 			{ title: '角色类型', width: '11%', dataIndex: 'role', scopedSlots: { customRender: 'role' } },
 			{ title: '注册时间', width: '12%', dataIndex: 'createTime', scopedSlots: { customRender: 'createTime' } },
 			{ title: '状态', width: '9%', dataIndex: 'status', scopedSlots: { customRender: 'status' } },
