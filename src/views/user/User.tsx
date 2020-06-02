@@ -9,7 +9,7 @@
 import './less/user.less'
 
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Tag, Avatar } from 'ant-design-vue'
+import { Table, Tag, Avatar, Tooltip } from 'ant-design-vue'
 import { AvaterUpload, CommEdit } from '@/components/common'
 import { UpdateUserModal, UpdateUserAuthModal } from './modules'
 import { allUser, deleteUser, cutoverUser, updateUserAvatar } from '@/api/user'
@@ -212,10 +212,30 @@ export default class User extends Vue {
 									></Avatar>
 								)
 							},
-							email: (email: any, props: UserTypes) => (
-								<div style={{ marginRight: '-16px' }}>{props.email || '------'}</div>
-							),
-							mobile: (mobile: any, props: UserTypes) => <div>{props.mobile || '------'}</div>,
+							email: (email: any, props: UserTypes) => {
+								const EmailVNode = (
+									<div class="row-ellipsis" style={{ marginRight: '-16px' }}>
+										{props.email || '------'}
+									</div>
+								)
+								return props.email ? (
+									<Tooltip placement="top" title={props.email}>
+										{EmailVNode}
+									</Tooltip>
+								) : (
+									EmailVNode
+								)
+							},
+							mobile: (mobile: any, props: UserTypes) => {
+								const MobileVNode = <div>{props.mobile || '------'}</div>
+								return props.mobile ? (
+									<Tooltip placement="top" title={props.mobile}>
+										{MobileVNode}
+									</Tooltip>
+								) : (
+									MobileVNode
+								)
+							},
 							role: (role: any, props: UserTypes) => <div>{props.role?.role_name || '游客'}</div>,
 							createTime: (createTime: string) => <div>{moment(createTime).format('YYYY-MM-DD')}</div>,
 							status: (status: number) => {

@@ -177,7 +177,7 @@ class UpdateUserModal extends Vue {
 								validateTrigger: 'change'
 							})(<Input type="text" placeholder="请输入手机号" />)}
 						</Form.Item>
-						<Form.Item label="状态" labelCol={this.modal.labelCol} wrapperCol={this.modal.wrapperCol}>
+						<Form.Item label="账户状态" labelCol={this.modal.labelCol} wrapperCol={this.modal.wrapperCol}>
 							{getFieldDecorator('status', {
 								initialValue: this.user.status,
 								validateTrigger: 'change'

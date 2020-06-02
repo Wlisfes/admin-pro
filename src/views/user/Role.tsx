@@ -128,7 +128,9 @@ export default class Role extends Vue {
 					/>
 				)}
 
-				<Button onClick={() => (this.createRoleModal.visible = true)}>新增</Button>
+				<Button style={{ marginBottom: '16px' }} onClick={() => (this.createRoleModal.visible = true)}>
+					新增
+				</Button>
 				<Table
 					bordered={false}
 					columns={this.table.columns}

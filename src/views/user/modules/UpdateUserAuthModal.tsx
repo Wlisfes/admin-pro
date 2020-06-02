@@ -7,7 +7,7 @@
  */
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Form, Input, Modal, Checkbox, Spin, Select } from 'ant-design-vue'
+import { Form, Modal, Checkbox, Spin, Select, Radio } from 'ant-design-vue'
 import { CommonModal, Apply } from '@/interface/common'
 import { getUser, updateUserAuth } from '@/api/user'
 import { roleAll } from '@/api/role'
@@ -99,27 +99,22 @@ class UpdateUserAuthModal extends Vue {
 				}, 600)
 				return
 			}
-			console.log(form)
 
 			const auth = []
+			const whits = ['roles', 'status']
 			const role = this.user.roleAll.find(k => k.role_key === form.roles) || null //筛选角色
 			for (const key in form) {
-				const u = this.user.authAll.find(k => k.auth_key === key) || null
-				if (u) {
-					const h = u.apply.filter(k => form[key].includes(k.key))
-					h.length > 0 &&
+				if (!whits.includes(key)) {
+					const h = this.user.authAll.find(k => k.auth_key === key) || null
+					if (h && form[key].length > 0) {
 						auth.push({
-							...u,
-							apply: h
+							...h,
+							apply: Apply.filter(k => form[key].includes(k.key)).map(k => ({ ...k, status: 1 }))
 						})
+					}
 				}
 			}
-			console.log(role, auth)
-			const response = await updateUserAuth({
-				uid: form.uid,
-				role,
-				auth
-			})
+			const response = await updateUserAuth({ uid: this.uid, role, auth })
 			if (response.code === 200) {
 				this.$notification.success({ message: '修改成功', description: '' })
 				this.$emit('submit')
@@ -154,17 +149,6 @@ class UpdateUserAuthModal extends Vue {
 				<Spin size="large" spinning={this.user.loading}>
 					<Form layout="horizontal" style={{ minHeight: '400px' }}>
 						<Form.Item
-							style={{ display: 'none' }}
-							hasFeedback={true}
-							labelCol={this.modal.labelCol}
-							wrapperCol={this.modal.wrapperCol}
-						>
-							{getFieldDecorator('uid', {
-								initialValue: this.uid,
-								validateTrigger: 'change'
-							})(<Input type="text" disabled />)}
-						</Form.Item>
-						<Form.Item
 							label="角色"
 							hasFeedback={true}
 							labelCol={this.modal.labelCol}
@@ -183,6 +167,23 @@ class UpdateUserAuthModal extends Vue {
 								</Select>
 							)}
 						</Form.Item>
+						{this.user.role && (
+							<Form.Item
+								label="权限状态"
+								labelCol={this.modal.labelCol}
+								wrapperCol={this.modal.wrapperCol}
+							>
+								{getFieldDecorator('status', {
+									initialValue: this.user.role.status,
+									validateTrigger: 'change'
+								})(
+									<Radio.Group>
+										<Radio value={1}>开放</Radio>
+										<Radio value={0}>禁用</Radio>
+									</Radio.Group>
+								)}
+							</Form.Item>
+						)}
 						{this.user.authAll.map((k, index) => {
 							const auth = this.user.auth.find(u => u.auth_key === k.auth_key)
 							const applyKey = auth?.apply.map(u => u.key) || []

@@ -128,7 +128,9 @@ export default class Auth extends Vue {
 					/>
 				)}
 
-				<Button onClick={() => (this.createAuthModal.visible = true)}>新增</Button>
+				<Button style={{ marginBottom: '16px' }} onClick={() => (this.createAuthModal.visible = true)}>
+					新增
+				</Button>
 				<Table
 					bordered={false}
 					columns={this.table.columns}
