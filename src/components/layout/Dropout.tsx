@@ -15,7 +15,7 @@ const AppModule = namespace('app')
 
 @Component
 export default class Dropout extends Vue {
-	@AppModule.State(state => state.user) user!: AppUser
+	@AppModule.State(state => state.user) user!: AppUser | null
 	@AppModule.Action('logout') logout!: Function
 
 	async onMenuClick(params: { key: string }) {
@@ -34,8 +34,8 @@ export default class Dropout extends Vue {
 			<div class="user-drop">
 				<Dropdown>
 					<div style={{ cursor: 'pointer', padding: '0 12px' }}>
-						<Avatar src={this.user.avatar} />
-						<span class="user-name">{this.user.nickname}</span>
+						<Avatar src={this.user?.avatar} />
+						<span class="user-name">{this.user?.nickname}</span>
 					</div>
 					<Menu slot="overlay" onClick={this.onMenuClick}>
 						<Menu.Item key="user">

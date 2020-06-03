@@ -10,6 +10,7 @@ import { Module, MutationTree, ActionTree } from 'vuex'
 import { AppState } from './types'
 import { login } from '@/api/user'
 import { Modal } from 'ant-design-vue'
+import { resetStore } from '@/utils/bootstrap'
 import router from '@/router'
 
 const createState = (): AppState => ({
@@ -42,6 +43,7 @@ const mutations: MutationTree<AppState> = {
 	},
 	SET_PRIMARYCOLOR: (state, primaryColor) => {
 		state.primaryColor = primaryColor
+		Vue.ls.set('primaryColor', primaryColor)
 	},
 	SET_MULTIPLE: (state, multiple) => {
 		state.multiple = multiple
@@ -87,11 +89,13 @@ const actions: ActionTree<AppState, any> = {
 				onOk: () => {
 					return new Promise(response => {
 						setTimeout(() => {
-							commit('SET_USER', null)
-							Vue.ls.remove('user')
 							response()
+							resetStore()
 							resolve(true)
-							router.replace('/login')
+							router
+								.replace('/login')
+								.then(() => {})
+								.catch(() => {})
 						}, 1000)
 					})
 				},
