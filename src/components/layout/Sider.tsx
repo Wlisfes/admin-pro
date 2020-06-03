@@ -2,11 +2,11 @@
  * @Date: 2020-03-27 15:41:24
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-04-23 13:44:21
+ * @LastEditTime: 2020-06-03 16:03:48
  * @Description: 侧边栏导航
  */
 
-import { Vue, Component, Mixins } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { MixinDevice } from '@/mixins'
 import { Layout } from 'ant-design-vue'

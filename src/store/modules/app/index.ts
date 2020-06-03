@@ -2,13 +2,15 @@
  * @Date: 2020-03-27 17:18:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-04-23 13:47:39
+ * @LastEditTime: 2020-06-03 17:11:42
  * @Description:
  */
 import Vue from 'vue'
 import { Module, MutationTree, ActionTree } from 'vuex'
 import { AppState } from './types'
 import { login } from '@/api/user'
+import { Modal } from 'ant-design-vue'
+import router from '@/router'
 
 const createState = (): AppState => ({
 	user: null, //用户信息
@@ -65,18 +67,36 @@ const mutations: MutationTree<AppState> = {
 }
 
 const actions: ActionTree<AppState, any> = {
-	asnycUser: ({ commit }, form: { username: string; password: string }) => {
-		return new Promise(async (resolve, reject) => {
-			const response = await login({
-				username: form.username,
-				password: form.password
-			})
+	login: async ({ commit }, form: { username: string; password: string }) => {
+		const response = await login({
+			username: form.username,
+			password: form.password
+		})
 
-			if (response.code === 200) {
-				commit('SET_USER', response.data)
-				Vue.ls.set('user', response.data, 6 * 3600 * 1000)
-			}
-			resolve(response.code === 200)
+		if (response.code === 200) {
+			commit('SET_USER', response.data)
+			Vue.ls.set('user', response.data, 6 * 3600 * 1000)
+		}
+		return response.code === 200
+	},
+	logout: ({ commit }) => {
+		return new Promise(resolve => {
+			Modal.confirm({
+				title: 'Message',
+				content: '确定要退出吗？',
+				onOk: () => {
+					return new Promise(response => {
+						setTimeout(() => {
+							commit('SET_USER', null)
+							Vue.ls.remove('user')
+							response()
+							resolve(true)
+							router.replace('/login')
+						}, 1000)
+					})
+				},
+				onCancel: () => resolve(false)
+			})
 		})
 	}
 }

@@ -1,5 +1,18 @@
+export interface AppUser {
+	id: number
+	uid: number
+	access_token: string
+	username: string
+	nickname: string
+	avatar: string | null
+	email: string | null
+	mobile: number | null
+	status: number
+	createTime: string
+}
+
 export interface AppState {
-	user: any
+	user: AppUser | null
 	device: string
 	collapsed: boolean
 	theme: string

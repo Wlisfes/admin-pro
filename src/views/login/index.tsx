@@ -2,7 +2,7 @@
  * @Date: 2020-03-27 13:14:26
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-03-31 16:16:48
+ * @LastEditTime: 2020-06-03 16:46:45
  * @Description: 登陆界面
  */
 
@@ -21,7 +21,7 @@ const AppModule = namespace('app')
 	}
 })
 class Login extends Vue {
-	@AppModule.Action('asnycUser') asnycUser!: Function
+	@AppModule.Action('login') login!: Function
 
 	private form: any
 	private loading: boolean = false
@@ -39,7 +39,7 @@ class Login extends Vue {
 				return
 			}
 
-			const rules = await this.asnycUser(form)
+			const rules = await this.login(form)
 			if (rules) {
 				this.$notification.success({
 					message: '欢迎',

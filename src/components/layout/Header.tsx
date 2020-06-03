@@ -10,6 +10,7 @@ import { Component, Mixins } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { MixinDevice } from '@/mixins'
 import { Layout, Icon } from 'ant-design-vue'
+import Dropout from '@/components/layout/Dropout'
 
 const AppModule = namespace('app')
 
@@ -83,6 +84,7 @@ export default class Header extends Mixins(MixinDevice) {
 								type={this.collapsed ? 'menu-unfold' : 'menu-fold'}
 								onClick={this.handelcollapsed}
 							/>
+							<Dropout />
 						</Layout.Header>
 					</div>
 				)}
