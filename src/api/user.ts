@@ -2,15 +2,33 @@
  * @Author: 情雨随风
  * @Date: 2020-04-07 22:33:10
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-31 14:43:17
+ * @Last Modified time: 2020-06-04 22:33:53
  * @Description: 用户模块接口
  */
 
 import http from '@/utils/request'
+import { RoleType } from '@/api/role'
+import { AuthType } from '@/api/auth'
+
+export interface UserType {
+	id: number
+	uid: number
+	username: string
+	nickname: string
+	status: number
+	createTime: string
+	email: string | null
+	mobile: string | null
+	avatar: string | null
+	access_token?: string
+	article?: [] | null
+	role?: RoleType | null
+	auth?: AuthType[] | null
+}
 
 //登录
 export const login = (params: { username?: string; email?: string; mobile?: string | number; password: string }) => {
-	return http({
+	return http<UserType>({
 		url: `/api/user/login`,
 		method: 'POST',
 		data: params

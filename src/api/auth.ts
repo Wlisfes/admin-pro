@@ -19,16 +19,16 @@ interface Auth {
 	status: number
 	apply: Apply[]
 }
-interface UpAuth {
+export interface ApplyType extends Apply {}
+export interface AuthType extends Auth {
 	id: number
-	auth_name: string
-	status: number
-	apply: Apply[]
+	createTime: string
+	all: number
 }
 
 //获取所有权限模块列表
 export const authAll = () => {
-	return http({
+	return http<Array<AuthType>>({
 		url: `/api/auth/all`,
 		method: 'GET'
 	})
@@ -36,7 +36,7 @@ export const authAll = () => {
 
 //新增权限模块
 export const createAuth = (params: Auth) => {
-	return http({
+	return http<AuthType>({
 		url: `/api/auth/create`,
 		method: 'POST',
 		data: params
@@ -44,8 +44,8 @@ export const createAuth = (params: Auth) => {
 }
 
 //修改权限模块
-export const updateAuth = (params: UpAuth) => {
-	return http({
+export const updateAuth = (params: { id: number; auth_name: string; status: number; apply: Apply[] }) => {
+	return http<AuthType>({
 		url: `/api/auth/update`,
 		method: 'PUT',
 		data: params
@@ -63,7 +63,7 @@ export const deleteAuth = (params: { id: number }) => {
 
 //切换权限模块状态
 export const cutoverAuth = (params: { id: number }) => {
-	return http({
+	return http<AuthType>({
 		url: `/api/auth/cutover`,
 		method: 'PUT',
 		params
@@ -72,7 +72,7 @@ export const cutoverAuth = (params: { id: number }) => {
 
 //获取权限模块信息
 export const getAuth = (params: { id: number }) => {
-	return http({
+	return http<AuthType>({
 		url: `/api/auth/info`,
 		method: 'GET',
 		params
