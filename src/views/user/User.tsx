@@ -105,7 +105,7 @@ export default class User extends Vue {
 	async allUser() {
 		const response = await allUser()
 		if (response.code === 200) {
-			this.table.dataSource = response.data
+			this.table.dataSource = response.data as []
 		}
 		this.table.loading = false
 	}

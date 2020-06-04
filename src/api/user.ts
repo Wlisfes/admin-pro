@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-07 22:33:10
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:33:53
+ * @Last Modified time: 2020-06-04 22:39:56
  * @Description: 用户模块接口
  */
 
@@ -37,7 +37,7 @@ export const login = (params: { username?: string; email?: string; mobile?: stri
 
 //获取所有用户列表
 export const allUser = (params?: any) => {
-	return http({
+	return http<Array<UserType>>({
 		url: `/api/user/all`,
 		method: 'GET',
 		params
@@ -46,7 +46,7 @@ export const allUser = (params?: any) => {
 
 //获取用户信息
 export const getUser = (params: { uid: number }) => {
-	return http({
+	return http<UserType>({
 		url: `/api/user/info`,
 		method: 'GET',
 		params
@@ -55,7 +55,7 @@ export const getUser = (params: { uid: number }) => {
 
 //切换权限模块状态
 export const cutoverUser = (params: { uid: number }) => {
-	return http({
+	return http<UserType>({
 		url: `/api/user/cutover`,
 		method: 'PUT',
 		params
@@ -70,7 +70,7 @@ export const updateUser = (params: {
 	mobile?: number
 	email?: string
 }) => {
-	return http({
+	return http<UserType>({
 		url: `/api/user/update`,
 		method: 'PUT',
 		data: params
@@ -79,7 +79,7 @@ export const updateUser = (params: {
 
 //修改用户权限
 export const updateUserAuth = (params: any) => {
-	return http({
+	return http<UserType>({
 		url: `/api/user/update/role`,
 		method: 'PUT',
 		data: params
@@ -88,7 +88,7 @@ export const updateUserAuth = (params: any) => {
 
 //修改用户头像
 export const updateUserAvatar = (params: { uid: number; avatar: string }) => {
-	return http({
+	return http<UserType>({
 		url: `/api/user/update/avatar`,
 		method: 'PUT',
 		data: params

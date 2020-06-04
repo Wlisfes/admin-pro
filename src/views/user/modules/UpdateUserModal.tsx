@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-28 22:04:38
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:30:03
+ * @Last Modified time: 2020-06-04 22:40:28
  * @Description: 修改用户信息
  */
 
@@ -43,8 +43,8 @@ class UpdateUserModal extends Vue {
 			const data = response.data
 			this.user.username = data.username
 			this.user.nickname = data.nickname
-			this.user.email = data.email
-			this.user.mobile = data.mobile
+			this.user.email = data.email as string
+			this.user.mobile = data.mobile as string
 			this.user.status = data.status
 			this.user.loading = false
 		}

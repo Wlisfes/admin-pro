@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-03-28 18:09:21
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 20:54:27
+ * @Last Modified time: 2020-06-04 22:38:13
  * @Description: 菜单组件
  */
 
@@ -27,7 +27,7 @@ const menu = [
 	},
 	{
 		key: 'admin',
-		icon: 'team',
+		icon: 'user',
 		title: '管理员/权限',
 		children: [
 			{
