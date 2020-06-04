@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:32:39
+ * @Last Modified time: 2020-06-04 23:24:59
  * @Description: 角色管理界面
  */
 
@@ -20,7 +20,6 @@ import moment from 'moment'
 export default class User extends Vue {
 	//表格配置
 	private table = {
-		//表头
 		columns: [
 			{ title: '用户头像', dataIndex: 'avatar', width: '9%', scopedSlots: { customRender: 'avatar' } },
 			{ title: '用户名', width: '9%', dataIndex: 'username' },
@@ -32,12 +31,12 @@ export default class User extends Vue {
 			{ title: '状态', width: '9%', dataIndex: 'status', scopedSlots: { customRender: 'status' } },
 			{ title: '操作', width: 130, dataIndex: 'action', scopedSlots: { customRender: 'action' } }
 		],
-
-		//loading动画
 		loading: true,
-
-		//列表数据
-		dataSource: []
+		dataSource: [],
+		pageSize: 10,
+		pageSizeOptions: ['10', '15', '20', '30', '40', '50'],
+		showSizeChanger: true,
+		current: 1
 	}
 
 	//头像上传组件配置
@@ -213,9 +212,9 @@ export default class User extends Vue {
 							},
 							email: (email: any, props: UserType) => {
 								const EmailVNode = (
-									<div class="row-ellipsis" style={{ marginRight: '-16px' }}>
+									<span class="row-ellipsis" style={{ cursor: 'pointer' }}>
 										{props.email || '------'}
-									</div>
+									</span>
 								)
 								return props.email ? (
 									<Tooltip placement="top" title={props.email}>
@@ -226,7 +225,9 @@ export default class User extends Vue {
 								)
 							},
 							mobile: (mobile: any, props: UserType) => {
-								const MobileVNode = <div>{props.mobile || '------'}</div>
+								const MobileVNode = (
+									<span style={{ cursor: 'pointer' }}>{props.mobile || '------'}</span>
+								)
 								return props.mobile ? (
 									<Tooltip placement="top" title={props.mobile}>
 										{MobileVNode}
@@ -267,6 +268,16 @@ export default class User extends Vue {
 								)
 							}
 						}
+					}}
+					pagination={{
+						pageSize: this.table.pageSize,
+						pageSizeOptions: this.table.pageSizeOptions,
+						showSizeChanger: this.table.showSizeChanger,
+						current: this.table.current
+					}}
+					onChange={(ops: any) => {
+						this.table.current = ops.current
+						this.table.pageSize = ops.pageSize
 					}}
 				></Table>
 			</div>
