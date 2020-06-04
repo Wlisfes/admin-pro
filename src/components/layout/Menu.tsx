@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-03-28 18:09:21
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-03 22:50:16
+ * @Last Modified time: 2020-06-04 20:54:27
  * @Description: 菜单组件
  */
 
@@ -42,8 +42,20 @@ const menu = [
 			},
 			{
 				key: 'admin-auth',
-				title: '权限模块管理',
+				title: '权限管理',
 				path: '/admin-auth'
+			}
+		]
+	},
+	{
+		key: 'tag',
+		icon: 'yuque',
+		title: '标签管理',
+		children: [
+			{
+				key: 'tag-all',
+				title: '标签列表',
+				path: '/tag-all'
 			}
 		]
 	},

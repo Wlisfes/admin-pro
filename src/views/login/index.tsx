@@ -6,10 +6,10 @@
  * @Description: 登陆界面
  */
 
+import './index.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { Form, Input, Icon, Button, Checkbox } from 'ant-design-vue'
-import './index.less'
 
 const AppModule = namespace('app')
 

@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-25 19:26:29
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-31 17:01:37
+ * @Last Modified time: 2020-06-04 22:27:49
  * @Description: 新增角色弹窗
  */
 
@@ -12,9 +12,8 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Table, Button, Tag } from 'ant-design-vue'
 import { CommEdit } from '@/components/common'
 import { UpdateRoleModal, CreateRoleModal } from './modules'
-import { roleAll, cutoverRole, deleteRole } from '@/api/role'
+import { roleAll, cutoverRole, deleteRole, RoleType } from '@/api/role'
 import { Color } from '@/interface'
-import { RoleType } from '@/interface/user.type'
 
 @Component
 export default class Role extends Vue {
@@ -70,7 +69,7 @@ export default class Role extends Vue {
 	async roleAll() {
 		const response = await roleAll()
 		if (response.code === 200) {
-			this.table.dataSource = response.data
+			this.table.dataSource = response.data as []
 		}
 
 		this.table.loading = false

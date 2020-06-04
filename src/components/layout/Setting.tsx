@@ -8,7 +8,7 @@
 
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
-import { colorList, updateTheme, updateColorWeak } from '@/components/layout/settingConfig'
+import { colorList, updateTheme } from '@/components/layout/settingConfig'
 import { Drawer, Icon, Tooltip, List, Switch, Divider, Tag } from 'ant-design-vue'
 import lightSvg from '@/assets/image/light.svg'
 import darkSvg from '@/assets/image/dark.svg'
@@ -135,8 +135,7 @@ export default class Setting extends Vue {
 								<div class="theme-tags">
 									{this.colorList.map((k, i) => {
 										return (
-											<Tooltip key={i}>
-												<template slot="title">{k.key}</template>
+											<Tooltip key={i} title={k.key}>
 												<Tag
 													color={k.color}
 													onClick={() => {

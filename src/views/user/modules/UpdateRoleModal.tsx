@@ -2,12 +2,12 @@
  * @Author: 情雨随风
  * @Date: 2020-04-25 12:49:40
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-31 17:15:21
+ * @Last Modified time: 2020-06-04 22:28:35
  * @Description: Role编辑弹窗
  */
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Form, Input, Modal, Checkbox, Radio, Spin } from 'ant-design-vue'
+import { Form, Input, Modal, Radio, Spin } from 'ant-design-vue'
 import { CommonModal } from '@/interface/common'
 import { updateRole, getRole } from '@/api/role'
 

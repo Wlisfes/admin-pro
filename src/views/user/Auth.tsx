@@ -12,9 +12,8 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Button } from 'ant-design-vue'
 import { CommEdit } from '@/components/common'
 import { UpdateAuthModal, CreateAuthModal } from './modules'
-import { authAll, deleteAuth, cutoverAuth } from '@/api/auth'
+import { authAll, deleteAuth, cutoverAuth, AuthType, ApplyType } from '@/api/auth'
 import { Color } from '@/interface/common'
-import { AuthType, ApplyType } from '@/interface/user.type'
 
 @Component
 export default class Auth extends Vue {
@@ -71,7 +70,7 @@ export default class Auth extends Vue {
 	async authAll() {
 		const response = await authAll()
 		if (response.code === 200) {
-			this.table.dataSource = response.data
+			this.table.dataSource = response.data as []
 		}
 		this.table.loading = false
 	}

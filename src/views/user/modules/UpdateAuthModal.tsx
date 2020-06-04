@@ -43,7 +43,7 @@ class UpdateAuthModal extends Vue {
 			this.auth.auth_key = data.auth_key
 			this.auth.auth_name = data.auth_name
 			this.auth.status = data.status
-			this.auth.apply = data.apply
+			this.auth.apply = data.apply as []
 			this.auth.all = data.all
 			this.auth.loading = false
 		}

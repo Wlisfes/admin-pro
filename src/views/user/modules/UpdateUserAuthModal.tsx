@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-05-31 15:04:31
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-31 15:20:12
+ * @Last Modified time: 2020-06-04 22:29:15
  * @Description:
  */
 
@@ -10,9 +10,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Form, Modal, Checkbox, Spin, Select, Radio } from 'ant-design-vue'
 import { CommonModal, Apply } from '@/interface/common'
 import { getUser, updateUserAuth } from '@/api/user'
-import { roleAll } from '@/api/role'
-import { authAll } from '@/api/auth'
-import { RoleType, AuthType } from '@/interface/user.type'
+import { roleAll, RoleType } from '@/api/role'
+import { authAll, AuthType } from '@/api/auth'
 
 interface UserProp {
 	status: number

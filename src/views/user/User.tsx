@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-31 15:21:10
+ * @Last Modified time: 2020-06-04 22:32:39
  * @Description: 角色管理界面
  */
 
@@ -12,9 +12,8 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Avatar, Tooltip } from 'ant-design-vue'
 import { AvaterUpload, CommEdit } from '@/components/common'
 import { UpdateUserModal, UpdateUserAuthModal } from './modules'
-import { allUser, deleteUser, cutoverUser, updateUserAvatar } from '@/api/user'
+import { allUser, deleteUser, cutoverUser, updateUserAvatar, UserType } from '@/api/user'
 import { Color } from '@/interface'
-import { UserTypes } from '@/interface/user.type'
 import moment from 'moment'
 
 @Component
@@ -112,7 +111,7 @@ export default class User extends Vue {
 	}
 
 	//操作
-	async onChange({ key, props }: { key: string; props: UserTypes }) {
+	async onChange({ key, props }: { key: string; props: UserType }) {
 		this.table.loading = true
 
 		//修改用户信息
@@ -186,7 +185,7 @@ export default class User extends Vue {
 					scroll={{ x: 1000 }}
 					{...{
 						scopedSlots: {
-							avatar: (avatar: string, props: UserTypes) => {
+							avatar: (avatar: string, props: UserType) => {
 								return avatar ? (
 									<Avatar
 										size={50}
@@ -212,7 +211,7 @@ export default class User extends Vue {
 									></Avatar>
 								)
 							},
-							email: (email: any, props: UserTypes) => {
+							email: (email: any, props: UserType) => {
 								const EmailVNode = (
 									<div class="row-ellipsis" style={{ marginRight: '-16px' }}>
 										{props.email || '------'}
@@ -226,7 +225,7 @@ export default class User extends Vue {
 									EmailVNode
 								)
 							},
-							mobile: (mobile: any, props: UserTypes) => {
+							mobile: (mobile: any, props: UserType) => {
 								const MobileVNode = <div>{props.mobile || '------'}</div>
 								return props.mobile ? (
 									<Tooltip placement="top" title={props.mobile}>
@@ -236,7 +235,7 @@ export default class User extends Vue {
 									MobileVNode
 								)
 							},
-							role: (role: any, props: UserTypes) => <div>{props.role?.role_name || '游客'}</div>,
+							role: (role: any, props: UserType) => <div>{props.role?.role_name || '游客'}</div>,
 							createTime: (createTime: string) => <div>{moment(createTime).format('YYYY-MM-DD')}</div>,
 							status: (status: number) => {
 								return (
@@ -245,7 +244,7 @@ export default class User extends Vue {
 									</Tag>
 								)
 							},
-							action: (action: any, props: UserTypes) => {
+							action: (action: any, props: UserType) => {
 								return (
 									<CommEdit
 										params={{

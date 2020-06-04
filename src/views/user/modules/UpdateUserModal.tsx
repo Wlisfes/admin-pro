@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-28 22:04:38
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-05-31 15:11:22
+ * @Last Modified time: 2020-06-04 22:30:03
  * @Description: 修改用户信息
  */
 
@@ -10,15 +10,6 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Form, Input, Modal, Radio, Spin } from 'ant-design-vue'
 import { CommonModal } from '@/interface/common'
 import { updateUser, getUser } from '@/api/user'
-
-interface User {
-	username: string
-	nickname: string
-	email: string | null
-	mobile: string | null
-	status: number
-	loading: boolean
-}
 
 @Component({
 	props: { form: { type: Object } }
@@ -32,7 +23,7 @@ class UpdateUserModal extends Vue {
 		...CommonModal,
 		title: '编辑用户信息'
 	}
-	private user: User = {
+	private user = {
 		username: '',
 		nickname: '',
 		email: '',
