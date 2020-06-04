@@ -18,6 +18,6 @@ export interface Response<T = any> {
 
 declare module 'axios' {
 	export interface AxiosInstance {
-		<T = Response>(config: AxiosRequestConfig): Promise<T>
+		<T = any, R = Response<T>>(config: AxiosRequestConfig): Promise<R>
 	}
 }
