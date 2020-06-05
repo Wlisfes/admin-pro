@@ -27,3 +27,48 @@ export const TAGAll = () => {
 		method: 'GET'
 	})
 }
+
+//获取标签详情
+export const getTAG = (params: { id: number }) => {
+	return http<TAGType>({
+		url: '/api/tag/info',
+		method: 'GET',
+		params
+	})
+}
+
+//修改标签
+export const updateTAG = (params: { id: number; name: string; color: string; status: number }) => {
+	return http<TAGType>({
+		url: '/api/tag/update',
+		method: 'PUT',
+		data: params
+	})
+}
+
+//置顶标签
+export const sortTAG = (params: { id: number }) => {
+	return http<TAGType>({
+		url: `/api/tag/sort`,
+		method: 'PUT',
+		params
+	})
+}
+
+//切换标签状态
+export const cutoverTAG = (params: { id: number }) => {
+	return http<TAGType>({
+		url: `/api/tag/cutover`,
+		method: 'PUT',
+		params
+	})
+}
+
+//删除标签
+export const deleteTAG = (params: { id: number }) => {
+	return http({
+		url: `/api/tag/delete`,
+		method: 'DELETE',
+		params
+	})
+}

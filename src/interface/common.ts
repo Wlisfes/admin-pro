@@ -21,6 +21,8 @@ export enum Color {
 	export = 'purple'
 }
 
+export const predefineColor = ['#F5222D', '#FA541C', '#FAAD14', '#13C2C2', '#52C41A', '#1890FF', '#2F54EB', '#722ED1']
+
 //可操作权限列表
 export const Apply = [
 	{ name: '新增', key: 'create', status: 0 },
