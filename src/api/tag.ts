@@ -21,10 +21,11 @@ export interface TAGType {
 }
 
 //获取所有标签
-export const TAGAll = () => {
+export const TAGAll = (params?: { uid?: number; status?: number; createTime?: string }) => {
 	return http<Array<TAGType>>({
 		url: '/api/tag/all',
-		method: 'GET'
+		method: 'GET',
+		params
 	})
 }
 
