@@ -32,9 +32,9 @@ const err = (error: AxiosError<any>) => {
 				message: '账号异常',
 				description: data.message
 			})
-			Vue.ls.remove('user')
-			resetStore()
-			router.replace('/login')
+			// Vue.ls.remove('user')
+			// resetStore()
+			// router.replace('/login')
 		} else {
 			notification.error({
 				message: '服务器开了小个差',

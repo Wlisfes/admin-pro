@@ -62,10 +62,26 @@ class TermForm extends Vue {
 	}
 
 	createTime(key: number) {
+		const startTime = (num: number, key: 'day' | 'month' | 'year') => {
+			return moment()
+				.subtract(num, key)
+				.format('YYYY-MM-DD 00:00:00')
+		}
 		switch (key) {
 			case 1:
-				return moment().toDate()
-				break
+				return startTime(0, 'day')
+			case 2:
+				return startTime(1, 'day')
+			case 3:
+				return startTime(3, 'day')
+			case 4:
+				return startTime(7, 'day')
+			case 5:
+				return startTime(1, 'month')
+			case 6:
+				return startTime(3, 'month')
+			case 7:
+				return startTime(1, 'year')
 		}
 	}
 
