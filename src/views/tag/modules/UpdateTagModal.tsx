@@ -35,12 +35,12 @@ class UpdateTagModal extends Vue {
 	private tag = {
 		name: '',
 		color: '',
-		status: 0,
+		status: 5,
 		loading: true
 	}
 
 	protected created() {
-		setTimeout(() => this.getTAG(), 500)
+		this.getTAG()
 	}
 
 	//获取标签信息

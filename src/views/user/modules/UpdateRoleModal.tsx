@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-25 12:49:40
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:28:35
+ * @Last Modified time: 2020-06-06 13:52:39
  * @Description: Role编辑弹窗
  */
 
@@ -26,7 +26,7 @@ class UpdateRoleModal extends Vue {
 	private role = {
 		role_key: '',
 		role_name: '',
-		status: 0,
+		status: 5,
 		createTime: '',
 		loading: true
 	}

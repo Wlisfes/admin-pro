@@ -2,15 +2,15 @@
  * @Author: 情雨随风
  * @Date: 2020-06-04 20:46:53
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 23:27:11
+ * @Last Modified time: 2020-06-06 13:50:53
  * @Description: 标签列表
  */
 
 import './less/tag.less'
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Tag, Tooltip } from 'ant-design-vue'
+import { Table, Tag, Tooltip, Input } from 'ant-design-vue'
 import { TAGAll, cutoverTAG, deleteTAG, sortTAG, TAGType } from '@/api/tag'
-import { CommEdit } from '@/components/common'
+import { CommEdit, TermForm } from '@/components/common'
 import { UpdateTagModal } from './modules'
 import { Color } from '@/interface'
 import moment from 'moment'
@@ -49,13 +49,28 @@ export default class TAG extends Vue {
 		}
 	}
 
+	//查询组件配置
+	private termForm = {
+		onCreate: () => {
+			this.updateTagModal.visible = true
+		},
+		onReply: () => {
+			this.table.loading = true
+			setTimeout(() => this.TAGAll(), 300)
+		},
+		onSubmit: (params: any) => {
+			this.table.loading = true
+			setTimeout(() => this.TAGAll(params), 300)
+		}
+	}
+
 	protected created() {
 		this.TAGAll()
 	}
 
 	//获取所有标签列表
-	async TAGAll() {
-		const response = await TAGAll()
+	async TAGAll(params?: any) {
+		const response = await TAGAll(params)
 		if (response.code === 200) {
 			this.table.dataSource = response.data as []
 		}
@@ -113,7 +128,11 @@ export default class TAG extends Vue {
 						onSubmit={this.updateTagModal.onSubmit}
 					/>
 				)}
-
+				<TermForm
+					onCreate={this.termForm.onCreate}
+					onReply={this.termForm.onReply}
+					onSubmit={this.termForm.onSubmit}
+				></TermForm>
 				<Table
 					bordered={false}
 					columns={this.table.columns}

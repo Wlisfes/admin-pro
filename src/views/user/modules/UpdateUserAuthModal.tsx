@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-05-31 15:04:31
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:29:15
+ * @Last Modified time: 2020-06-06 13:52:51
  * @Description:
  */
 
@@ -35,7 +35,7 @@ class UpdateUserAuthModal extends Vue {
 		title: '编辑用户权限'
 	}
 	private user: UserProp = {
-		status: 0,
+		status: 5,
 		role: null,
 		roleAll: [],
 		auth: [],

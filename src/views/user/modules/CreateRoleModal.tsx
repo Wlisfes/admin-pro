@@ -32,7 +32,6 @@ class CreateAuthModal extends Vue {
 				}, 600)
 				return
 			}
-			console.log(form)
 			const response = await createRole({
 				role_key: form.role_key,
 				role_name: form.role_name,

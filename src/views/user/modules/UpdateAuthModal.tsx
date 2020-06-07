@@ -26,7 +26,7 @@ class UpdateAuthModal extends Vue {
 	private auth = {
 		auth_key: '',
 		auth_name: '',
-		status: 0,
+		status: 5,
 		apply: [],
 		all: 0,
 		loading: true

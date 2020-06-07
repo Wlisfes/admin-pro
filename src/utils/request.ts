@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import { notification } from 'ant-design-vue'
+import { resetStore } from '@/utils/bootstrap'
 import router from '@/router'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 
 const service: AxiosInstance = axios.create({
-	baseURL: `/api`,
+	baseURL: process.env.VUE_APP_BASE_URL,
 	timeout: 30000
 })
 
@@ -22,17 +23,18 @@ const err = (error: AxiosError<any>) => {
 				message: '守卫拦截',
 				description: data.message
 			})
-			if (!Vue.ls.get('user')) {
-				//未登录
-			}
+			Vue.ls.remove('user')
+			resetStore()
+			router.replace('/login')
 		} else if (error.response.status === 403) {
 			//权限不足、账号被禁用、密码更换
 			notification.error({
 				message: '账号异常',
 				description: data.message
 			})
-			// Vue.ls.remove('user')
-			// router.replace('/login')
+			Vue.ls.remove('user')
+			resetStore()
+			router.replace('/login')
 		} else {
 			notification.error({
 				message: '服务器开了小个差',
@@ -48,7 +50,7 @@ const err = (error: AxiosError<any>) => {
 service.interceptors.request.use((config: AxiosRequestConfig) => {
 	const user = Vue.ls.get('user')
 	if (user) {
-		config.headers['access_token'] = user.access_token
+		config.headers['access-token'] = user.access_token
 	}
 	return config
 }, err)
