@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import router from '@/router'
-
+import { resetStore } from '@/utils/bootstrap'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
@@ -24,6 +24,7 @@ router.beforeEach(async (to, from, next) => {
 			next({ path: '/login', replace: true })
 			NProgress.done()
 		}
+		resetStore()
 	}
 })
 
