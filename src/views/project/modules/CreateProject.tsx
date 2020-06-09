@@ -1,0 +1,207 @@
+/*
+ * @Author: 情雨随风
+ * @Date: 2020-06-09 21:17:38
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2020-06-09 23:26:01
+ * @Description: project新增弹窗
+ */
+
+import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Form, Input, Modal, Radio, Select, Spin, Icon } from 'ant-design-vue'
+import { CommonModal } from '@/interface/common'
+import { Upload } from '@/components/common'
+import { TAGAll } from '@/api/tag'
+
+@Component({
+	props: {
+		form: { type: Object }
+	}
+})
+class CreateProject extends Vue {
+	@Prop(Boolean) visible!: false
+
+	private form: any
+	private modal = {
+		...CommonModal,
+		title: '新增项目'
+	}
+	private create = {
+		tag: [],
+		loading: true,
+		picUrl: '',
+		visible: false
+	}
+
+	protected created() {
+		this.TAGAll()
+	}
+
+	//获取标签列表
+	async TAGAll() {
+		const response = await TAGAll()
+		if (response.code === 200) {
+			this.create.tag = response.data as []
+		}
+		this.create.loading = false
+	}
+
+	public onSubmit() {
+		this.modal.loading = true
+		this.form.validateFields(async (err: any, form: { name: string; color: string; status: number }) => {
+			if (err) {
+				setTimeout(() => {
+					this.modal.loading = false
+				}, 600)
+				return
+			}
+			console.log(form)
+			// const response = await updateTAG({
+			// 	id: this.id,
+			// 	name: form.name,
+			// 	color: form.color,
+			// 	status: form.status
+			// })
+			// if (response.code === 200) {
+			// 	this.$notification.success({ message: '修改成功', description: '' })
+			// 	this.$emit('submit')
+			// }
+			this.modal.loading = false
+		})
+	}
+
+	public onCancel() {
+		this.$emit('cancel')
+		this.modal.loading = false
+	}
+
+	protected render() {
+		const { getFieldDecorator, setFieldsValue } = this.form
+		return (
+			<Modal
+				getContainer={() => document.querySelector('.root-project')}
+				visible={this.visible}
+				title={this.modal.title}
+				centered={this.modal.centered}
+				width={this.modal.width}
+				okText={this.modal.okText}
+				cancelText={this.modal.cancelText}
+				confirmLoading={this.modal.loading}
+				destroyOnClose={this.modal.destroyOnClose}
+				okButtonProps={{ props: { disabled: this.create.loading } }}
+				onCancel={this.onCancel}
+				onOk={this.onSubmit}
+			>
+				<Spin size="large" spinning={this.create.loading}>
+					<Form layout="horizontal">
+						<Form.Item
+							label="项目名称"
+							hasFeedback={true}
+							labelCol={this.modal.labelCol}
+							wrapperCol={this.modal.wrapperCol}
+						>
+							{getFieldDecorator('title', {
+								rules: [{ required: true, message: '请输入项目名称' }],
+								validateTrigger: 'change'
+							})(<Input type="text" placeholder="请输入项目名称" />)}
+						</Form.Item>
+						<Form.Item
+							label="类别标签"
+							hasFeedback={true}
+							labelCol={this.modal.labelCol}
+							wrapperCol={this.modal.wrapperCol}
+						>
+							{getFieldDecorator('tag', {
+								rules: [{ required: true, message: '至少选择一个类别' }],
+								validateTrigger: 'change'
+							})(
+								<Select mode="multiple" placeholder="请选择类别">
+									{this.create.tag.map((k: any) => (
+										<Select.Option value={k.name}>{k.name}</Select.Option>
+									))}
+								</Select>
+							)}
+						</Form.Item>
+						<Form.Item
+							label="Github"
+							hasFeedback={true}
+							labelCol={this.modal.labelCol}
+							wrapperCol={this.modal.wrapperCol}
+						>
+							{getFieldDecorator('github', {
+								rules: [{ required: true, message: '请输入项目Github地址' }],
+								validateTrigger: 'change'
+							})(<Input type="text" placeholder="请输入项目Github地址" />)}
+						</Form.Item>
+						<Form.Item
+							label="预览地址"
+							hasFeedback={true}
+							labelCol={this.modal.labelCol}
+							wrapperCol={this.modal.wrapperCol}
+						>
+							{getFieldDecorator('accessUrl', {
+								validateTrigger: 'change'
+							})(<Input type="text" placeholder="请输入项目预览地址" />)}
+						</Form.Item>
+						<Form.Item
+							label="封面"
+							hasFeedback={false}
+							labelCol={this.modal.labelCol}
+							wrapperCol={this.modal.wrapperCol}
+						>
+							{getFieldDecorator('picUrl', {
+								rules: [{ required: true, message: '请上传项目封面' }],
+								validateTrigger: 'change'
+							})(
+								<div>
+									<Input
+										type="text"
+										style={{ display: 'none' }}
+										onInput={(e: Event) => (this.create.picUrl = (e.target as any).value || '')}
+									/>
+									<div class="root-update" onClick={() => (this.create.visible = true)}>
+										{this.create.picUrl ? (
+											<img src={this.create.picUrl} />
+										) : (
+											<Icon type="plus" style={{ color: '#999999', fontSize: '32px' }} />
+										)}
+									</div>
+								</div>
+							)}
+						</Form.Item>
+						<Form.Item
+							label="项目描述"
+							hasFeedback={true}
+							labelCol={this.modal.labelCol}
+							wrapperCol={this.modal.wrapperCol}
+						>
+							{getFieldDecorator('description', {
+								rules: [{ required: true, message: '请输入项目描述' }],
+								validateTrigger: 'change'
+							})(<Input.TextArea autoSize={{ minRows: 4, maxRows: 6 }} placeholder="请输入项目描述" />)}
+						</Form.Item>
+					</Form>
+					<Upload
+						title="项目封面"
+						auto={{ w: 450, h: 300 }}
+						container={{ w: 600, h: 350 }}
+						visible={this.create.visible}
+						onCancel={() => (this.create.visible = false)}
+						onSubmit={({ response }: { response: { code: number; data: { path: string } } }) => {
+							if (response.code === 200) {
+								setFieldsValue({ picUrl: response.data.path })
+								this.create.picUrl = response.data.path
+								this.create.visible = false
+							}
+						}}
+					/>
+				</Spin>
+			</Modal>
+		)
+	}
+}
+
+export default Form.create({
+	props: {
+		visible: { type: Boolean, default: () => false }
+	}
+})(CreateProject)

@@ -1,0 +1,37 @@
+.root-upload {
+	&-cropper {
+		display: flex;
+		flex-direction: row;
+		@media (max-width: 800px) {
+			flex-direction: column;
+		}
+	}
+	&-container {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		> div {
+			position: relative;
+			@media (max-width: 500px) {
+				width: 300px !important;
+				height: 300px !important;
+			}
+		}
+	}
+
+	&-footer {
+		margin-top: 24px;
+		display: flex;
+		@media (max-width: 550px) {
+			justify-content: space-between;
+		}
+		> div {
+			margin-right: 24px;
+			@media (max-width: 550px) {
+				margin-right: 0;
+			}
+		}
+	}
+}

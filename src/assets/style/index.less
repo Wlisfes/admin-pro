@@ -1,8 +1,21 @@
-.row-ellipsis {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
 div {
 	user-select: none;
+}
+
+//用于表格文字
+.root-table-content {
+	position: absolute;
+	left: 16px;
+	right: 16px;
+	top: 16px;
+	bottom: 16px;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+	.row-ellipsis {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		cursor: pointer;
+	}
 }

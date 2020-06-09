@@ -1,23 +1,25 @@
 /*
  * @Author: 情雨随风
- * @Date: 2020-04-09 19:54:03
+ * @Date: 2020-06-09 22:44:22
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-09 22:50:01
- * @Description: 头像裁剪组件
+ * @Last Modified time: 2020-06-09 23:16:51
+ * @Description: 封面上传组件
  */
 
-import './less/common.avater.less'
+import './less/common.upload.less'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Modal, Upload, Button } from 'ant-design-vue'
 import { VueCropper } from 'vue-cropper'
 import { uploadFile } from '@/api'
 
 @Component
-export default class AvaterUpload extends Vue {
+export default class ImageUpload extends Vue {
 	@Prop(Boolean) visible!: boolean
 	@Prop() uid!: number | string
 	@Prop({ default: '头像修改' }) title!: string
 	@Prop({ default: '' }) picUrl!: string
+	@Prop({ default: () => ({ w: 240, h: 240 }) }) auto!: { w: number; h: number }
+	@Prop({ default: () => ({ w: 350, h: 350 }) }) container!: { w: number; h: number }
 
 	private centered: boolean = true
 	private width: number = 800
@@ -34,8 +36,6 @@ export default class AvaterUpload extends Vue {
 	private vueCropperOptions = {
 		img: '',
 		autoCrop: true,
-		autoCropWidth: 240,
-		autoCropHeight: 240,
 		fixedBox: true,
 		info: true
 	}
@@ -75,7 +75,6 @@ export default class AvaterUpload extends Vue {
 			const response = await uploadFile(formData)
 
 			this.$emit('submit', {
-				uid: this.uid,
 				response: response,
 				timeout: () => {
 					setTimeout(() => {
@@ -90,7 +89,7 @@ export default class AvaterUpload extends Vue {
 		})
 	}
 
-	render() {
+	protected render() {
 		return (
 			<Modal
 				title={this.title}
@@ -108,45 +107,24 @@ export default class AvaterUpload extends Vue {
 					this.previews.name = ''
 				}}
 			>
-				<div class="avater-modal">
-					<div class="avater-modal-cropper">
-						<div class="avater-modal-container">
-							<div>
+				<div class="root-upload">
+					<div class="root-upload-cropper">
+						<div class="root-upload-container">
+							<div style={{ width: `${this.container.w}px`, height: `${this.container.h}px` }}>
 								<VueCropper
 									ref="cropper"
 									mode="cover"
 									img={this.vueCropperOptions.img}
 									info={this.vueCropperOptions.info}
 									autoCrop={this.vueCropperOptions.autoCrop}
-									autoCropWidth={this.vueCropperOptions.autoCropWidth}
-									autoCropHeight={this.vueCropperOptions.autoCropHeight}
+									autoCropWidth={this.auto.w}
+									autoCropHeight={this.auto.h}
 									fixedBox={this.vueCropperOptions.fixedBox}
 									onRealTime={(data: { img: any; url: string }) => {
 										this.previews.url = data.url
 										this.previews.img = data.img
 									}}
 								></VueCropper>
-							</div>
-						</div>
-						<div class="avater-modal-container">
-							<div>
-								<div class="previews">
-									{(this.previews.url || this.picUrl) && (
-										<img
-											src={this.previews.url || this.picUrl}
-											style={
-												this.previews.url
-													? this.previews.img
-													: {
-															height: '100%',
-															width: '100%',
-															display: 'block',
-															borderRadius: '50%'
-													  }
-											}
-										/>
-									)}
-								</div>
 							</div>
 						</div>
 					</div>

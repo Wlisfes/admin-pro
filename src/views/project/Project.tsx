@@ -11,6 +11,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Tooltip } from 'ant-design-vue'
 import { CommEdit, TermForm } from '@/components/common'
 import { projectAll, ProjectType } from '@/api/project'
+import { CreateProject } from './modules'
 import { Color } from '@/interface'
 import moment from 'moment'
 
@@ -20,13 +21,24 @@ export default class Project extends Vue {
 	private table = {
 		//表头
 		columns: [
-			{ title: '项目名称', dataIndex: 'title' },
-			{ title: '项目作者', width: 95, ellipsis: true, dataIndex: 'user', scopedSlots: { customRender: 'user' } },
-			{ title: '项目描述', dataIndex: 'description', scopedSlots: { customRender: 'description' } },
+			{
+				title: '项目名称',
+				width: '11%',
+				ellipsis: true,
+				dataIndex: 'title',
+				scopedSlots: { customRender: 'renderTitle' }
+			},
+			{
+				title: '项目作者',
+				width: '10%',
+				ellipsis: true,
+				dataIndex: 'user',
+				scopedSlots: { customRender: 'user' }
+			},
 			{ title: '标签类别', dataIndex: 'tag', scopedSlots: { customRender: 'tag' } },
-			{ title: '源码地址', dataIndex: 'github', scopedSlots: { customRender: 'github' } },
-			{ title: '创建时间', dataIndex: 'createTime', scopedSlots: { customRender: 'createTime' } },
-			{ title: '状态', dataIndex: 'status', scopedSlots: { customRender: 'status' } },
+			{ title: '源码地址', width: '8.6%', dataIndex: 'github', scopedSlots: { customRender: 'github' } },
+			{ title: '创建时间', width: '11%', dataIndex: 'createTime', scopedSlots: { customRender: 'createTime' } },
+			{ title: '状态', width: 80, dataIndex: 'status', scopedSlots: { customRender: 'status' } },
 			{ title: '操作', width: 130, dataIndex: 'action', scopedSlots: { customRender: 'action' } }
 		],
 		loading: true,
@@ -40,7 +52,7 @@ export default class Project extends Vue {
 	//查询组件配置
 	private termForm = {
 		onCreate: () => {
-			// this.updateTagModal.visible = true
+			this.createProjectModal.visible = true
 		},
 		onReply: () => {
 			// this.table.loading = true
@@ -49,6 +61,19 @@ export default class Project extends Vue {
 		onSubmit: (params: any) => {
 			this.table.loading = true
 			setTimeout(() => this.projectAll(params), 300)
+		}
+	}
+
+	//新增弹窗配置
+	private createProjectModal = {
+		visible: false,
+		onCancel: () => {
+			this.createProjectModal.visible = false
+		},
+		onSubmit: () => {
+			this.table.loading = true
+			// this.projectAll()
+			this.createProjectModal.visible = false
 		}
 	}
 
@@ -67,6 +92,15 @@ export default class Project extends Vue {
 	protected render() {
 		return (
 			<div class="root-project">
+				{/**项目新增组件**/
+				this.createProjectModal.visible && (
+					<CreateProject
+						{...{ props: this.createProjectModal }}
+						onCancel={this.createProjectModal.onCancel}
+						onSubmit={this.createProjectModal.onSubmit}
+					/>
+				)}
+
 				<TermForm
 					onCreate={this.termForm.onCreate}
 					onReply={this.termForm.onReply}
@@ -79,12 +113,34 @@ export default class Project extends Vue {
 					dataSource={this.table.dataSource}
 					loading={this.table.loading}
 					rowKey={(record: any) => record.id}
+					scroll={{ x: 1100 }}
 					{...{
 						scopedSlots: {
+							expandedRowRender: (props: ProjectType) => <div>{props.description}</div>,
+							renderTitle: (title: string) => (
+								<div class="root-table-content">
+									<Tooltip placement="top" title={title}>
+										<span class="row-ellipsis">{title}</span>
+									</Tooltip>
+								</div>
+							),
 							user: (user: any) => (
-								<Tooltip placement="top" title={user.nickname}>
-									<span class="root-ellipsis">收取单个战利品收取单个战利品</span>
-								</Tooltip>
+								<div class="root-table-content">
+									<Tooltip placement="top" title={user.nickname}>
+										<span class="row-ellipsis">{user.nickname}</span>
+									</Tooltip>
+								</div>
+							),
+							tag: (tag: any, props: ProjectType) => (
+								<div class="root-table-content">
+									{props.tag.map(k => (
+										<Tooltip placement="top" title={k.name}>
+											<Tag style={{ cursor: 'pointer' }} color={k.color}>
+												{k.name}
+											</Tag>
+										</Tooltip>
+									))}
+								</div>
 							),
 							github: (github: string) => {
 								return (

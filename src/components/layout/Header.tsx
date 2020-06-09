@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-03-28 17:28:54
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-03-30 21:10:35
+ * @Last Modified time: 2020-06-09 21:16:03
  * @Description: 头部导航组件
  */
 
@@ -77,7 +77,7 @@ export default class Header extends Mixins(MixinDevice) {
 						<Layout.Header
 							class={`${this.headerfixed && 'create-header-fixed'} ${this.className} ${this.headerfixed &&
 								'create-header-fixed-transition'}`}
-							style={{ background: '#fff', padding: '0' }}
+							style={{ background: '#fff', padding: '0', transition: 'width 200ms' }}
 						>
 							<Icon
 								class="trigger"

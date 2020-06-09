@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 23:24:59
+ * @Last Modified time: 2020-06-09 19:58:23
  * @Description: 角色管理界面
  */
 
@@ -236,7 +236,7 @@ export default class User extends Vue {
 							createTime: (createTime: string) => <div>{moment(createTime).format('YYYY-MM-DD')}</div>,
 							status: (status: number) => {
 								return (
-									<Tag style={{ marginRight: 0 }} color={status ? 'green' : 'pink'}>
+									<Tag style={{ cursor: 'pointer' }} color={status ? 'green' : 'pink'}>
 										{status ? '正常' : '已禁用'}
 									</Tag>
 								)
