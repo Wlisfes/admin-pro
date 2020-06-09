@@ -61,7 +61,7 @@ const menu = [
 	},
 	{
 		key: 'article',
-		icon: 'chrome',
+		icon: 'read',
 		title: '文章管理',
 		children: [
 			{
@@ -70,7 +70,7 @@ const menu = [
 				path: '/'
 			},
 			{
-				key: 'article-list',
+				key: 'article-all',
 				title: '文章列表',
 				path: '/'
 			}
@@ -78,7 +78,7 @@ const menu = [
 	},
 	{
 		key: 'note',
-		icon: 'chrome',
+		icon: 'schedule',
 		title: '笔记管理',
 		children: [
 			{
@@ -87,9 +87,21 @@ const menu = [
 				path: '/'
 			},
 			{
-				key: 'note-list',
+				key: 'note-all',
 				title: '笔记列表',
 				path: '/'
+			}
+		]
+	},
+	{
+		key: 'project',
+		icon: 'profile',
+		title: '项目管理',
+		children: [
+			{
+				key: 'profile-all',
+				title: '项目列表',
+				path: '/project-all'
 			}
 		]
 	}

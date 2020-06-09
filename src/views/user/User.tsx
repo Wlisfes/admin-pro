@@ -211,11 +211,7 @@ export default class User extends Vue {
 								)
 							},
 							email: (email: any, props: UserType) => {
-								const EmailVNode = (
-									<span class="row-ellipsis" style={{ cursor: 'pointer' }}>
-										{props.email || '------'}
-									</span>
-								)
+								const EmailVNode = <span style={{ cursor: 'pointer' }}>{props.email || '------'}</span>
 								return props.email ? (
 									<Tooltip placement="top" title={props.email}>
 										{EmailVNode}

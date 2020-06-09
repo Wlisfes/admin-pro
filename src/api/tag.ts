@@ -23,7 +23,7 @@ export interface TAGType {
 //获取所有标签
 export const TAGAll = (params?: { uid?: number; status?: number; createTime?: string }) => {
 	return http<Array<TAGType>>({
-		url: '/api/tag/all',
+		url: '/v2/tag/all',
 		method: 'GET',
 		params
 	})
@@ -32,7 +32,7 @@ export const TAGAll = (params?: { uid?: number; status?: number; createTime?: st
 //获取标签详情
 export const getTAG = (params: { id: number }) => {
 	return http<TAGType>({
-		url: '/api/tag/info',
+		url: '/v2/tag/info',
 		method: 'GET',
 		params
 	})
@@ -41,7 +41,7 @@ export const getTAG = (params: { id: number }) => {
 //修改标签
 export const updateTAG = (params: { id: number; name: string; color: string; status: number }) => {
 	return http<TAGType>({
-		url: '/api/tag/update',
+		url: '/v2/tag/update',
 		method: 'PUT',
 		data: params
 	})
@@ -50,7 +50,7 @@ export const updateTAG = (params: { id: number; name: string; color: string; sta
 //置顶标签
 export const sortTAG = (params: { id: number }) => {
 	return http<TAGType>({
-		url: `/api/tag/sort`,
+		url: `/v2/tag/sort`,
 		method: 'PUT',
 		params
 	})
@@ -59,7 +59,7 @@ export const sortTAG = (params: { id: number }) => {
 //切换标签状态
 export const cutoverTAG = (params: { id: number }) => {
 	return http<TAGType>({
-		url: `/api/tag/cutover`,
+		url: `/v2/tag/cutover`,
 		method: 'PUT',
 		params
 	})
@@ -68,7 +68,7 @@ export const cutoverTAG = (params: { id: number }) => {
 //删除标签
 export const deleteTAG = (params: { id: number }) => {
 	return http({
-		url: `/api/tag/delete`,
+		url: `/v2/tag/delete`,
 		method: 'DELETE',
 		params
 	})

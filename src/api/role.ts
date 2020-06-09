@@ -19,7 +19,7 @@ export interface RoleType {
 //获取所有角色列表
 export const roleAll = () => {
 	return http<Array<RoleType>>({
-		url: `/api/role/all`,
+		url: `/v2/role/all`,
 		method: 'GET'
 	})
 }
@@ -27,7 +27,7 @@ export const roleAll = () => {
 //新增角色
 export const createRole = (params: { role_key: string; role_name: string; status: number }) => {
 	return http<RoleType>({
-		url: `/api/role/create`,
+		url: `/v2/role/create`,
 		method: 'POST',
 		data: params
 	})
@@ -36,7 +36,7 @@ export const createRole = (params: { role_key: string; role_name: string; status
 //修改角色
 export const updateRole = (params: { id: number; role_key: string; role_name: string; status: number }) => {
 	return http<RoleType>({
-		url: `/api/role/update`,
+		url: `/v2/role/update`,
 		method: 'PUT',
 		data: params
 	})
@@ -45,7 +45,7 @@ export const updateRole = (params: { id: number; role_key: string; role_name: st
 //切换角色状态
 export const cutoverRole = (params: { id: number }) => {
 	return http({
-		url: `/api/role/cutover`,
+		url: `/v2/role/cutover`,
 		method: 'PUT',
 		params
 	})
@@ -54,7 +54,7 @@ export const cutoverRole = (params: { id: number }) => {
 //删除权限模块
 export const deleteRole = (params: { id: number }) => {
 	return http({
-		url: `/api/role/delete`,
+		url: `/v2/role/delete`,
 		method: 'DELETE',
 		params
 	})
@@ -63,7 +63,7 @@ export const deleteRole = (params: { id: number }) => {
 //获取角色信息
 export const getRole = (params: { id: number }) => {
 	return http<RoleType>({
-		url: `/api/role/info`,
+		url: `/v2/role/info`,
 		method: 'GET',
 		params
 	})

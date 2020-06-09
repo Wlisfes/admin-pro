@@ -2,7 +2,7 @@
  * @Date: 2020-03-31 15:16:00
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-04-22 14:20:35
+ * @LastEditTime: 2020-06-09 13:06:32
  * @Description: page配置
  */
 
@@ -48,6 +48,13 @@ const routes: RouteConfig[] = [
 				name: 'tag-all',
 				meta: { title: '标签列表' },
 				component: () => import('@/views/tag/Tag')
+			},
+			/**项目管理******************************************************/
+			{
+				path: '/project-all',
+				name: 'project-all',
+				meta: { title: '项目列表' },
+				component: () => import('@/views/project/Project')
 			}
 		]
 	},

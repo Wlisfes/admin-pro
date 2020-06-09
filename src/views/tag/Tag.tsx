@@ -1,14 +1,14 @@
 /*
+ * @Date: 2020-06-08 08:39:19
  * @Author: 情雨随风
- * @Date: 2020-06-04 20:46:53
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-06 13:50:53
+ * @LastEditors: 情雨随风
+ * @LastEditTime: 2020-06-09 13:03:41
  * @Description: 标签列表
  */
 
 import './less/tag.less'
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Tag, Tooltip, Input } from 'ant-design-vue'
+import { Table, Tag, Tooltip } from 'ant-design-vue'
 import { TAGAll, cutoverTAG, deleteTAG, sortTAG, TAGType } from '@/api/tag'
 import { CommEdit, TermForm } from '@/components/common'
 import { UpdateTagModal } from './modules'

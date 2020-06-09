@@ -29,7 +29,7 @@ export interface UserType {
 //登录
 export const login = (params: { username?: string; email?: string; mobile?: string | number; password: string }) => {
 	return http<UserType>({
-		url: `/api/user/login`,
+		url: `/v2/user/login`,
 		method: 'POST',
 		data: params
 	})
@@ -38,7 +38,7 @@ export const login = (params: { username?: string; email?: string; mobile?: stri
 //获取所有用户列表
 export const allUser = (params?: any) => {
 	return http<Array<UserType>>({
-		url: `/api/user/all`,
+		url: `/v2/user/all`,
 		method: 'GET',
 		params
 	})
@@ -47,7 +47,7 @@ export const allUser = (params?: any) => {
 //获取用户信息
 export const getUser = (params: { uid: number }) => {
 	return http<UserType>({
-		url: `/api/user/info`,
+		url: `/v2/user/info`,
 		method: 'GET',
 		params
 	})
@@ -56,7 +56,7 @@ export const getUser = (params: { uid: number }) => {
 //切换权限模块状态
 export const cutoverUser = (params: { uid: number }) => {
 	return http<UserType>({
-		url: `/api/user/cutover`,
+		url: `/v2/user/cutover`,
 		method: 'PUT',
 		params
 	})
@@ -71,7 +71,7 @@ export const updateUser = (params: {
 	email?: string
 }) => {
 	return http<UserType>({
-		url: `/api/user/update`,
+		url: `/v2/user/update`,
 		method: 'PUT',
 		data: params
 	})
@@ -80,7 +80,7 @@ export const updateUser = (params: {
 //修改用户权限
 export const updateUserAuth = (params: any) => {
 	return http<UserType>({
-		url: `/api/user/update/role`,
+		url: `/v2/user/update/role`,
 		method: 'PUT',
 		data: params
 	})
@@ -89,7 +89,7 @@ export const updateUserAuth = (params: any) => {
 //修改用户头像
 export const updateUserAvatar = (params: { uid: number; avatar: string }) => {
 	return http<UserType>({
-		url: `/api/user/update/avatar`,
+		url: `/v2/user/update/avatar`,
 		method: 'PUT',
 		data: params
 	})
@@ -98,7 +98,7 @@ export const updateUserAvatar = (params: { uid: number; avatar: string }) => {
 //删除用户
 export const deleteUser = (params: { uid: number }) => {
 	return http({
-		url: `/api/user/delete`,
+		url: `/v2/user/delete`,
 		method: 'DELETE',
 		params
 	})

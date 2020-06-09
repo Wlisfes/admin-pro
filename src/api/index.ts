@@ -11,7 +11,7 @@ import http from '@/utils/request'
 //单张图片上传
 export const uploadFile = (params: FormData) => {
 	return http({
-		url: '/api/oss/upload/file',
+		url: '/oss/upload/file',
 		method: 'POST',
 		data: params,
 		headers: {
