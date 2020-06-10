@@ -10,8 +10,8 @@ import './less/project.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Tooltip } from 'ant-design-vue'
 import { CommEdit, TermForm } from '@/components/common'
-import { projectAll, ProjectType } from '@/api/project'
-import { CreateProject } from './modules'
+import { projectAll, cutoverProject, sortProject, deleteProject, ProjectType } from '@/api/project'
+import { CreateProject, UpdateProject } from './modules'
 import { Color } from '@/interface'
 import moment from 'moment'
 
@@ -52,11 +52,11 @@ export default class Project extends Vue {
 	//查询组件配置
 	private termForm = {
 		onCreate: () => {
-			this.createProjectModal.visible = true
+			this.create.visible = true
 		},
 		onReply: () => {
-			// this.table.loading = true
-			// setTimeout(() => this.TAGAll(), 300)
+			this.table.loading = true
+			setTimeout(() => this.projectAll(), 300)
 		},
 		onSubmit: (params: any) => {
 			this.table.loading = true
@@ -65,15 +65,29 @@ export default class Project extends Vue {
 	}
 
 	//新增弹窗配置
-	private createProjectModal = {
+	private create = {
 		visible: false,
 		onCancel: () => {
-			this.createProjectModal.visible = false
+			this.create.visible = false
 		},
 		onSubmit: () => {
 			this.table.loading = true
-			// this.projectAll()
-			this.createProjectModal.visible = false
+			this.projectAll()
+			this.create.visible = false
+		}
+	}
+
+	//修改弹窗配置
+	private update = {
+		id: 0,
+		visible: false,
+		onCancel: () => {
+			this.update.visible = false
+		},
+		onSubmit: () => {
+			this.table.loading = true
+			this.projectAll()
+			this.update.visible = false
 		}
 	}
 
@@ -81,7 +95,8 @@ export default class Project extends Vue {
 		this.projectAll()
 	}
 
-	async projectAll(params?: any) {
+	//获取所有项目列表
+	public async projectAll(params?: any) {
 		const response = await projectAll(params)
 		if (response.code === 200) {
 			this.table.dataSource = response.data as []
@@ -89,15 +104,64 @@ export default class Project extends Vue {
 		this.table.loading = false
 	}
 
+	//操作
+	public async onChange({ key, props }: { key: string; props: ProjectType }) {
+		this.table.loading = true
+
+		//修改项目信息
+		if (key === 'update') {
+			this.update.id = props.id
+			this.update.visible = true
+		}
+
+		//置顶标签
+		if (key === 'sort') {
+			const response = await sortProject({ id: props.id })
+			if (response.code === 200) {
+				this.projectAll()
+				return
+			}
+		}
+
+		//切换状态
+		if (key === 'status') {
+			const response = await cutoverProject({ id: props.id })
+			if (response.code === 200) {
+				this.projectAll()
+				return
+			}
+		}
+
+		//删除角标签
+		if (key === 'delete') {
+			const response = await deleteProject({ id: props.id })
+			if (response.code === 200) {
+				this.projectAll()
+				return
+			}
+		}
+
+		this.table.loading = false
+	}
+
 	protected render() {
 		return (
 			<div class="root-project">
 				{/**项目新增组件**/
-				this.createProjectModal.visible && (
+				this.create.visible && (
 					<CreateProject
-						{...{ props: this.createProjectModal }}
-						onCancel={this.createProjectModal.onCancel}
-						onSubmit={this.createProjectModal.onSubmit}
+						{...{ props: this.create }}
+						onCancel={this.create.onCancel}
+						onSubmit={this.create.onSubmit}
+					/>
+				)}
+
+				{/**项目修改组件**/
+				this.update.visible && (
+					<UpdateProject
+						{...{ props: this.update }}
+						onCancel={this.update.onCancel}
+						onSubmit={this.update.onSubmit}
 					/>
 				)}
 
@@ -176,10 +240,20 @@ export default class Project extends Vue {
 											{ key: 'delete', name: '删除', icon: 'rest', color: Color.delete }
 										]
 									}}
-									onChange={(e: any) => console.log(e)}
+									onChange={this.onChange}
 								/>
 							)
 						}
+					}}
+					pagination={{
+						pageSize: this.table.pageSize,
+						pageSizeOptions: this.table.pageSizeOptions,
+						showSizeChanger: this.table.showSizeChanger,
+						current: this.table.current
+					}}
+					onChange={(ops: any) => {
+						this.table.current = ops.current
+						this.table.pageSize = ops.pageSize
 					}}
 				></Table>
 			</div>

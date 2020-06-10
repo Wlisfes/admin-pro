@@ -23,7 +23,7 @@ export const uploadFile = (params: FormData) => {
 //单张图片上传、静态图片资源
 export const upload = (params: FormData) => {
 	return http({
-		url: '/oss/upload/file',
+		url: '/oss/upload/file/pic',
 		method: 'POST',
 		data: params,
 		headers: {

@@ -1,9 +1,9 @@
 /*
  * @Author: 情雨随风
- * @Date: 2020-06-09 21:17:38
+ * @Date: 2020-06-10 19:22:43
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-10 20:00:01
- * @Description: project新增弹窗
+ * @Last Modified time: 2020-06-10 19:56:12
+ * @Description: 项目修改弹窗
  */
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
@@ -11,42 +11,66 @@ import { Form, Input, Modal, Radio, Select, Spin, Icon } from 'ant-design-vue'
 import { CommonModal } from '@/interface/common'
 import { Upload } from '@/components/common'
 import { TAGAll } from '@/api/tag'
-import { createProject } from '@/api/project'
+import { updateProject, getProject } from '@/api/project'
 
 @Component({
 	props: {
 		form: { type: Object }
 	}
 })
-class CreateProject extends Vue {
+class UpdateProject extends Vue {
 	@Prop(Boolean) visible!: false
+	@Prop(Number) id!: number
 
 	private form: any
 	private modal = {
 		...CommonModal,
-		title: '新增项目'
+		title: '修改项目'
 	}
 	private upload = {
 		visible: false
 	}
-	private create = {
-		tag: [],
-		loading: true,
+	private update = {
+		title: '',
 		picUrl: '',
-		visible: false
+		accessUrl: '',
+		github: '',
+		status: 5,
+		description: '',
+		tag: [],
+		tagAll: [],
+		loading: true
 	}
 
 	protected created() {
-		this.TAGAll()
+		this.getProject()
 	}
 
 	//获取标签列表
 	public async TAGAll() {
 		const response = await TAGAll()
 		if (response.code === 200) {
-			this.create.tag = response.data as []
+			this.update.tagAll = response.data as []
 		}
-		this.create.loading = false
+		return response
+	}
+
+	//获取项目详情
+	public async getProject() {
+		await this.TAGAll()
+		const response = await getProject({ id: this.id })
+		if (response.code === 200) {
+			const { title, tag, github, accessUrl, picUrl, status, description } = response.data
+
+			this.update.title = title
+			this.update.tag = tag.map(k => k.id) as []
+			this.update.github = github
+			this.update.accessUrl = accessUrl || ''
+			this.update.picUrl = picUrl
+			this.update.status = status
+			this.update.description = description
+		}
+		this.update.loading = false
 	}
 
 	public onSubmit() {
@@ -58,8 +82,8 @@ class CreateProject extends Vue {
 				}, 600)
 				return
 			}
-
-			const response = await createProject({
+			const response = await updateProject({
+				id: this.id,
 				title: form.title,
 				description: form.description,
 				picUrl: form.picUrl,
@@ -69,7 +93,7 @@ class CreateProject extends Vue {
 				status: form.status
 			})
 			if (response.code === 200) {
-				this.$notification.success({ message: '新增成功', description: '' })
+				this.$notification.success({ message: '修改成功', description: '' })
 				this.$emit('submit')
 			}
 			this.modal.loading = false
@@ -94,11 +118,11 @@ class CreateProject extends Vue {
 				cancelText={this.modal.cancelText}
 				confirmLoading={this.modal.loading}
 				destroyOnClose={this.modal.destroyOnClose}
-				okButtonProps={{ props: { disabled: this.create.loading } }}
+				okButtonProps={{ props: { disabled: this.update.loading } }}
 				onCancel={this.onCancel}
 				onOk={this.onSubmit}
 			>
-				<Spin size="large" spinning={this.create.loading}>
+				<Spin size="large" spinning={this.update.loading}>
 					<Form layout="horizontal">
 						<Form.Item
 							label="项目名称"
@@ -107,6 +131,7 @@ class CreateProject extends Vue {
 							wrapperCol={this.modal.wrapperCol}
 						>
 							{getFieldDecorator('title', {
+								initialValue: this.update.title,
 								rules: [{ required: true, message: '请输入项目名称' }],
 								validateTrigger: 'change'
 							})(<Input type="text" placeholder="请输入项目名称" />)}
@@ -118,11 +143,12 @@ class CreateProject extends Vue {
 							wrapperCol={this.modal.wrapperCol}
 						>
 							{getFieldDecorator('tag', {
+								initialValue: this.update.tag,
 								rules: [{ required: true, message: '至少选择一个类别' }],
 								validateTrigger: 'change'
 							})(
 								<Select mode="multiple" placeholder="请选择类别">
-									{this.create.tag.map((k: any) => (
+									{this.update.tagAll.map((k: any) => (
 										<Select.Option value={k.id}>{k.name}</Select.Option>
 									))}
 								</Select>
@@ -135,6 +161,7 @@ class CreateProject extends Vue {
 							wrapperCol={this.modal.wrapperCol}
 						>
 							{getFieldDecorator('github', {
+								initialValue: this.update.github,
 								rules: [{ required: true, message: '请输入项目Github地址' }],
 								validateTrigger: 'change'
 							})(<Input type="text" placeholder="请输入项目Github地址" />)}
@@ -146,6 +173,7 @@ class CreateProject extends Vue {
 							wrapperCol={this.modal.wrapperCol}
 						>
 							{getFieldDecorator('accessUrl', {
+								initialValue: this.update.accessUrl,
 								validateTrigger: 'change'
 							})(<Input type="text" placeholder="请输入项目预览地址" />)}
 						</Form.Item>
@@ -156,14 +184,15 @@ class CreateProject extends Vue {
 							wrapperCol={this.modal.wrapperCol}
 						>
 							{getFieldDecorator('picUrl', {
+								initialValue: this.update.picUrl,
 								rules: [{ required: true, message: '请上传项目封面' }],
 								validateTrigger: 'change'
 							})(
 								<div>
 									<Input type="text" style={{ display: 'none' }} />
 									<div class="root-update" onClick={() => (this.upload.visible = true)}>
-										{this.create.picUrl ? (
-											<img src={this.create.picUrl} />
+										{this.update.picUrl ? (
+											<img src={this.update.picUrl} />
 										) : (
 											<Icon type="plus" style={{ color: '#999999', fontSize: '32px' }} />
 										)}
@@ -178,7 +207,7 @@ class CreateProject extends Vue {
 							wrapperCol={this.modal.wrapperCol}
 						>
 							{getFieldDecorator('status', {
-								initialValue: 1,
+								initialValue: this.update.status,
 								validateTrigger: 'change'
 							})(
 								<Radio.Group>
@@ -194,6 +223,7 @@ class CreateProject extends Vue {
 							wrapperCol={this.modal.wrapperCol}
 						>
 							{getFieldDecorator('description', {
+								initialValue: this.update.description,
 								rules: [{ required: true, message: '请输入项目描述' }],
 								validateTrigger: 'change'
 							})(<Input.TextArea autoSize={{ minRows: 4, maxRows: 6 }} placeholder="请输入项目描述" />)}
@@ -208,7 +238,7 @@ class CreateProject extends Vue {
 						onSubmit={({ response }: { response: { code: number; data: { path: string } } }) => {
 							if (response.code === 200) {
 								setFieldsValue({ picUrl: response.data.path })
-								this.create.picUrl = response.data.path
+								this.update.picUrl = response.data.path
 								this.upload.visible = false
 							}
 						}}
@@ -221,6 +251,7 @@ class CreateProject extends Vue {
 
 export default Form.create({
 	props: {
-		visible: { type: Boolean, default: () => false }
+		visible: { type: Boolean, default: () => false },
+		id: { type: Number, default: () => 0 }
 	}
-})(CreateProject)
+})(UpdateProject)
