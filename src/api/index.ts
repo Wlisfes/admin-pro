@@ -8,10 +8,34 @@
 
 import http from '@/utils/request'
 
-//单张图片上传
+//单张图片上传、头像上传
 export const uploadFile = (params: FormData) => {
 	return http({
 		url: '/oss/upload/file',
+		method: 'POST',
+		data: params,
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		}
+	})
+}
+
+//单张图片上传、静态图片资源
+export const upload = (params: FormData) => {
+	return http({
+		url: '/oss/upload/file',
+		method: 'POST',
+		data: params,
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		}
+	})
+}
+
+//多张图片上传、静态图片资源
+export const uploadFiles = (params: FormData) => {
+	return http({
+		url: '/oss/upload/files',
 		method: 'POST',
 		data: params,
 		headers: {

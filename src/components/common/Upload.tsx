@@ -10,13 +10,13 @@ import './less/common.upload.less'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Modal, Upload, Button } from 'ant-design-vue'
 import { VueCropper } from 'vue-cropper'
-import { uploadFile } from '@/api'
+import { upload } from '@/api'
 
 @Component
 export default class ImageUpload extends Vue {
 	@Prop(Boolean) visible!: boolean
 	@Prop() uid!: number | string
-	@Prop({ default: '头像修改' }) title!: string
+	@Prop({ default: '图片上传' }) title!: string
 	@Prop({ default: '' }) picUrl!: string
 	@Prop({ default: () => ({ w: 240, h: 240 }) }) auto!: { w: number; h: number }
 	@Prop({ default: () => ({ w: 350, h: 350 }) }) container!: { w: number; h: number }
@@ -72,7 +72,7 @@ export default class ImageUpload extends Vue {
 		const formData = new FormData()
 		this.cropper.getCropBlob(async (data: any) => {
 			formData.append('file', data, this.previews.name)
-			const response = await uploadFile(formData)
+			const response = await upload(formData)
 
 			this.$emit('submit', {
 				response: response,

@@ -11,6 +11,7 @@ import { Form, Input, Modal, Radio, Select, Spin, Icon } from 'ant-design-vue'
 import { CommonModal } from '@/interface/common'
 import { Upload } from '@/components/common'
 import { TAGAll } from '@/api/tag'
+import { createProject } from '@/api/project'
 
 @Component({
 	props: {
@@ -47,26 +48,40 @@ class CreateProject extends Vue {
 
 	public onSubmit() {
 		this.modal.loading = true
-		this.form.validateFields(async (err: any, form: { name: string; color: string; status: number }) => {
-			if (err) {
-				setTimeout(() => {
-					this.modal.loading = false
-				}, 600)
-				return
+		this.form.validateFields(
+			async (
+				err: any,
+				form: {
+					title: string
+					description: string
+					picUrl: string
+					github: string
+					accessUrl?: string | undefined
+					tag: number[]
+				}
+			) => {
+				if (err) {
+					setTimeout(() => {
+						this.modal.loading = false
+					}, 600)
+					return
+				}
+
+				const response = await createProject({
+					title: form.title,
+					description: form.description,
+					picUrl: form.picUrl,
+					github: form.github,
+					tag: form.tag,
+					accessUrl: form.accessUrl
+				})
+				if (response.code === 200) {
+					this.$notification.success({ message: '新增成功', description: '' })
+					this.$emit('submit')
+				}
+				this.modal.loading = false
 			}
-			console.log(form)
-			// const response = await updateTAG({
-			// 	id: this.id,
-			// 	name: form.name,
-			// 	color: form.color,
-			// 	status: form.status
-			// })
-			// if (response.code === 200) {
-			// 	this.$notification.success({ message: '修改成功', description: '' })
-			// 	this.$emit('submit')
-			// }
-			this.modal.loading = false
-		})
+		)
 	}
 
 	public onCancel() {
@@ -116,7 +131,7 @@ class CreateProject extends Vue {
 							})(
 								<Select mode="multiple" placeholder="请选择类别">
 									{this.create.tag.map((k: any) => (
-										<Select.Option value={k.name}>{k.name}</Select.Option>
+										<Select.Option value={k.id}>{k.name}</Select.Option>
 									))}
 								</Select>
 							)}
@@ -156,7 +171,7 @@ class CreateProject extends Vue {
 									<Input
 										type="text"
 										style={{ display: 'none' }}
-										onInput={(e: Event) => (this.create.picUrl = (e.target as any).value || '')}
+										// onInput={(e: Event) => (this.create.picUrl = (e.target as any).value || '')}
 									/>
 									<div class="root-update" onClick={() => (this.create.visible = true)}>
 										{this.create.picUrl ? (

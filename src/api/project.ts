@@ -2,7 +2,7 @@
  * @Date: 2020-06-09 14:24:01
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-09 14:44:04
+ * @LastEditTime: 2020-06-10 17:15:33
  * @Description: 项目模块接口
  */
 
@@ -22,6 +22,22 @@ export interface ProjectType {
 	accessUrl: string | null
 	user: UserType
 	tag: TAGType[]
+}
+
+//创建项目
+export const createProject = (params: {
+	title: string
+	description: string
+	picUrl: string
+	github: string
+	accessUrl?: string
+	tag: number[]
+}) => {
+	return http<ProjectType>({
+		url: `/v2/project/create`,
+		method: 'POST',
+		data: params
+	})
 }
 
 //获取所有项目列表
