@@ -14,7 +14,7 @@ import { CommonModal, Apply } from '@/interface/common'
 @Component({
 	props: { form: { type: Object } }
 })
-class CreateAuthModal extends Vue {
+class CreateAuth extends Vue {
 	@Prop(Boolean) visible!: boolean
 
 	private form: any
@@ -24,7 +24,7 @@ class CreateAuthModal extends Vue {
 		all: 0
 	}
 
-	onSubmit() {
+	public onSubmit() {
 		this.modal.loading = true
 		this.form.validateFields(
 			async (err: any, form: { auth_key: string; auth_name: string; status: number; apply: string[] }) => {
@@ -50,14 +50,13 @@ class CreateAuthModal extends Vue {
 		)
 	}
 
-	onCancel() {
+	public onCancel() {
 		this.$emit('cancel')
 		this.modal.loading = false
 	}
 
-	render() {
+	protected render() {
 		const { getFieldDecorator, getFieldValue, setFieldsValue } = this.form
-		const len = ((getFieldValue('apply') as []) || []).filter(k => k).length
 		return (
 			<Modal
 				getContainer={() => document.querySelector('.admin-auth')}
@@ -154,4 +153,4 @@ export default Form.create({
 	props: {
 		visible: { type: Boolean, default: () => false }
 	}
-})(CreateAuthModal)
+})(CreateAuth)

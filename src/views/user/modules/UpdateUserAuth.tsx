@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-05-31 15:04:31
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-06 13:52:51
+ * @Last Modified time: 2020-06-10 20:05:58
  * @Description:
  */
 
@@ -25,7 +25,7 @@ interface UserProp {
 @Component({
 	props: { form: { type: Object } }
 })
-class UpdateUserAuthModal extends Vue {
+class UpdateUserAuth extends Vue {
 	@Prop(Boolean) visible!: false
 	@Prop(Number) uid!: number
 
@@ -43,13 +43,13 @@ class UpdateUserAuthModal extends Vue {
 		loading: true
 	}
 
-	created() {
+	protected created() {
 		this.getUser()
 		this.roleAll()
 	}
 
 	//获取用户信息
-	async getUser() {
+	public async getUser() {
 		const response = await getUser({ uid: this.uid })
 		const roles = await this.roleAll()
 		const auths = await this.authAll()
@@ -72,7 +72,7 @@ class UpdateUserAuthModal extends Vue {
 	}
 
 	//获取所有角色
-	async roleAll(): Promise<RoleType[]> {
+	public async roleAll(): Promise<RoleType[]> {
 		const response = await roleAll()
 		if (response.code === 200) {
 			return response.data
@@ -81,7 +81,7 @@ class UpdateUserAuthModal extends Vue {
 	}
 
 	//获取所有权限模块
-	async authAll(): Promise<AuthType[]> {
+	public async authAll(): Promise<AuthType[]> {
 		const response = await authAll()
 		if (response.code === 200) {
 			return response.data
@@ -89,7 +89,7 @@ class UpdateUserAuthModal extends Vue {
 		return []
 	}
 
-	onSubmit() {
+	public onSubmit() {
 		this.modal.loading = true
 		this.form.validateFields(async (err: any, form: any) => {
 			if (err) {
@@ -122,12 +122,12 @@ class UpdateUserAuthModal extends Vue {
 		})
 	}
 
-	onCancel() {
+	public onCancel() {
 		this.$emit('cancel')
 		this.modal.loading = false
 	}
 
-	render() {
+	protected render() {
 		const { getFieldDecorator, setFieldsValue, getFieldValue } = this.form
 
 		return (
@@ -244,4 +244,4 @@ export default Form.create({
 		visible: { type: Boolean, default: () => false },
 		uid: { type: Number, default: () => '' }
 	}
-})(UpdateUserAuthModal)
+})(UpdateUserAuth)

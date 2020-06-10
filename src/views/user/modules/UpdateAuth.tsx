@@ -14,7 +14,7 @@ import { CommonModal, Apply } from '@/interface/common'
 @Component({
 	props: { form: { type: Object } }
 })
-class UpdateAuthModal extends Vue {
+class UpdateAuth extends Vue {
 	@Prop(Boolean) visible!: boolean
 	@Prop(Number) id!: number
 
@@ -32,11 +32,12 @@ class UpdateAuthModal extends Vue {
 		loading: true
 	}
 
-	created() {
+	protected created() {
 		this.getAuth()
 	}
 
-	async getAuth() {
+	//获取权限详情
+	public async getAuth() {
 		const response = await getAuth({ id: this.id })
 		if (response.code === 200) {
 			const data = response.data
@@ -49,7 +50,7 @@ class UpdateAuthModal extends Vue {
 		}
 	}
 
-	onSubmit() {
+	public onSubmit() {
 		this.modal.loading = true
 		this.form.validateFields(
 			async (err: any, form: { id: number; auth_name: string; status: number; apply: string[] }) => {
@@ -76,12 +77,12 @@ class UpdateAuthModal extends Vue {
 		)
 	}
 
-	onCancel() {
+	public onCancel() {
 		this.$emit('cancel')
 		this.modal.loading = false
 	}
 
-	render() {
+	protected render() {
 		const { getFieldDecorator, getFieldValue, setFieldsValue } = this.form
 		return (
 			<Modal
@@ -196,4 +197,4 @@ export default Form.create({
 		visible: { type: Boolean, default: () => false },
 		id: { type: Number, default: () => '' }
 	}
-})(UpdateAuthModal)
+})(UpdateAuth)

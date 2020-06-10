@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-25 12:49:40
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-06 13:52:39
+ * @Last Modified time: 2020-06-10 20:10:57
  * @Description: Role编辑弹窗
  */
 
@@ -14,7 +14,7 @@ import { updateRole, getRole } from '@/api/role'
 @Component({
 	props: { form: { type: Object } }
 })
-class UpdateRoleModal extends Vue {
+class UpdateRole extends Vue {
 	@Prop(Boolean) visible!: boolean
 	@Prop(Number) id!: number
 
@@ -31,11 +31,12 @@ class UpdateRoleModal extends Vue {
 		loading: true
 	}
 
-	created() {
+	protected created() {
 		this.getRole()
 	}
 
-	async getRole() {
+	//获取角色详情
+	public async getRole() {
 		const response = await getRole({ id: this.id })
 		if (response.code === 200) {
 			const data = response.data
@@ -47,7 +48,7 @@ class UpdateRoleModal extends Vue {
 		}
 	}
 
-	onSubmit() {
+	public onSubmit() {
 		this.modal.loading = true
 		this.form.validateFields(
 			async (err: any, form: { id: number; role_key: string; role_name: string; status: number }) => {
@@ -73,12 +74,12 @@ class UpdateRoleModal extends Vue {
 		)
 	}
 
-	onCancel() {
+	public onCancel() {
 		this.$emit('cancel')
 		this.modal.loading = false
 	}
 
-	render() {
+	protected render() {
 		const { getFieldDecorator } = this.form
 		return (
 			<Modal
@@ -155,4 +156,4 @@ export default Form.create({
 		visible: { type: Boolean, default: () => false },
 		id: { type: Number, default: () => '' }
 	}
-})(UpdateRoleModal)
+})(UpdateRole)

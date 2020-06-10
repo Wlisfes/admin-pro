@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-06 11:27:31
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-06 14:02:29
+ * @Last Modified time: 2020-06-10 21:26:54
  * @Description: 表格查找组件
  */
 
@@ -12,19 +12,27 @@ import { Form, Select, Button, Badge, Spin } from 'ant-design-vue'
 import { allUser, UserType } from '@/api/user'
 import moment from 'moment'
 
+interface FormElement {
+	replace: boolean
+	key: string
+	label: string
+	render: Function
+}
+
 @Component({
 	props: { form: { type: Object } }
 })
 class TermForm extends Vue {
-	@Prop() htmlForname!: string
-	@Prop() htmlFor!: Function
+	@Prop() one?: FormElement
+	@Prop() two?: FormElement
+	@Prop() there?: FormElement
 
 	private form: any
 	private all: Array<UserType> = []
 	private loading: boolean = true
 
 	protected created() {
-		!this.htmlFor && this.allUser()
+		!this.one?.replace && this.allUser()
 	}
 
 	//所有用户列表
@@ -36,15 +44,18 @@ class TermForm extends Vue {
 		this.loading = false
 	}
 
+	//新增
 	public onCreate() {
 		this.onEmit('create')
 	}
 
+	//重置
 	public onReply() {
 		this.form.resetFields()
 		this.onEmit('reply')
 	}
 
+	//查询
 	public onSubmit() {
 		this.form.validateFields(async (err: any, form: any) => {
 			const params: any = {}
@@ -61,7 +72,8 @@ class TermForm extends Vue {
 		})
 	}
 
-	createTime(key: number) {
+	//时间转换
+	public createTime(key: number) {
 		const startTime = (num: number, key: 'day' | 'month' | 'year') => {
 			return moment()
 				.subtract(num, key)
@@ -96,12 +108,12 @@ class TermForm extends Vue {
 			<Form layout="inline">
 				<div class="common-term">
 					<div class="term-item">
-						<Form.Item label="作者">
-							{getFieldDecorator(this.htmlForname || 'uid', {
+						<Form.Item label={this.one?.replace ? this.one.label : '作者'}>
+							{getFieldDecorator(this.one?.replace ? this.one.key : 'uid', {
 								validateTrigger: 'change'
 							})(
-								this.htmlFor ? (
-									this.htmlFor()
+								this.one?.replace ? (
+									this.one.render()
 								) : (
 									<Select mode="default" placeholder="请选择">
 										{this.loading && (
@@ -123,35 +135,43 @@ class TermForm extends Vue {
 						</Form.Item>
 					</div>
 					<div class="term-item">
-						<Form.Item label="状态">
-							{getFieldDecorator('status', {
+						<Form.Item label={this.two?.replace ? this.two.label : '状态'}>
+							{getFieldDecorator(this.two?.replace ? this.two.label : 'status', {
 								validateTrigger: 'change'
 							})(
-								<Select mode="default" placeholder="请选择">
-									<Select.Option key={1}>
-										<Badge color="green" text="已开放" />
-									</Select.Option>
-									<Select.Option key={0}>
-										<Badge color="pink" text="已禁用" />
-									</Select.Option>
-								</Select>
+								this.two?.replace ? (
+									this.two.render()
+								) : (
+									<Select mode="default" placeholder="请选择">
+										<Select.Option key={1}>
+											<Badge color="green" text="已开放" />
+										</Select.Option>
+										<Select.Option key={0}>
+											<Badge color="pink" text="已禁用" />
+										</Select.Option>
+									</Select>
+								)
 							)}
 						</Form.Item>
 					</div>
 					<div class="term-item">
-						<Form.Item label="日期">
-							{getFieldDecorator('createTime', {
+						<Form.Item label={this.there?.replace ? this.there.label : '日期'}>
+							{getFieldDecorator(this.there?.replace ? this.there.key : 'createTime', {
 								validateTrigger: 'change'
 							})(
-								<Select mode="default" placeholder="请选择">
-									<Select.Option key={1}>今日</Select.Option>
-									<Select.Option key={2}>昨日</Select.Option>
-									<Select.Option key={3}>前三日</Select.Option>
-									<Select.Option key={4}>前一周</Select.Option>
-									<Select.Option key={5}>前一月</Select.Option>
-									<Select.Option key={6}>前三月</Select.Option>
-									<Select.Option key={7}>前一年</Select.Option>
-								</Select>
+								this.there?.replace ? (
+									this.there.render()
+								) : (
+									<Select mode="default" placeholder="请选择">
+										<Select.Option key={1}>今日</Select.Option>
+										<Select.Option key={2}>昨日</Select.Option>
+										<Select.Option key={3}>前三日</Select.Option>
+										<Select.Option key={4}>前一周</Select.Option>
+										<Select.Option key={5}>前一月</Select.Option>
+										<Select.Option key={6}>前三月</Select.Option>
+										<Select.Option key={7}>前一年</Select.Option>
+									</Select>
+								)
 							)}
 						</Form.Item>
 					</div>
@@ -174,6 +194,8 @@ class TermForm extends Vue {
 
 export default Form.create({
 	props: {
-		htmlFor: { type: Function }
+		one: { type: Object },
+		two: { type: Object },
+		there: { type: Object }
 	}
 })(TermForm)

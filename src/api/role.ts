@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-24 23:50:59
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:27:36
+ * @Last Modified time: 2020-06-10 21:36:41
  * @Description: 角色模块接口
  */
 
@@ -17,10 +17,11 @@ export interface RoleType {
 }
 
 //获取所有角色列表
-export const roleAll = () => {
+export const roleAll = (params?: { role_name?: string; status?: number; createTime?: string }) => {
 	return http<Array<RoleType>>({
 		url: `/v2/role/all`,
-		method: 'GET'
+		method: 'GET',
+		params
 	})
 }
 

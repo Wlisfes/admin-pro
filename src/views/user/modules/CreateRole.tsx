@@ -14,7 +14,7 @@ import { CommonModal } from '@/interface/common'
 @Component({
 	props: { form: { type: Object } }
 })
-class CreateAuthModal extends Vue {
+class CreateRole extends Vue {
 	@Prop(Boolean) visible!: boolean
 
 	private form: any
@@ -23,7 +23,7 @@ class CreateAuthModal extends Vue {
 		title: '新增权限'
 	}
 
-	onSubmit() {
+	public onSubmit() {
 		this.modal.loading = true
 		this.form.validateFields(async (err: any, form: { role_key: string; role_name: string; status: number }) => {
 			if (err) {
@@ -46,12 +46,12 @@ class CreateAuthModal extends Vue {
 		})
 	}
 
-	onCancel() {
+	public onCancel() {
 		this.$emit('cancel')
 		this.modal.loading = false
 	}
 
-	render() {
+	protected render() {
 		const { getFieldDecorator } = this.form
 		return (
 			<Modal
@@ -111,4 +111,4 @@ export default Form.create({
 	props: {
 		visible: { type: Boolean, default: () => false }
 	}
-})(CreateAuthModal)
+})(CreateRole)

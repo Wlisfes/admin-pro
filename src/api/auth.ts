@@ -27,10 +27,11 @@ export interface AuthType extends Auth {
 }
 
 //获取所有权限模块列表
-export const authAll = () => {
+export const authAll = (params?: { auth_name?: string; status?: number; createTime?: string }) => {
 	return http<Array<AuthType>>({
 		url: `/v2/auth/all`,
-		method: 'GET'
+		method: 'GET',
+		params
 	})
 }
 

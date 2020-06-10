@@ -2,16 +2,15 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-09 19:58:23
+ * @Last Modified time: 2020-06-10 23:28:24
  * @Description: 角色管理界面
  */
 
 import './less/user.less'
-
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Tag, Avatar, Tooltip } from 'ant-design-vue'
-import { AvaterUpload, CommEdit } from '@/components/common'
-import { UpdateUserModal, UpdateUserAuthModal } from './modules'
+import { Table, Tag, Avatar, Tooltip, Input } from 'ant-design-vue'
+import { AvaterUpload, CommEdit, TermForm } from '@/components/common'
+import { UpdateUser, UpdateUserAuth } from './modules'
 import { allUser, deleteUser, cutoverUser, updateUserAvatar, UserType } from '@/api/user'
 import { Color } from '@/interface'
 import moment from 'moment'
@@ -69,30 +68,45 @@ export default class User extends Vue {
 	}
 
 	//用户信息修改配置
-	private updateUserModal = {
+	private updateUser = {
 		visible: false,
 		uid: 0,
 		onCancel: () => {
-			this.updateUserModal.visible = false
+			this.updateUser.visible = false
 		},
 		onSubmit: () => {
 			this.table.loading = true
 			this.allUser()
-			this.updateUserModal.visible = false
+			this.updateUser.visible = false
 		}
 	}
 
 	//用户权限修改配置
-	private updateUserAuthModal = {
+	private updateUserAuth = {
 		visible: false,
 		uid: 0,
 		onCancel: () => {
-			this.updateUserAuthModal.visible = false
+			this.updateUserAuth.visible = false
 		},
 		onSubmit: () => {
 			this.table.loading = true
 			this.allUser()
-			this.updateUserAuthModal.visible = false
+			this.updateUserAuth.visible = false
+		}
+	}
+
+	//查询组件配置
+	private termForm = {
+		onCreate: () => {
+			// this.createRole.visible = true
+		},
+		onReply: () => {
+			this.table.loading = true
+			setTimeout(() => this.allUser(), 300)
+		},
+		onSubmit: (params: any) => {
+			this.table.loading = true
+			setTimeout(() => this.allUser(params), 300)
 		}
 	}
 
@@ -101,8 +115,8 @@ export default class User extends Vue {
 	}
 
 	//获取所有用户列表
-	async allUser() {
-		const response = await allUser()
+	async allUser(params?: any) {
+		const response = await allUser(params)
 		if (response.code === 200) {
 			this.table.dataSource = response.data as []
 		}
@@ -115,14 +129,14 @@ export default class User extends Vue {
 
 		//修改用户信息
 		if (key === 'update') {
-			this.updateUserModal.uid = props.uid
-			this.updateUserModal.visible = true
+			this.updateUser.uid = props.uid
+			this.updateUser.visible = true
 		}
 
 		//修改用户权限
 		if (key === 'auth') {
-			this.updateUserAuthModal.uid = props.uid
-			this.updateUserAuthModal.visible = true
+			this.updateUserAuth.uid = props.uid
+			this.updateUserAuth.visible = true
 		}
 
 		//切换状态
@@ -149,20 +163,20 @@ export default class User extends Vue {
 		return (
 			<div class="admin-user">
 				{/**用户信息修改组件**/
-				this.updateUserModal.visible && (
-					<UpdateUserModal
-						{...{ props: this.updateUserModal }}
-						onCancel={this.updateUserModal.onCancel}
-						onSubmit={this.updateUserModal.onSubmit}
+				this.updateUser.visible && (
+					<UpdateUser
+						{...{ props: this.updateUser }}
+						onCancel={this.updateUser.onCancel}
+						onSubmit={this.updateUser.onSubmit}
 					/>
 				)}
 
 				{/**用户权限修改组件**/
-				this.updateUserAuthModal.visible && (
-					<UpdateUserAuthModal
-						{...{ props: this.updateUserAuthModal }}
-						onCancel={this.updateUserAuthModal.onCancel}
-						onSubmit={this.updateUserAuthModal.onSubmit}
+				this.updateUserAuth.visible && (
+					<UpdateUserAuth
+						{...{ props: this.updateUserAuth }}
+						onCancel={this.updateUserAuth.onCancel}
+						onSubmit={this.updateUserAuth.onSubmit}
 					/>
 				)}
 
@@ -174,6 +188,22 @@ export default class User extends Vue {
 						onSubmit={this.uploadModel.onSubmit}
 					/>
 				}
+
+				<TermForm
+					{...{
+						props: {
+							one: {
+								replace: true,
+								key: 'nickname',
+								label: '名称',
+								render: () => <Input type="text" allowClear placeholder="请输入用户名或者昵称" />
+							}
+						}
+					}}
+					onCreate={this.termForm.onCreate}
+					onReply={this.termForm.onReply}
+					onSubmit={this.termForm.onSubmit}
+				/>
 
 				<Table
 					bordered={false}

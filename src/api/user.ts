@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-07 22:33:10
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:39:56
+ * @Last Modified time: 2020-06-10 23:04:52
  * @Description: 用户模块接口
  */
 
@@ -36,7 +36,7 @@ export const login = (params: { username?: string; email?: string; mobile?: stri
 }
 
 //获取所有用户列表
-export const allUser = (params?: any) => {
+export const allUser = (params?: { nickname?: string; status?: number; createTime?: string }) => {
 	return http<Array<UserType>>({
 		url: `/v2/user/all`,
 		method: 'GET',

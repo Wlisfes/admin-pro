@@ -7,11 +7,10 @@
  */
 
 import './less/auth.less'
-
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Tag, Button } from 'ant-design-vue'
-import { CommEdit } from '@/components/common'
-import { UpdateAuthModal, CreateAuthModal } from './modules'
+import { Table, Tag, Input } from 'ant-design-vue'
+import { CommEdit, TermForm } from '@/components/common'
+import { UpdateAuth, CreateAuth } from './modules'
 import { authAll, deleteAuth, cutoverAuth, AuthType, ApplyType } from '@/api/auth'
 import { Color } from '@/interface/common'
 
@@ -36,39 +35,54 @@ export default class Auth extends Vue {
 	}
 
 	//编辑弹窗配置
-	private updateAuthModal = {
+	private updateAuth = {
 		visible: false,
 		id: 0,
 		onCancel: () => {
-			this.updateAuthModal.visible = false
+			this.updateAuth.visible = false
 		},
 		onSubmit: () => {
 			this.table.loading = true
 			this.authAll()
-			this.updateAuthModal.visible = false
+			this.updateAuth.visible = false
 		}
 	}
 
 	//新增弹窗配置
-	private createAuthModal = {
+	private createAuth = {
 		visible: false,
 		onCancel: () => {
-			this.createAuthModal.visible = false
+			this.createAuth.visible = false
 		},
 		onSubmit: () => {
 			this.table.loading = true
 			this.authAll()
-			this.createAuthModal.visible = false
+			this.createAuth.visible = false
 		}
 	}
 
-	created() {
+	//查询组件配置
+	private termForm = {
+		onCreate: () => {
+			this.createAuth.visible = true
+		},
+		onReply: () => {
+			this.table.loading = true
+			setTimeout(() => this.authAll(), 300)
+		},
+		onSubmit: (params: any) => {
+			this.table.loading = true
+			setTimeout(() => this.authAll(params), 300)
+		}
+	}
+
+	protected created() {
 		this.authAll()
 	}
 
 	//获取所有权限模块列表
-	async authAll() {
-		const response = await authAll()
+	public async authAll(params?: any) {
+		const response = await authAll(params)
 		if (response.code === 200) {
 			this.table.dataSource = response.data as []
 		}
@@ -76,13 +90,13 @@ export default class Auth extends Vue {
 	}
 
 	//操作
-	async onChange({ key, props }: { key: string; props: AuthType }) {
+	public async onChange({ key, props }: { key: string; props: AuthType }) {
 		this.table.loading = true
 
 		//修改
 		if (key === 'update') {
-			this.updateAuthModal.id = props.id
-			this.updateAuthModal.visible = true
+			this.updateAuth.id = props.id
+			this.updateAuth.visible = true
 		}
 
 		//切换状态
@@ -106,30 +120,42 @@ export default class Auth extends Vue {
 		this.table.loading = false
 	}
 
-	render() {
+	protected render() {
 		return (
 			<div class="admin-auth">
 				{/**新增权限弹窗**/
-				this.createAuthModal.visible && (
-					<CreateAuthModal
-						{...{ props: this.createAuthModal }}
-						onCancel={this.createAuthModal.onCancel}
-						onSubmit={this.createAuthModal.onSubmit}
+				this.createAuth.visible && (
+					<CreateAuth
+						{...{ props: this.createAuth }}
+						onCancel={this.createAuth.onCancel}
+						onSubmit={this.createAuth.onSubmit}
 					/>
 				)}
 
 				{/**编辑权限弹窗**/
-				this.updateAuthModal.visible && (
-					<UpdateAuthModal
-						{...{ props: this.updateAuthModal }}
-						onCancel={this.updateAuthModal.onCancel}
-						onSubmit={this.updateAuthModal.onSubmit}
+				this.updateAuth.visible && (
+					<UpdateAuth
+						{...{ props: this.updateAuth }}
+						onCancel={this.updateAuth.onCancel}
+						onSubmit={this.updateAuth.onSubmit}
 					/>
 				)}
 
-				<Button style={{ marginBottom: '16px' }} onClick={() => (this.createAuthModal.visible = true)}>
-					新增
-				</Button>
+				<TermForm
+					{...{
+						props: {
+							one: {
+								replace: true,
+								key: 'auth_name',
+								label: '名称',
+								render: () => <Input type="text" allowClear placeholder="请输入标识码或者名称" />
+							}
+						}
+					}}
+					onCreate={this.termForm.onCreate}
+					onReply={this.termForm.onReply}
+					onSubmit={this.termForm.onSubmit}
+				/>
 				<Table
 					bordered={false}
 					columns={this.table.columns}

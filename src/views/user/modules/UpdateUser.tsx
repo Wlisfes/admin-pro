@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-28 22:04:38
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-06 13:53:05
+ * @Last Modified time: 2020-06-10 20:05:28
  * @Description: 修改用户信息
  */
 
@@ -14,7 +14,7 @@ import { updateUser, getUser } from '@/api/user'
 @Component({
 	props: { form: { type: Object } }
 })
-class UpdateUserModal extends Vue {
+class UpdateUser extends Vue {
 	@Prop(Boolean) visible!: false
 	@Prop(Number) uid!: number
 
@@ -32,12 +32,12 @@ class UpdateUserModal extends Vue {
 		loading: true
 	}
 
-	created() {
+	protected created() {
 		this.getUser()
 	}
 
 	//获取用户信息
-	async getUser() {
+	public async getUser() {
 		const response = await getUser({ uid: this.uid })
 		if (response.code === 200) {
 			const data = response.data
@@ -50,7 +50,7 @@ class UpdateUserModal extends Vue {
 		}
 	}
 
-	onSubmit() {
+	public onSubmit() {
 		this.modal.loading = true
 		this.form.validateFields(async (err: any, form: any) => {
 			if (err) {
@@ -75,13 +75,13 @@ class UpdateUserModal extends Vue {
 		})
 	}
 
-	onCancel() {
+	public onCancel() {
 		this.$emit('cancel')
 		this.modal.loading = false
 	}
 
-	render() {
-		const { getFieldDecorator, getFieldValue } = this.form
+	protected render() {
+		const { getFieldDecorator } = this.form
 
 		return (
 			<Modal
@@ -191,4 +191,4 @@ export default Form.create({
 		visible: { type: Boolean, default: () => false },
 		uid: { type: Number, default: () => '' }
 	}
-})(UpdateUserModal)
+})(UpdateUser)

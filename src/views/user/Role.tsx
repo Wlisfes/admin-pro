@@ -2,16 +2,15 @@
  * @Author: 情雨随风
  * @Date: 2020-04-25 19:26:29
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:27:49
+ * @Last Modified time: 2020-06-10 22:50:44
  * @Description: 新增角色弹窗
  */
 
 import './less/role.less'
-
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Button, Tag } from 'ant-design-vue'
-import { CommEdit } from '@/components/common'
-import { UpdateRoleModal, CreateRoleModal } from './modules'
+import { Table, Input, Tag } from 'ant-design-vue'
+import { CommEdit, TermForm } from '@/components/common'
+import { UpdateRole, CreateRole } from './modules'
 import { roleAll, cutoverRole, deleteRole, RoleType } from '@/api/role'
 import { Color } from '@/interface'
 
@@ -35,29 +34,44 @@ export default class Role extends Vue {
 	}
 
 	//编辑弹窗配置
-	private updateRoleModal = {
+	private updateRole = {
 		visible: false,
 		id: 0,
 		onCancel: () => {
-			this.updateRoleModal.visible = false
+			this.updateRole.visible = false
 		},
 		onSubmit: () => {
 			this.table.loading = true
 			this.roleAll()
-			this.updateRoleModal.visible = false
+			this.updateRole.visible = false
 		}
 	}
 
 	//新增弹窗配置
-	private createRoleModal = {
+	private createRole = {
 		visible: false,
 		onCancel: () => {
-			this.createRoleModal.visible = false
+			this.createRole.visible = false
 		},
 		onSubmit: () => {
 			this.table.loading = true
 			this.roleAll()
-			this.createRoleModal.visible = false
+			this.createRole.visible = false
+		}
+	}
+
+	//查询组件配置
+	private termForm = {
+		onCreate: () => {
+			this.createRole.visible = true
+		},
+		onReply: () => {
+			this.table.loading = true
+			setTimeout(() => this.roleAll(), 300)
+		},
+		onSubmit: (params: any) => {
+			this.table.loading = true
+			setTimeout(() => this.roleAll(params), 300)
 		}
 	}
 
@@ -66,8 +80,8 @@ export default class Role extends Vue {
 	}
 
 	//获取所有角色列表
-	async roleAll() {
-		const response = await roleAll()
+	async roleAll(params?: any) {
+		const response = await roleAll(params)
 		if (response.code === 200) {
 			this.table.dataSource = response.data as []
 		}
@@ -81,8 +95,8 @@ export default class Role extends Vue {
 
 		//修改角色
 		if (key === 'update') {
-			this.updateRoleModal.id = props.id
-			this.updateRoleModal.visible = true
+			this.updateRole.id = props.id
+			this.updateRole.visible = true
 		}
 
 		//切换状态
@@ -110,26 +124,38 @@ export default class Role extends Vue {
 		return (
 			<div class="admin-role">
 				{/**新增角色弹窗**/
-				this.createRoleModal.visible && (
-					<CreateRoleModal
-						{...{ props: this.createRoleModal }}
-						onCancel={this.createRoleModal.onCancel}
-						onSubmit={this.createRoleModal.onSubmit}
+				this.createRole.visible && (
+					<CreateRole
+						{...{ props: this.createRole }}
+						onCancel={this.createRole.onCancel}
+						onSubmit={this.createRole.onSubmit}
 					/>
 				)}
 
 				{/**编辑角色弹窗**/
-				this.updateRoleModal.visible && (
-					<UpdateRoleModal
-						{...{ props: this.updateRoleModal }}
-						onCancel={this.updateRoleModal.onCancel}
-						onSubmit={this.updateRoleModal.onSubmit}
+				this.updateRole.visible && (
+					<UpdateRole
+						{...{ props: this.updateRole }}
+						onCancel={this.updateRole.onCancel}
+						onSubmit={this.updateRole.onSubmit}
 					/>
 				)}
 
-				<Button style={{ marginBottom: '16px' }} onClick={() => (this.createRoleModal.visible = true)}>
-					新增
-				</Button>
+				<TermForm
+					{...{
+						props: {
+							one: {
+								replace: true,
+								key: 'role_name',
+								label: '名称',
+								render: () => <Input type="text" allowClear placeholder="请输入标识码或者名称" />
+							}
+						}
+					}}
+					onCreate={this.termForm.onCreate}
+					onReply={this.termForm.onReply}
+					onSubmit={this.termForm.onSubmit}
+				/>
 				<Table
 					bordered={false}
 					columns={this.table.columns}
