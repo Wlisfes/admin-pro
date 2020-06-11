@@ -21,8 +21,8 @@ export default class User extends Vue {
 	private table = {
 		columns: [
 			{ title: '用户头像', dataIndex: 'avatar', width: '9%', scopedSlots: { customRender: 'avatar' } },
-			{ title: '用户名', width: '9%', dataIndex: 'username' },
-			{ title: '昵称', width: '9%', dataIndex: 'nickname' },
+			{ title: '用户名', width: '9%', dataIndex: 'username', scopedSlots: { customRender: 'username' } },
+			{ title: '昵称', width: '9%', dataIndex: 'nickname', scopedSlots: { customRender: 'nickname' } },
 			{ title: '邮箱', dataindex: 'email', scopedSlots: { customRender: 'email' } },
 			{ title: '手机', width: '14%', dataindex: 'mobile', scopedSlots: { customRender: 'mobile' } },
 			{ title: '角色类型', width: '11%', dataIndex: 'role', scopedSlots: { customRender: 'role' } },
@@ -197,7 +197,8 @@ export default class User extends Vue {
 								key: 'nickname',
 								label: '名称',
 								render: () => <Input type="text" allowClear placeholder="请输入用户名或者昵称" />
-							}
+							},
+							createHide: true
 						}
 					}}
 					onCreate={this.termForm.onCreate}
@@ -206,6 +207,7 @@ export default class User extends Vue {
 				/>
 
 				<Table
+					class="root-table"
 					bordered={false}
 					columns={this.table.columns}
 					dataSource={this.table.dataSource}
@@ -240,26 +242,40 @@ export default class User extends Vue {
 									></Avatar>
 								)
 							},
-							email: (email: any, props: UserType) => {
-								const EmailVNode = <span style={{ cursor: 'pointer' }}>{props.email || '------'}</span>
-								return props.email ? (
-									<Tooltip placement="top" title={props.email}>
-										{EmailVNode}
+							username: (username: string) => (
+								<div class="root-table-content">
+									<Tooltip placement="top" title={username}>
+										<span class="row-ellipsis">{username}</span>
 									</Tooltip>
+								</div>
+							),
+							nickname: (nickname: string) => (
+								<div class="root-table-content">
+									<Tooltip placement="top" title={nickname}>
+										<span class="row-ellipsis">{nickname}</span>
+									</Tooltip>
+								</div>
+							),
+							email: (email: any, props: UserType) => {
+								return props.email ? (
+									<div class="root-table-content">
+										<Tooltip placement="top" title={props.email}>
+											<span class="row-ellipsis">{props.email}</span>
+										</Tooltip>
+									</div>
 								) : (
-									EmailVNode
+									<span>------</span>
 								)
 							},
 							mobile: (mobile: any, props: UserType) => {
-								const MobileVNode = (
-									<span style={{ cursor: 'pointer' }}>{props.mobile || '------'}</span>
-								)
 								return props.mobile ? (
-									<Tooltip placement="top" title={props.mobile}>
-										{MobileVNode}
-									</Tooltip>
+									<div class="root-table-content">
+										<Tooltip placement="top" title={props.mobile}>
+											<span class="row-ellipsis">{props.mobile}</span>
+										</Tooltip>
+									</div>
 								) : (
-									MobileVNode
+									<span>------</span>
 								)
 							},
 							role: (role: any, props: UserType) => <div>{props.role?.role_name || '游客'}</div>,

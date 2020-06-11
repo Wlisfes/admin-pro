@@ -8,7 +8,7 @@
 
 import './less/auth.less'
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Tag, Input } from 'ant-design-vue'
+import { Table, Tag, Input, Tooltip } from 'ant-design-vue'
 import { CommEdit, TermForm } from '@/components/common'
 import { UpdateAuth, CreateAuth } from './modules'
 import { authAll, deleteAuth, cutoverAuth, AuthType, ApplyType } from '@/api/auth'
@@ -20,8 +20,8 @@ export default class Auth extends Vue {
 	private table = {
 		//表头
 		columns: [
-			{ title: '唯一识别码', width: '13.75%', dataIndex: 'auth_key' },
-			{ title: '权限名称', width: '12.5%', dataIndex: 'auth_name' },
+			{ title: '唯一识别码', width: '13.75%', dataIndex: 'auth_key', scopedSlots: { customRender: 'key' } },
+			{ title: '权限名称', width: '12.5%', dataIndex: 'auth_name', scopedSlots: { customRender: 'name' } },
 			{ title: '可操作权限', dataIndex: 'apply', scopedSlots: { customRender: 'apply' } },
 			{ title: '状态', width: '10%', dataIndex: 'status', scopedSlots: { customRender: 'status' } },
 			{ title: '操作', width: 130, dataIndex: 'action', scopedSlots: { customRender: 'action' } }
@@ -157,6 +157,7 @@ export default class Auth extends Vue {
 					onSubmit={this.termForm.onSubmit}
 				/>
 				<Table
+					class="root-table"
 					bordered={false}
 					columns={this.table.columns}
 					dataSource={this.table.dataSource}
@@ -178,6 +179,20 @@ export default class Auth extends Vue {
 											</Tag>
 										) : null
 									)}
+								</div>
+							),
+							key: (auth_key: string) => (
+								<div class="root-table-content">
+									<Tooltip placement="top" title={auth_key}>
+										<span class="row-ellipsis">{auth_key}</span>
+									</Tooltip>
+								</div>
+							),
+							name: (auth_name: string) => (
+								<div class="root-table-content">
+									<Tooltip placement="top" title={auth_name}>
+										<span class="row-ellipsis">{auth_name}</span>
+									</Tooltip>
 								</div>
 							),
 							status: (status: number) => (

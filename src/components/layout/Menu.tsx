@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-03-28 18:09:21
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 22:38:13
+ * @Last Modified time: 2020-06-11 21:42:40
  * @Description: 菜单组件
  */
 
@@ -65,14 +65,14 @@ const menu = [
 		title: '文章管理',
 		children: [
 			{
-				key: 'add-article',
+				key: 'create-article',
 				title: '新增文章',
-				path: '/'
+				path: '/create-article'
 			},
 			{
 				key: 'article-all',
 				title: '文章列表',
-				path: '/'
+				path: '/article-all'
 			}
 		]
 	},

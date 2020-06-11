@@ -55,6 +55,19 @@ const routes: RouteConfig[] = [
 				name: 'project-all',
 				meta: { title: '项目列表' },
 				component: () => import('@/views/project/Project')
+			},
+			/**文章管理******************************************************/
+			{
+				path: '/create-article',
+				name: 'create-article',
+				meta: { title: '新增文章' },
+				component: () => import('@/views/article/CreateArticle')
+			},
+			{
+				path: '/article-all',
+				name: 'article-all',
+				meta: { title: '文章列表' },
+				component: () => import('@/views/article/ArticleAll')
 			}
 		]
 	},

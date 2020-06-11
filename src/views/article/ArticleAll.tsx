@@ -1,43 +1,30 @@
 /*
- * @Date: 2020-06-09 13:01:55
  * @Author: 情雨随风
- * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-09 17:29:12
- * @Description: 项目列表
+ * @Date: 2020-06-11 21:38:55
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2020-06-11 23:25:39
+ * @Description: 文章列表
  */
 
-import './less/project.less'
+import './less/article.less'
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Tag, Tooltip } from 'ant-design-vue'
+import { Table, Tag, Tooltip, Spin, Select, Badge } from 'ant-design-vue'
 import { CommEdit, TermForm } from '@/components/common'
-import { projectAll, cutoverProject, sortProject, deleteProject, ProjectType } from '@/api/project'
-import { CreateProject, UpdateProject } from './modules'
+import { articleAll, sortArticle, cutoverArticle, deleteArticle, ArticleType } from '@/api/article'
+import { TAGAll, TAGType } from '@/api/tag'
 import { Color } from '@/interface'
 import moment from 'moment'
 
 @Component
-export default class Project extends Vue {
+class ArticleAll extends Vue {
 	//表格配置
 	private table = {
 		//表头
 		columns: [
-			{
-				title: '项目名称',
-				width: '11%',
-				ellipsis: true,
-				dataIndex: 'title',
-				scopedSlots: { customRender: 'renderTitle' }
-			},
-			{
-				title: '项目作者',
-				width: '10%',
-				ellipsis: true,
-				dataIndex: 'user',
-				scopedSlots: { customRender: 'user' }
-			},
+			{ title: '文章标题', width: '20%', dataIndex: 'title', scopedSlots: { customRender: 'renderTitle' } },
+			{ title: '文章作者', width: '12%', dataIndex: 'user', scopedSlots: { customRender: 'user' } },
 			{ title: '标签类别', dataIndex: 'tag', scopedSlots: { customRender: 'tag' } },
-			{ title: '源码地址', width: '8.6%', dataIndex: 'github', scopedSlots: { customRender: 'github' } },
-			{ title: '创建时间', width: '11%', dataIndex: 'createTime', scopedSlots: { customRender: 'createTime' } },
+			{ title: '创建时间', width: 120, dataIndex: 'createTime', scopedSlots: { customRender: 'createTime' } },
 			{ title: '状态', width: 95, dataIndex: 'status', scopedSlots: { customRender: 'status' } },
 			{ title: '操作', width: 130, dataIndex: 'action', scopedSlots: { customRender: 'action' } }
 		],
@@ -49,94 +36,80 @@ export default class Project extends Vue {
 		current: 1
 	}
 
+	private TAG = {
+		all: [],
+		loading: true
+	}
+
 	//查询组件配置
 	private termForm = {
 		onCreate: () => {
-			this.create.visible = true
+			this.createArticle()
 		},
 		onReply: () => {
 			this.table.loading = true
-			setTimeout(() => this.projectAll(), 300)
+			setTimeout(() => this.articleAll(), 300)
 		},
 		onSubmit: (params: any) => {
 			this.table.loading = true
-			setTimeout(() => this.projectAll(params), 300)
-		}
-	}
-
-	//新增弹窗配置
-	private create = {
-		visible: false,
-		onCancel: () => {
-			this.create.visible = false
-		},
-		onSubmit: () => {
-			this.table.loading = true
-			this.projectAll()
-			this.create.visible = false
-		}
-	}
-
-	//修改弹窗配置
-	private update = {
-		id: 0,
-		visible: false,
-		onCancel: () => {
-			this.update.visible = false
-		},
-		onSubmit: () => {
-			this.table.loading = true
-			this.projectAll()
-			this.update.visible = false
+			setTimeout(() => this.articleAll(params), 300)
 		}
 	}
 
 	protected created() {
-		this.projectAll()
+		this.articleAll()
+		this.TAGAll()
 	}
 
-	//获取所有项目列表
-	public async projectAll(params?: any) {
-		const response = await projectAll(params)
+	private createArticle() {
+		this.$router.push('create-article')
+	}
+
+	//文章列表
+	public async articleAll(params?: any) {
+		const response = await articleAll(params)
 		if (response.code === 200) {
 			this.table.dataSource = response.data as []
 		}
 		this.table.loading = false
 	}
 
+	//标签列表
+	public async TAGAll() {
+		const response = await TAGAll()
+		if (response.code === 200) {
+			this.TAG.all = response.data as []
+		}
+		this.TAG.loading = false
+	}
+
 	//操作
-	public async onChange({ key, props }: { key: string; props: ProjectType }) {
+	public async onChange({ key, props }: { key: string; props: ArticleType }) {
 		this.table.loading = true
 
-		//修改项目信息
-		if (key === 'update') {
-			this.update.id = props.id
-			this.update.visible = true
-		}
-
-		//置顶标签
+		//置顶文章
 		if (key === 'sort') {
-			const response = await sortProject({ id: props.id })
+			const response = await sortArticle({ id: props.id })
 			if (response.code === 200) {
-				this.projectAll()
+				this.articleAll()
 				return
 			}
 		}
 
 		//切换状态
 		if (key === 'status') {
-			const response = await cutoverProject({ id: props.id })
+			const response = await cutoverArticle({ id: props.id })
 			if (response.code === 200) {
-				this.projectAll()
+				this.articleAll()
 				return
 			}
 		}
 
-		//删除角标签
+		//删除文章
 		if (key === 'delete') {
-			const response = await deleteProject({ id: props.id })
+			const response = await deleteArticle({ id: props.id })
 			if (response.code === 200) {
-				this.projectAll()
+				this.articleAll()
 				return
 			}
 		}
@@ -146,26 +119,49 @@ export default class Project extends Vue {
 
 	protected render() {
 		return (
-			<div class="root-project">
-				{/**项目新增组件**/
-				this.create.visible && (
-					<CreateProject
-						{...{ props: this.create }}
-						onCancel={this.create.onCancel}
-						onSubmit={this.create.onSubmit}
-					/>
-				)}
-
-				{/**项目修改组件**/
-				this.update.visible && (
-					<UpdateProject
-						{...{ props: this.update }}
-						onCancel={this.update.onCancel}
-						onSubmit={this.update.onSubmit}
-					/>
-				)}
-
+			<div class="root-article">
 				<TermForm
+					{...{
+						props: {
+							two: {
+								replace: true,
+								key: 'tag',
+								label: '类别',
+								render: () => (
+									<Select mode="default" placeholder="请选择">
+										{this.TAG.loading && (
+											<Spin
+												slot="notFoundContent"
+												style={{
+													display: 'flex',
+													justifyContent: 'center',
+													padding: '24px 0'
+												}}
+											/>
+										)}
+										{this.TAG.all.map((k: TAGType) => (
+											<Select.Option key={k.id}>{k.name}</Select.Option>
+										))}
+									</Select>
+								)
+							},
+							there: {
+								replace: true,
+								key: 'status',
+								label: '状态',
+								render: () => (
+									<Select mode="default" placeholder="请选择">
+										<Select.Option key={1}>
+											<Badge color="green" text="已开放" />
+										</Select.Option>
+										<Select.Option key={0}>
+											<Badge color="pink" text="已禁用" />
+										</Select.Option>
+									</Select>
+								)
+							}
+						}
+					}}
 					onCreate={this.termForm.onCreate}
 					onReply={this.termForm.onReply}
 					onSubmit={this.termForm.onSubmit}
@@ -180,7 +176,7 @@ export default class Project extends Vue {
 					scroll={{ x: 1100 }}
 					{...{
 						scopedSlots: {
-							expandedRowRender: (props: ProjectType) => <div>{props.description}</div>,
+							expandedRowRender: (props: ArticleType) => <div>{props.description}</div>,
 							renderTitle: (title: string) => (
 								<div class="root-table-content">
 									<Tooltip placement="top" title={title}>
@@ -195,7 +191,7 @@ export default class Project extends Vue {
 									</Tooltip>
 								</div>
 							),
-							tag: (tag: any, props: ProjectType) => (
+							tag: (tag: any, props: ArticleType) => (
 								<div class="root-table-content">
 									{props.tag.map(k => (
 										<Tooltip placement="top" title={k.name}>
@@ -206,24 +202,13 @@ export default class Project extends Vue {
 									))}
 								</div>
 							),
-							github: (github: string) => {
-								return (
-									<Tooltip placement="top" title={github}>
-										<Tag color="blue" style="margin: 0 auto;">
-											<a href={github} target="_blank" rel="noopener noreferrer">
-												GitHub
-											</a>
-										</Tag>
-									</Tooltip>
-								)
-							},
 							createTime: (createTime: string) => <div>{moment(createTime).format('YYYY-MM-DD')}</div>,
 							status: (status: number) => (
 								<Tag style={{ cursor: 'pointer' }} color={status ? 'green' : 'pink'}>
 									{status ? '正常' : '已禁用'}
 								</Tag>
 							),
-							action: (action: any, props: ProjectType) => (
+							action: (action: any, props: ArticleType) => (
 								<CommEdit
 									params={{
 										props,
@@ -260,3 +245,5 @@ export default class Project extends Vue {
 		)
 	}
 }
+
+export default ArticleAll

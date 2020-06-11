@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-06 11:27:31
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-10 21:26:54
+ * @Last Modified time: 2020-06-11 23:22:06
  * @Description: 表格查找组件
  */
 
@@ -18,7 +18,6 @@ interface FormElement {
 	label: string
 	render: Function
 }
-
 @Component({
 	props: { form: { type: Object } }
 })
@@ -26,6 +25,9 @@ class TermForm extends Vue {
 	@Prop() one?: FormElement
 	@Prop() two?: FormElement
 	@Prop() there?: FormElement
+	@Prop() createHide!: boolean
+	@Prop() replyHide!: boolean
+	@Prop() submitHide!: boolean
 
 	private form: any
 	private all: Array<UserType> = []
@@ -136,7 +138,7 @@ class TermForm extends Vue {
 					</div>
 					<div class="term-item">
 						<Form.Item label={this.two?.replace ? this.two.label : '状态'}>
-							{getFieldDecorator(this.two?.replace ? this.two.label : 'status', {
+							{getFieldDecorator(this.two?.replace ? this.two.key : 'status', {
 								validateTrigger: 'change'
 							})(
 								this.two?.replace ? (
@@ -176,15 +178,21 @@ class TermForm extends Vue {
 						</Form.Item>
 					</div>
 					<div class="term-submit-group">
-						<Button type="primary" icon="search" style={styles} onClick={this.onSubmit}>
-							查询
-						</Button>
-						<Button type="primary" icon="plus-circle" style={styles} onClick={this.onCreate}>
-							新增
-						</Button>
-						<Button icon="sync" onClick={this.onReply}>
-							重置
-						</Button>
+						{!this.submitHide && (
+							<Button type="primary" icon="search" style={styles} onClick={this.onSubmit}>
+								查询
+							</Button>
+						)}
+						{!this.createHide && (
+							<Button type="primary" icon="plus-circle" style={styles} onClick={this.onCreate}>
+								新增
+							</Button>
+						)}
+						{!this.replyHide && (
+							<Button icon="sync" onClick={this.onReply}>
+								重置
+							</Button>
+						)}
 					</div>
 				</div>
 			</Form>
@@ -196,6 +204,9 @@ export default Form.create({
 	props: {
 		one: { type: Object },
 		two: { type: Object },
-		there: { type: Object }
+		there: { type: Object },
+		createHide: { type: Boolean },
+		replyHide: { type: Boolean },
+		submitHide: { type: Boolean }
 	}
 })(TermForm)
