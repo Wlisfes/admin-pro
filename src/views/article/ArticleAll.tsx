@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:38:55
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-11 23:25:39
+ * @Last Modified time: 2020-06-13 11:30:17
  * @Description: 文章列表
  */
 
@@ -38,13 +38,14 @@ class ArticleAll extends Vue {
 
 	private TAG = {
 		all: [],
-		loading: true
+		loading: true,
+		show: false
 	}
 
 	//查询组件配置
 	private termForm = {
 		onCreate: () => {
-			this.createArticle()
+			this.TAG.show = true
 		},
 		onReply: () => {
 			this.table.loading = true
@@ -59,10 +60,6 @@ class ArticleAll extends Vue {
 	protected created() {
 		this.articleAll()
 		this.TAGAll()
-	}
-
-	private createArticle() {
-		this.$router.push('create-article')
 	}
 
 	//文章列表

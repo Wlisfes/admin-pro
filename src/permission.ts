@@ -29,6 +29,6 @@ router.beforeEach(async (to, from, next) => {
 })
 
 router.afterEach((to, form) => {
-	console.log(to, form)
+	// console.log(to, form)
 	NProgress.done()
 })

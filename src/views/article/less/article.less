@@ -2,4 +2,29 @@
 	flex: 1;
 	background-color: #ffffff;
 	padding: 24px;
+	#root-meditor {
+		.markdown-toolbars {
+			flex-wrap: wrap;
+			height: auto;
+		}
+	}
+	&-form {
+		display: flex;
+		margin-bottom: 16px;
+		.form-item {
+			flex: 1;
+			display: flex;
+			@media (max-width: 1551px) {
+				width: 33.333%;
+				margin-bottom: 10px;
+			}
+		}
+		.ant-form-item {
+			flex: 1;
+			display: flex;
+		}
+		.ant-form-item-control-wrapper {
+			flex: 1;
+		}
+	}
 }

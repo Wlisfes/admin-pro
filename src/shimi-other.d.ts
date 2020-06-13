@@ -48,3 +48,8 @@ declare module 'element-ui/lib/color-picker' {
 	class ColorPicker extends ElColorPicker {}
 	export default ColorPicker
 }
+declare module 'vue-meditor' {
+	import { Vue } from 'vue-property-decorator'
+	class Meditor extends Vue {}
+	export default Meditor
+}
