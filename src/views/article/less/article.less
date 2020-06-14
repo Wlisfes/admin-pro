@@ -2,21 +2,55 @@
 	flex: 1;
 	background-color: #ffffff;
 	padding: 24px;
-	#root-meditor {
-		.markdown-toolbars {
-			flex-wrap: wrap;
-			height: auto;
-		}
-	}
 	&-form {
 		display: flex;
-		margin-bottom: 16px;
+		flex-wrap: wrap;
+		margin-right: -16px;
 		.form-item {
-			flex: 1;
+			min-height: 59px;
+			width: 50%;
 			display: flex;
-			@media (max-width: 1551px) {
-				width: 33.333%;
+			button {
+				margin-right: 16px;
+			}
+			.ant-form-item-with-help {
 				margin-bottom: 10px;
+			}
+			.ant-form-item-control {
+				width: 100%;
+			}
+			&:nth-child(3) {
+				width: 100%;
+				.ant-form-item {
+					margin-bottom: 18px;
+				}
+				.ant-form-item-with-help {
+					margin-bottom: 10px;
+				}
+			}
+			&:nth-child(4) {
+				width: 100%;
+				.ant-form-item {
+					margin-bottom: 10px;
+				}
+				.ant-form-item-with-help {
+					margin-bottom: 0;
+				}
+				.ant-form-explain {
+					margin-top: 3px;
+				}
+			}
+			@media (max-width: 1040px) {
+				width: 100%;
+			}
+			@media (max-width: 576px) {
+				.ant-form-item-label {
+					width: auto;
+					padding-right: 10px;
+					label {
+						line-height: 40px;
+					}
+				}
 			}
 		}
 		.ant-form-item {
@@ -25,6 +59,26 @@
 		}
 		.ant-form-item-control-wrapper {
 			flex: 1;
+		}
+		.root-update {
+			width: 102px;
+			height: 102px;
+			border: 1px dashed #d9d9d9;
+			border-radius: 4px;
+			cursor: pointer;
+			transition: border-color 0.3s ease;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			overflow: hidden;
+			&:hover {
+				border-color: #1890ff;
+			}
+			img {
+				width: 100%;
+				display: block;
+			}
 		}
 	}
 }

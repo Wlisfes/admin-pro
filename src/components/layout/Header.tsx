@@ -77,7 +77,7 @@ export default class Header extends Mixins(MixinDevice) {
 						<Layout.Header
 							class={`${this.headerfixed && 'create-header-fixed'} ${this.className} ${this.headerfixed &&
 								'create-header-fixed-transition'}`}
-							style={{ background: '#fff', padding: '0', transition: 'width 200ms' }}
+							style={{ background: '#fff', padding: '0', transition: 'width 200ms', zIndex: 99 }}
 						>
 							<Icon
 								class="trigger"

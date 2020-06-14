@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:38:55
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-13 11:30:17
+ * @Last Modified time: 2020-06-14 22:53:24
  * @Description: 文章列表
  */
 
@@ -156,7 +156,8 @@ class ArticleAll extends Vue {
 										</Select.Option>
 									</Select>
 								)
-							}
+							},
+							createHide: true
 						}
 					}}
 					onCreate={this.termForm.onCreate}
