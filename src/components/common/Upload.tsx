@@ -19,7 +19,6 @@ export default class ImageUpload extends Vue {
 	@Prop({ default: '图片上传' }) title!: string
 	@Prop({ default: '' }) picUrl!: string
 	@Prop({ default: () => ({ w: 240, h: 240 }) }) auto!: { w: number; h: number }
-	@Prop({ default: () => ({ w: 350, h: 350 }) }) container!: { w: number; h: number }
 
 	private centered: boolean = true
 	private width: number = 800
@@ -37,6 +36,8 @@ export default class ImageUpload extends Vue {
 		img: '',
 		autoCrop: true,
 		fixedBox: true,
+		fixedNumber: [16, 9],
+		canMoveBox: false,
 		info: true
 	}
 
@@ -110,7 +111,7 @@ export default class ImageUpload extends Vue {
 				<div class="root-upload">
 					<div class="root-upload-cropper">
 						<div class="root-upload-container">
-							<div style={{ width: `${this.container.w}px`, height: `${this.container.h}px` }}>
+							<div style={{ height: '350px' }}>
 								<VueCropper
 									ref="cropper"
 									mode="cover"
@@ -120,6 +121,8 @@ export default class ImageUpload extends Vue {
 									autoCropWidth={this.auto.w}
 									autoCropHeight={this.auto.h}
 									fixedBox={this.vueCropperOptions.fixedBox}
+									fixedNumber={this.vueCropperOptions.fixedNumber}
+									canMoveBox={this.vueCropperOptions.canMoveBox}
 									onRealTime={(data: { img: any; url: string }) => {
 										this.previews.url = data.url
 										this.previews.img = data.img

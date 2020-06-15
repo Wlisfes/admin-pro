@@ -231,8 +231,7 @@ class UpdateProject extends Vue {
 					</Form>
 					<Upload
 						title="项目封面"
-						auto={{ w: 450, h: 300 }}
-						container={{ w: 600, h: 350 }}
+						auto={{ w: 480, h: 270 }}
 						visible={this.upload.visible}
 						onCancel={() => (this.upload.visible = false)}
 						onSubmit={({ response }: { response: { code: number; data: { path: string } } }) => {

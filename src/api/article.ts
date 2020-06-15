@@ -19,9 +19,28 @@ export interface ArticleType {
 	description: string
 	content: string
 	picUrl: string
-	text: string
+	html: string
 	tag: TAGType[]
 	user: UserType
+}
+export interface CreateType {
+	title: string
+	content: string
+	html: string
+	picUrl: string
+	tag: number[]
+	status: number
+	themeName: string
+	description: string
+}
+
+//创建文章
+export const createArticle = (params: CreateType) => {
+	return http({
+		url: `/v2/article/create`,
+		method: 'POST',
+		data: params
+	})
 }
 
 //文章列表

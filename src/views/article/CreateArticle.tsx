@@ -8,159 +8,81 @@
 
 import './less/article.less'
 import { Vue, Component } from 'vue-property-decorator'
-import { Form, Input, Button, Radio, Icon, Select, Spin } from 'ant-design-vue'
+import { ArticleForm } from './modules'
 import { Meditor } from '@/components/meditor'
-import { TAGAll, TAGType } from '@/api/tag'
+import { createArticle, CreateType } from '@/api/article'
 
-@Component({
-	props: {
-		form: { type: Object }
+@Component
+export default class CreateArticle extends Vue {
+	//表单配置
+	private form = {
+		self: null,
+		props: { status: 1 },
+		//表单加载完成触发onReady事件，返回表单实例
+		onReady: (self: any) => (this.form.self = self),
+		//表单保存事件
+		onSubmit: (params: {
+			title: string
+			picUrl: string
+			status: number
+			description: string
+			tag: number[]
+			timeout: Function
+		}) => {
+			const { currentValue, html, themeName } = (this.meditor.self as any).handleSave()
+			if (!currentValue || !html) {
+				this.$notification.error({ message: '文章内容不可为空', description: '' })
+				setTimeout(() => params.timeout(), 600)
+				return
+			}
+			this.create(
+				{
+					title: params.title,
+					tag: params.tag,
+					description: params.description,
+					picUrl: params.description,
+					status: params.status,
+					themeName,
+					html,
+					content: currentValue
+				},
+				params.timeout
+			)
+		}
 	}
-})
-class CreateArticle extends Vue {
-	private form: any
-	private upload = { visible: false }
-	private create = {
-		tag: [],
-		picUrl: '',
-		loading: true
-	}
+
 	//编辑器配置
-	private meditor: any = {
+	private meditor = {
 		self: null,
 		props: {
 			height: 800,
 			toolbars: { clear: true }
 		},
+		//编辑器加载完成触发onReady事件，返回编辑器实例
 		onReady: (e: any) => (this.meditor.self = e.self),
+		//编辑器上传图片
 		onUpload: async (e: { self: any; insertContent: Function }) => {
 			console.log(e)
 		}
 	}
 
-	protected created() {
-		this.TAGAll()
-	}
-
-	//标签列表
-	public async TAGAll() {
-		const response = await TAGAll()
+	//创建
+	public async create(params: CreateType, timeout: Function) {
+		const response = await createArticle(params)
 		if (response.code === 200) {
-			this.create.tag = response.data as []
+			console.log(response)
 		}
-		this.create.loading = false
-	}
-
-	//保存
-	public onSubmit() {
-		this.form.validateFields(async (err: any, form: any) => {
-			if (!err) {
-				const context = this.meditor.self.handleSave()
-				console.log(form, context)
-			}
-		})
-	}
-
-	//重置
-	public onReply() {
-		this.form.resetFields()
+		timeout()
 	}
 
 	protected render() {
-		const { getFieldDecorator } = this.form
 		return (
 			<div class="root-article">
-				<Form layout="inline">
-					<div class="root-article-form">
-						<div class="form-item">
-							<Form.Item label="文章标题" hasFeedback={true}>
-								{getFieldDecorator('title', {
-									rules: [{ required: true, message: '请输入文章名称' }],
-									validateTrigger: 'change'
-								})(<Input type="text" placeholder="请输入文章名称" />)}
-							</Form.Item>
-						</div>
-						<div class="form-item">
-							<Form.Item label="文章类别" hasFeedback={true}>
-								{getFieldDecorator('tag', {
-									rules: [{ required: true, message: '请输至少选择一个类别' }],
-									validateTrigger: 'change'
-								})(
-									<Select mode="multiple" placeholder="请选择类别">
-										{this.create.loading && (
-											<Spin
-												slot="notFoundContent"
-												style={{
-													display: 'flex',
-													justifyContent: 'center',
-													padding: '24px 0'
-												}}
-											/>
-										)}
-										{this.create.tag.map((k: TAGType) => (
-											<Select.Option key={k.id}>{k.name}</Select.Option>
-										))}
-									</Select>
-								)}
-							</Form.Item>
-						</div>
-						<div class="form-item">
-							<Form.Item label="文章描述" hasFeedback={true}>
-								{getFieldDecorator('description', {
-									rules: [{ required: true, message: '请输入文章描述' }],
-									validateTrigger: 'change'
-								})(
-									<Input.TextArea
-										autoSize={{ minRows: 4, maxRows: 6 }}
-										placeholder="请输入项目描述"
-									/>
-								)}
-							</Form.Item>
-						</div>
-						<div class="form-item">
-							<Form.Item label="文章封面" hasFeedback={false}>
-								{getFieldDecorator('picUrl', {
-									rules: [{ required: true, message: '请上传文章封面' }],
-									validateTrigger: 'change'
-								})(
-									<div>
-										<Input type="text" style={{ display: 'none' }} />
-										<div class="root-update" onClick={() => (this.upload.visible = true)}>
-											{this.create.picUrl ? (
-												<img src={this.create.picUrl} />
-											) : (
-												<Icon type="plus" style={{ color: '#999999', fontSize: '32px' }} />
-											)}
-										</div>
-									</div>
-								)}
-							</Form.Item>
-						</div>
-						<div class="form-item" style={{ minHeight: '50px' }}>
-							<Form.Item label="文章状态" hasFeedback={false}>
-								{getFieldDecorator('status', {
-									initialValue: 1,
-									rules: [{ required: true, message: '请选择文章状态' }],
-									validateTrigger: 'change'
-								})(
-									<Radio.Group>
-										<Radio value={1}>开放</Radio>
-										<Radio value={0}>禁用</Radio>
-									</Radio.Group>
-								)}
-							</Form.Item>
-						</div>
-						<div class="form-item">
-							<Button type="primary" icon="save" onClick={this.onSubmit}>
-								保存
-							</Button>
-							<Button icon="sync" onClick={this.onReply}>
-								重置
-							</Button>
-						</div>
-					</div>
-				</Form>
-
+				<ArticleForm
+					{...{ props: this.form.props }}
+					onSubmit={this.form.onSubmit}
+					onReady={this.form.onReady}
+				/>
 				<Meditor
 					class="root-meditor"
 					height={800}
@@ -172,5 +94,3 @@ class CreateArticle extends Vue {
 		)
 	}
 }
-
-export default Form.create({})(CreateArticle)
