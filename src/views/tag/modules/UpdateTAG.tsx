@@ -23,7 +23,7 @@ Vue.use(I)
 	props: { form: { type: Object } },
 	components: { ColorPicker }
 })
-class UpdateTagModal extends Vue {
+class UpdateTAG extends Vue {
 	@Prop(Boolean) visible!: false
 	@Prop(Number) id!: number
 
@@ -150,4 +150,4 @@ export default Form.create({
 		visible: { type: Boolean, default: () => false },
 		id: { type: Number, default: () => 0 }
 	}
-})(UpdateTagModal)
+})(UpdateTAG)

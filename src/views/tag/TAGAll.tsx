@@ -11,7 +11,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Tooltip } from 'ant-design-vue'
 import { TAGAll, cutoverTAG, deleteTAG, sortTAG, TAGType } from '@/api/tag'
 import { CommEdit, TermForm } from '@/components/common'
-import { UpdateTagModal } from './modules'
+import { UpdateTAG, CreateTAG } from './modules'
 import { Color } from '@/interface'
 import moment from 'moment'
 
@@ -35,25 +35,32 @@ export default class TAG extends Vue {
 		current: 1
 	}
 
-	//用户标签修改配置
-	private updateTagModal = {
+	//标签修改配置
+	private update = {
 		visible: false,
 		id: 0,
-		onCancel: () => {
-			this.updateTagModal.visible = false
-		},
+		onCancel: () => (this.update.visible = false),
 		onSubmit: () => {
 			this.table.loading = true
 			this.TAGAll()
-			this.updateTagModal.visible = false
+			this.update.visible = false
+		}
+	}
+
+	//标签新增配置
+	private create = {
+		visible: false,
+		onCancel: () => (this.create.visible = false),
+		onSubmit: () => {
+			this.table.loading = true
+			this.TAGAll()
+			this.create.visible = false
 		}
 	}
 
 	//查询组件配置
 	private termForm = {
-		onCreate: () => {
-			this.updateTagModal.visible = true
-		},
+		onCreate: () => (this.create.visible = true),
 		onReply: () => {
 			this.table.loading = true
 			setTimeout(() => this.TAGAll(), 300)
@@ -83,8 +90,8 @@ export default class TAG extends Vue {
 
 		//修改标签信息
 		if (key === 'update') {
-			this.updateTagModal.id = props.id
-			this.updateTagModal.visible = true
+			this.update.id = props.id
+			this.update.visible = true
 		}
 
 		//置顶标签
@@ -120,14 +127,22 @@ export default class TAG extends Vue {
 	render() {
 		return (
 			<div class="root-tag">
-				{/**标签修改组件**/
-				this.updateTagModal.visible && (
-					<UpdateTagModal
-						{...{ props: this.updateTagModal }}
-						onCancel={this.updateTagModal.onCancel}
-						onSubmit={this.updateTagModal.onSubmit}
+				{this.update.visible && (
+					<UpdateTAG
+						{...{ props: this.update }}
+						onCancel={this.update.onCancel}
+						onSubmit={this.update.onSubmit}
 					/>
 				)}
+
+				{this.create.visible && (
+					<CreateTAG
+						{...{ props: this.create }}
+						onCancel={this.create.onCancel}
+						onSubmit={this.create.onSubmit}
+					/>
+				)}
+
 				<TermForm
 					onCreate={this.termForm.onCreate}
 					onReply={this.termForm.onReply}

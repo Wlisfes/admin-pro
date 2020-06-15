@@ -47,7 +47,7 @@ const routes: RouteConfig[] = [
 				path: '/tag-all',
 				name: 'tag-all',
 				meta: { title: '标签列表' },
-				component: () => import('@/views/tag/Tag')
+				component: () => import('@/views/tag/TAGAll')
 			},
 			/**项目管理******************************************************/
 			{

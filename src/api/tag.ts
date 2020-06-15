@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-04 21:30:06
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-04 23:00:34
+ * @Last Modified time: 2020-06-15 21:17:07
  * @Description: 标签模块接口
  */
 
@@ -18,6 +18,15 @@ export interface TAGType {
 	createTime: string
 	updateTime: string
 	user: UserType
+}
+
+//创建标签
+export const createTAG = (params: { name: string; color: string; status: number }) => {
+	return http<Array<TAGType>>({
+		url: '/v2/tag/create',
+		method: 'POST',
+		data: params
+	})
 }
 
 //获取所有标签

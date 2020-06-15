@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-09 21:17:38
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-10 20:00:01
+ * @Last Modified time: 2020-06-15 21:42:23
  * @Description: project新增弹窗
  */
 
@@ -163,7 +163,10 @@ class CreateProject extends Vue {
 									<Input type="text" style={{ display: 'none' }} />
 									<div class="root-update" onClick={() => (this.upload.visible = true)}>
 										{this.create.picUrl ? (
-											<img src={this.create.picUrl} />
+											<div
+												class="root-update-picUrl"
+												style={{ backgroundImage: `url('${this.create.picUrl}')` }}
+											></div>
 										) : (
 											<Icon type="plus" style={{ color: '#999999', fontSize: '32px' }} />
 										)}

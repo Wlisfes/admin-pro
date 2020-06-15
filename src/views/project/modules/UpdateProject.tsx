@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-10 19:22:43
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-10 19:56:12
+ * @Last Modified time: 2020-06-15 21:42:42
  * @Description: 项目修改弹窗
  */
 
@@ -192,7 +192,10 @@ class UpdateProject extends Vue {
 									<Input type="text" style={{ display: 'none' }} />
 									<div class="root-update" onClick={() => (this.upload.visible = true)}>
 										{this.update.picUrl ? (
-											<img src={this.update.picUrl} />
+											<div
+												class="root-update-picUrl"
+												style={{ backgroundImage: `url('${this.update.picUrl}')` }}
+											></div>
 										) : (
 											<Icon type="plus" style={{ color: '#999999', fontSize: '32px' }} />
 										)}
