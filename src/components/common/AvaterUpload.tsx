@@ -37,6 +37,8 @@ export default class AvaterUpload extends Vue {
 		autoCropWidth: 240,
 		autoCropHeight: 240,
 		fixedBox: true,
+		canMoveBox: false,
+		centerBox: true,
 		info: true
 	}
 
@@ -121,6 +123,8 @@ export default class AvaterUpload extends Vue {
 									autoCropWidth={this.vueCropperOptions.autoCropWidth}
 									autoCropHeight={this.vueCropperOptions.autoCropHeight}
 									fixedBox={this.vueCropperOptions.fixedBox}
+									canMoveBox={this.vueCropperOptions.canMoveBox}
+									centerBox={this.vueCropperOptions.centerBox}
 									onRealTime={(data: { img: any; url: string }) => {
 										this.previews.url = data.url
 										this.previews.img = data.img
