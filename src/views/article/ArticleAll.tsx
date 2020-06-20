@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:38:55
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-14 22:53:24
+ * @Last Modified time: 2020-06-20 23:50:04
  * @Description: 文章列表
  */
 
@@ -10,6 +10,7 @@ import './less/article.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Tooltip, Spin, Select, Badge } from 'ant-design-vue'
 import { CommEdit, TermForm } from '@/components/common'
+import { UpdateArticle } from './modules'
 import { articleAll, sortArticle, cutoverArticle, deleteArticle, ArticleType } from '@/api/article'
 import { TAGAll, TAGType } from '@/api/tag'
 import { Color } from '@/interface'
@@ -40,6 +41,14 @@ class ArticleAll extends Vue {
 		all: [],
 		loading: true,
 		show: false
+	}
+
+	//修改文章配置
+	private update = {
+		id: 0,
+		visible: false,
+		onCancel: () => (this.update.visible = false),
+		onSubmit: () => {}
 	}
 
 	//查询组件配置
@@ -84,6 +93,12 @@ class ArticleAll extends Vue {
 	public async onChange({ key, props }: { key: string; props: ArticleType }) {
 		this.table.loading = true
 
+		//
+		if (key === 'update') {
+			this.update.id = props.id
+			this.update.visible = true
+		}
+
 		//置顶文章
 		if (key === 'sort') {
 			const response = await sortArticle({ id: props.id })
@@ -117,6 +132,14 @@ class ArticleAll extends Vue {
 	protected render() {
 		return (
 			<div class="root-article">
+				{this.update.visible && (
+					<UpdateArticle
+						{...{ props: this.update }}
+						onCancel={this.update.onCancel}
+						onSubmit={this.update.onSubmit}
+					></UpdateArticle>
+				)}
+
 				<TermForm
 					{...{
 						props: {
