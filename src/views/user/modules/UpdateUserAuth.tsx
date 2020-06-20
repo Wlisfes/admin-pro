@@ -157,7 +157,7 @@ class UpdateUserAuth extends Vue {
 								initialValue: this.user.role?.role_key || null,
 								validateTrigger: 'change'
 							})(
-								<Select mode="default" placeholder="请选择角色">
+								<Select mode="default" placeholder="请选择角色" disabled={this.user.role?.role_key === 'admin'}>
 									{this.user.roleAll.map(k => (
 										<Select.Option disabled={!k.status} value={k.role_key}>
 											{k.role_name}

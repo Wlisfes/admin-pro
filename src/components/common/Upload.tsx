@@ -39,6 +39,7 @@ export default class ImageUpload extends Vue {
 		fixedNumber: [16, 9],
 		canMoveBox: false,
 		centerBox: true,
+		enlarge: 4,
 		info: true
 	}
 
@@ -125,6 +126,7 @@ export default class ImageUpload extends Vue {
 									fixedNumber={this.vueCropperOptions.fixedNumber}
 									canMoveBox={this.vueCropperOptions.canMoveBox}
 									centerBox={this.vueCropperOptions.centerBox}
+									enlarge={this.vueCropperOptions.enlarge}
 									onRealTime={(data: { img: any; url: string }) => {
 										this.previews.url = data.url
 										this.previews.img = data.img
