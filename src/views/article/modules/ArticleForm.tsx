@@ -12,14 +12,6 @@ import { Form, Input, Button, Radio, Icon, Select, Spin } from 'ant-design-vue'
 import { Upload } from '@/components/common'
 import { TAGAll, TAGType } from '@/api/tag'
 
-interface CreateForm {
-	title: string | undefined
-	tag: any | undefined
-	description: string | undefined
-	picUrl: string | undefined
-	loading: boolean
-}
-
 @Component({
 	props: {
 		form: { type: Object }
@@ -31,15 +23,12 @@ class ArticleForm extends Vue {
 	@Prop() description!: string
 	@Prop() picUrl!: string
 	@Prop() status!: number
+	@Prop() reply!: string
 
 	private form: any
 	private upload = { visible: false }
 	private TAG = { all: [], loading: true }
-	private create: CreateForm = {
-		title: this.title,
-		tag: this.tag,
-		description: this.description,
-		picUrl: this.picUrl,
+	private create = {
 		loading: false
 	}
 
@@ -79,17 +68,12 @@ class ArticleForm extends Vue {
 
 	//重置
 	public onReply() {
-		this.create.title = undefined
-		this.create.tag = undefined
-		this.create.description = undefined
-		this.create.picUrl = undefined
 		this.form.resetFields()
-
 		this.$emit('reply')
 	}
 
 	protected render() {
-		const { getFieldDecorator, setFieldsValue } = this.form
+		const { getFieldDecorator, setFieldsValue, getFieldValue } = this.form
 		return (
 			<div class="root-article-form">
 				<Upload
@@ -100,7 +84,7 @@ class ArticleForm extends Vue {
 					onSubmit={({ response }: { response: { code: number; data: { path: string } } }) => {
 						if (response.code === 200) {
 							setFieldsValue({ picUrl: response.data.path })
-							this.create.picUrl = response.data.path
+							// this.create.picUrl = response.data.path
 							this.upload.visible = false
 						}
 					}}
@@ -111,7 +95,7 @@ class ArticleForm extends Vue {
 						<div class="form-item">
 							<Form.Item label="文章标题" hasFeedback={true}>
 								{getFieldDecorator('title', {
-									initialValue: this.create.title,
+									initialValue: this.title,
 									rules: [{ required: true, message: '请输入文章名称' }],
 									validateTrigger: 'change'
 								})(<Input type="text" placeholder="请输入文章名称" />)}
@@ -120,11 +104,11 @@ class ArticleForm extends Vue {
 						<div class="form-item">
 							<Form.Item label="文章类别" hasFeedback={true}>
 								{getFieldDecorator('tag', {
-									initialValue: this.create.tag,
+									initialValue: this.tag,
 									rules: [{ required: true, message: '请输至少选择一个类别' }],
 									validateTrigger: 'change'
 								})(
-									<Select mode="multiple" placeholder="请选择类别">
+									<Select mode="multiple" placeholder="请选择类别" showArrow>
 										{this.TAG.loading && (
 											<Spin
 												slot="notFoundContent"
@@ -145,7 +129,7 @@ class ArticleForm extends Vue {
 						<div class="form-item">
 							<Form.Item label="文章描述" hasFeedback={true}>
 								{getFieldDecorator('description', {
-									initialValue: this.create.description,
+									initialValue: this.description,
 									rules: [{ required: true, message: '请输入文章描述' }],
 									validateTrigger: 'change'
 								})(
@@ -159,17 +143,19 @@ class ArticleForm extends Vue {
 						<div class="form-item">
 							<Form.Item label="文章封面" hasFeedback={false}>
 								{getFieldDecorator('picUrl', {
-									initialValue: this.create.picUrl,
+									initialValue: this.picUrl,
 									rules: [{ required: true, message: '请上传文章封面' }],
 									validateTrigger: 'change'
 								})(
 									<div>
 										<Input type="text" style={{ display: 'none' }} />
 										<div class="root-update" onClick={() => (this.upload.visible = true)}>
-											{this.create.picUrl ? (
+											{getFieldValue('picUrl') ? (
 												<div
 													class="root-update-picUrl"
-													style={{ backgroundImage: `url('${this.create.picUrl}')` }}
+													style={{
+														backgroundImage: `url('${getFieldValue('picUrl')}')`
+													}}
 												></div>
 											) : (
 												<Icon type="plus" style={{ color: '#999999', fontSize: '32px' }} />
@@ -203,9 +189,11 @@ class ArticleForm extends Vue {
 							>
 								保存
 							</Button>
-							<Button icon="sync" onClick={this.onReply}>
-								重置
-							</Button>
+							{!this.reply && (
+								<Button icon="sync" onClick={this.onReply}>
+									重置
+								</Button>
+							)}
 						</div>
 					</div>
 				</Form>
@@ -220,6 +208,7 @@ export default Form.create({
 		tag: { type: Array },
 		description: { type: String },
 		picUrl: { type: String },
-		status: { type: Number }
+		status: { type: Number },
+		reply: { type: Boolean }
 	}
 })(ArticleForm)

@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:38:55
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-20 23:50:04
+ * @Last Modified time: 2020-06-21 17:42:16
  * @Description: 文章列表
  */
 
@@ -48,7 +48,11 @@ class ArticleAll extends Vue {
 		id: 0,
 		visible: false,
 		onCancel: () => (this.update.visible = false),
-		onSubmit: () => {}
+		onSubmit: () => {
+			this.table.loading = true
+			this.update.visible = false
+			setTimeout(() => this.articleAll(), 300)
+		}
 	}
 
 	//查询组件配置

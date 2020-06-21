@@ -2,22 +2,25 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:28:59
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-14 23:10:17
+ * @Last Modified time: 2020-06-21 18:14:48
  * @Description: 新增文章
  */
 
 import './less/article.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { ArticleForm } from './modules'
-import { Meditor } from '@/components/meditor'
+import { Meditor, createFile } from '@/components/meditor'
 import { createArticle, CreateType } from '@/api/article'
+import { upload } from '@/api'
 
 @Component
 export default class CreateArticle extends Vue {
 	//表单配置
 	private form = {
 		self: null,
-		props: { status: 1 },
+		props: {
+			status: 1
+		},
 		//表单加载完成触发onReady事件，返回表单实例
 		onReady: (self: any) => (this.form.self = self),
 		//表单保存事件
@@ -40,7 +43,7 @@ export default class CreateArticle extends Vue {
 					title: params.title,
 					tag: params.tag,
 					description: params.description,
-					picUrl: params.description,
+					picUrl: params.picUrl,
 					status: params.status,
 					themeName,
 					html,
@@ -62,15 +65,21 @@ export default class CreateArticle extends Vue {
 		onReady: (e: any) => (this.meditor.self = e.self),
 		//编辑器上传图片
 		onUpload: async (e: { self: any; insertContent: Function }) => {
-			console.log(e)
+			const formData = await createFile()
+			const response = await upload(formData)
+			if (response.code === 200) {
+				e.insertContent(response.data.path)
+			}
 		}
 	}
 
 	//创建
 	public async create(params: CreateType, timeout: Function) {
 		const response = await createArticle(params)
+		const self = this.form.self as any
 		if (response.code === 200) {
-			console.log(response)
+			this.$notification.success({ message: '新增成功', description: '' })
+			self.onReply()
 		}
 		timeout()
 	}

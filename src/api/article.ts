@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:43:22
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-11 22:35:03
+ * @Last Modified time: 2020-06-21 16:35:32
  * @Description: 文章接口
  */
 
@@ -20,6 +20,7 @@ export interface ArticleType {
 	content: string
 	picUrl: string
 	html: string
+	themeName: string
 	tag: TAGType[]
 	user: UserType
 }
@@ -33,12 +34,33 @@ export interface CreateType {
 	themeName: string
 	description: string
 }
+export interface UpdateType extends CreateType {
+	id: number
+}
 
 //创建文章
 export const createArticle = (params: CreateType) => {
-	return http({
+	return http<ArticleType>({
 		url: `/v2/article/create`,
 		method: 'POST',
+		data: params
+	})
+}
+
+//获取文章详情
+export const getArticle = (params: { id: number }) => {
+	return http<ArticleType>({
+		url: `/v2/article/info`,
+		method: 'GET',
+		params
+	})
+}
+
+//修改文章
+export const updateArticle = (params: UpdateType) => {
+	return http<ArticleType>({
+		url: `/v2/article/update`,
+		method: 'PUT',
 		data: params
 	})
 }
