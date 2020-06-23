@@ -2,7 +2,7 @@
  * @Date: 2020-03-31 15:16:00
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-09 13:06:32
+ * @LastEditTime: 2020-06-23 17:08:16
  * @Description: page配置
  */
 
@@ -68,6 +68,19 @@ const routes: RouteConfig[] = [
 				name: 'article-all',
 				meta: { title: '文章列表' },
 				component: () => import('@/views/article/ArticleAll')
+			},
+			/**笔记管理******************************************************/
+			{
+				path: '/create-notes',
+				name: 'create-notes',
+				meta: { title: '新增笔记' },
+				component: () => import('@/views/notes/CreateNotes')
+			},
+			{
+				path: '/notes-all',
+				name: 'notes-all',
+				meta: { title: '笔记列表' },
+				component: () => import('@/views/notes/NotesAll')
 			}
 		]
 	},

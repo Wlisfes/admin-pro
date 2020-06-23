@@ -77,19 +77,19 @@ const menu = [
 		]
 	},
 	{
-		key: 'note',
+		key: 'notes',
 		icon: 'schedule',
 		title: '笔记管理',
 		children: [
 			{
-				key: 'add-note',
+				key: 'create-notes',
 				title: '新增笔记',
-				path: '/'
+				path: '/create-notes'
 			},
 			{
-				key: 'note-all',
+				key: 'notes-all',
 				title: '笔记列表',
-				path: '/'
+				path: '/notes-all'
 			}
 		]
 	},
