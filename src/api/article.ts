@@ -66,7 +66,7 @@ export const updateArticle = (params: UpdateType) => {
 }
 
 //文章列表
-export const articleAll = (params?: { uid?: number; status?: number; createTime?: string }) => {
+export const articleAll = (params?: { uid?: number; status?: number; tag?: number; createTime?: string }) => {
 	return http<Array<ArticleType>>({
 		url: `/v2/article/all`,
 		method: 'GET',

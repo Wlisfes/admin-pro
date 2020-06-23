@@ -24,10 +24,37 @@ export interface NotesType {
 }
 
 //笔记列表
-export const notesAll = (params?: { uid?: number; status?: number; createTime?: string }) => {
+export const notesAll = (params?: { uid?: number; status?: number; tag?: number; createTime?: string }) => {
 	return http<Array<NotesType>>({
 		url: `/v2/notes/all`,
 		method: 'GET',
+		params
+	})
+}
+
+//置顶笔记
+export const sortNotes = (params: { id: number }) => {
+	return http<NotesType>({
+		url: `/v2/notes/sort`,
+		method: 'PUT',
+		params
+	})
+}
+
+//切换笔记状态
+export const cutoverNotes = (params: { id: number }) => {
+	return http<NotesType>({
+		url: `/v2/notes/cutover`,
+		method: 'PUT',
+		params
+	})
+}
+
+//删除笔记
+export const deleteNotes = (params: { id: number }) => {
+	return http({
+		url: `/v2/notes/delete`,
+		method: 'DELETE',
 		params
 	})
 }
