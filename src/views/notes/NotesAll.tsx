@@ -2,7 +2,7 @@
  * @Date: 2020-06-23 16:55:22
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-23 17:22:23
+ * @LastEditTime: 2020-06-24 16:38:09
  * @Description: 笔记列表
  */
 
@@ -10,6 +10,7 @@ import './less/notes.less'
 import { Vue, Component } from 'vue-property-decorator'
 import { Table, Tag, Tooltip, Spin, Select, Badge } from 'ant-design-vue'
 import { CommEdit, TermForm } from '@/components/common'
+import { UpdateNotes } from './modules'
 import { notesAll, sortNotes, cutoverNotes, deleteNotes, NotesType } from '@/api/notes'
 import { TAGAll, TAGType } from '@/api/tag'
 import { Color } from '@/interface'
@@ -40,6 +41,18 @@ export default class NotesAll extends Vue {
 		all: [],
 		loading: true,
 		show: false
+	}
+
+	//修改文章配置
+	private update = {
+		id: 0,
+		visible: false,
+		onCancel: () => (this.update.visible = false),
+		onSubmit: () => {
+			this.table.loading = true
+			this.update.visible = false
+			setTimeout(() => this.notesAll(), 300)
+		}
 	}
 
 	//查询组件配置
@@ -81,6 +94,12 @@ export default class NotesAll extends Vue {
 	public async onChange({ key, props }: { key: string; props: NotesType }) {
 		this.table.loading = true
 
+		//更新
+		if (key === 'update') {
+			this.update.id = props.id
+			this.update.visible = true
+		}
+
 		//置顶笔记
 		if (key === 'sort') {
 			const response = await sortNotes({ id: props.id })
@@ -114,6 +133,14 @@ export default class NotesAll extends Vue {
 	protected render() {
 		return (
 			<div class="root-notes">
+				{this.update.visible && (
+					<UpdateNotes
+						{...{ props: this.update }}
+						onCancel={this.update.onCancel}
+						onSubmit={this.update.onSubmit}
+					></UpdateNotes>
+				)}
+
 				<TermForm
 					{...{
 						props: {

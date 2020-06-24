@@ -4,7 +4,7 @@ import { resetStore } from '@/utils/bootstrap'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-const whiteList: string[] = ['login', 'register']
+const whiteList: string[] = ['login', 'register'] //白名单页面
 
 router.beforeEach(async (to, from, next) => {
 	NProgress.start()
@@ -17,14 +17,13 @@ router.beforeEach(async (to, from, next) => {
 			next()
 		}
 	} else {
+		resetStore()
 		if (whiteList.includes(to.name as string)) {
-			//白名单页面
 			next()
 		} else {
 			next({ path: '/login', replace: true })
 			NProgress.done()
 		}
-		resetStore()
 	}
 })
 

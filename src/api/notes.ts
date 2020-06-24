@@ -2,7 +2,7 @@
  * @Date: 2020-06-23 17:17:25
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-23 17:21:20
+ * @LastEditTime: 2020-06-24 16:42:43
  * @Description: 笔记模块接口
  */
 
@@ -21,6 +21,45 @@ export interface NotesType {
 	themeName: string
 	tag: TAGType[]
 	user: UserType
+}
+export interface CreateType {
+	title: string
+	content: string
+	html: string
+	picUrl: string
+	tag: number[]
+	status: number
+	themeName: string
+}
+export interface UpdateType extends CreateType {
+	id: number
+}
+
+//创建笔记
+export const createNotes = (params: CreateType) => {
+	return http<NotesType>({
+		url: `/v2/notes/create`,
+		method: 'POST',
+		data: params
+	})
+}
+
+//获取笔记详情
+export const getNotes = (params: { id: number }) => {
+	return http<NotesType>({
+		url: `/v2/notes/info`,
+		method: 'GET',
+		params
+	})
+}
+
+//修改文章
+export const updateNotes = (params: UpdateType) => {
+	return http<NotesType>({
+		url: `/v2/notes/update`,
+		method: 'PUT',
+		data: params
+	})
 }
 
 //笔记列表
