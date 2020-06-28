@@ -2,7 +2,7 @@
  * @Date: 2020-03-27 13:14:26
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-03 16:46:45
+ * @LastEditTime: 2020-06-28 10:51:12
  * @Description: 登陆界面
  */
 
@@ -68,20 +68,22 @@ class Login extends Vue {
 					<Form onSubmit={this.onSubmit}>
 						<Form.Item>
 							{getFieldDecorator('username', {
+								initialValue: 'test',
 								rules: [{ required: true, message: '请输入帐户名' }],
 								validateTrigger: 'change'
 							})(
-								<Input size="large" type="text" placeholder="admin">
+								<Input size="large" type="text" placeholder="test">
 									<Icon slot="prefix" type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
 								</Input>
 							)}
 						</Form.Item>
 						<Form.Item>
 							{getFieldDecorator('password', {
+								initialValue: 'test',
 								rules: [{ required: true, message: '请输入密码' }],
 								validateTrigger: 'blur'
 							})(
-								<Input size="large" type="password" placeholder="admin">
+								<Input size="large" type="password" placeholder="test">
 									<Icon slot="prefix" type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
 								</Input>
 							)}
