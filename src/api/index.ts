@@ -43,3 +43,11 @@ export const uploadFiles = (params: FormData) => {
 		}
 	})
 }
+
+//信息统计
+export const AppCount = () => {
+	return http({
+		url: '/v2/app/count',
+		method: 'GET'
+	})
+}

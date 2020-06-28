@@ -32,6 +32,13 @@
 .create-header {
 	position: relative;
 	// z-index: 105;
+	.ant-layout-header {
+		background: #ffffff;
+		padding: 0;
+		transition: width 200ms;
+		z-index: 99;
+		box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+	}
 	&-fixed {
 		position: fixed;
 		z-index: 1;
@@ -40,9 +47,6 @@
 		width: 100%;
 		height: 64px;
 		transform: translate3d(0, 0, 0);
-	}
-	&-transition {
-		transition: width 0.2s;
 	}
 	&-fixed-100 {
 		width: 100%;

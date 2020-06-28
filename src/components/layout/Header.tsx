@@ -74,11 +74,7 @@ export default class Header extends Mixins(MixinDevice) {
 			<transition name="showHeader">
 				{this.visible && (
 					<div class="create-header">
-						<Layout.Header
-							class={`${this.headerfixed && 'create-header-fixed'} ${this.className} ${this.headerfixed &&
-								'create-header-fixed-transition'}`}
-							style={{ background: '#fff', padding: '0', transition: 'width 200ms', zIndex: 99 }}
-						>
+						<Layout.Header class={`${this.headerfixed && 'create-header-fixed'} ${this.className}`}>
 							<Icon
 								class="trigger"
 								type={this.collapsed ? 'menu-unfold' : 'menu-fold'}
