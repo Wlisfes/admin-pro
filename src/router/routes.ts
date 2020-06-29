@@ -2,7 +2,7 @@
  * @Date: 2020-03-31 15:16:00
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-23 17:08:16
+ * @LastEditTime: 2020-06-29 17:25:05
  * @Description: page配置
  */
 
@@ -10,6 +10,16 @@ import { RouteConfig } from 'vue-router'
 import Layout from '@/components/layout'
 
 const routes: RouteConfig[] = [
+	{
+		path: '/login',
+		name: 'login',
+		component: () => import('@/views/login/Login')
+	},
+	{
+		path: '/register',
+		name: 'register',
+		component: () => import('@/views/login/Register')
+	},
 	{
 		path: '/',
 		name: 'Layout',
@@ -83,11 +93,6 @@ const routes: RouteConfig[] = [
 				component: () => import('@/views/notes/NotesAll')
 			}
 		]
-	},
-	{
-		path: '/login',
-		name: 'login',
-		component: () => import('@/views/login')
 	}
 ]
 

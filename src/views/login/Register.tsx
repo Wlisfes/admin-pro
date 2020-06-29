@@ -1,15 +1,15 @@
 /*
- * @Date: 2020-03-27 13:14:26
+ * @Date: 2020-06-29 17:23:12
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-28 10:51:12
- * @Description: 登陆界面
+ * @LastEditTime: 2020-06-29 17:29:31
+ * @Description: 注册界面
  */
 
-import './index.less'
+import './less/index.less'
 import { Vue, Component } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
 import { Form, Input, Icon, Button, Checkbox } from 'ant-design-vue'
+import { namespace } from 'vuex-class'
 
 const AppModule = namespace('app')
 
@@ -20,7 +20,7 @@ const AppModule = namespace('app')
 		}
 	}
 })
-class Login extends Vue {
+class Register extends Vue {
 	@AppModule.Action('login') login!: Function
 
 	private form: any
@@ -28,7 +28,7 @@ class Login extends Vue {
 	private remember: boolean = false
 
 	//登陆
-	async onSubmit(e: Event) {
+	public async onSubmit(e: Event) {
 		e.preventDefault()
 		this.loading = true
 		this.form.validateFields(async (err: any, form: { username: string; password: string }) => {
@@ -55,11 +55,11 @@ class Login extends Vue {
 	}
 
 	//记住密码
-	onRemember(e: { target: { checked: boolean } }) {
+	public onRemember(e: { target: { checked: boolean } }) {
 		this.remember = e.target.checked
 	}
 
-	render() {
+	protected render() {
 		const { getFieldDecorator } = this.form
 		return (
 			<div class="login">
@@ -102,21 +102,8 @@ class Login extends Vue {
 						</Form.Item>
 						<Form.Item>
 							<div class="login-footer">
-								<Checkbox
-									checked={this.remember}
-									onChange={(e: { target: { checked: boolean } }) => {
-										this.remember = e.target.checked
-									}}
-								>
-									<a style={{ color: '#1890ff' }}>记住密码</a>
-								</Checkbox>
-								<a
-									onClick={() => {
-										this.$message.info('忘记了就等死吧！')
-									}}
-								>
-									忘记密码
-								</a>
+								<div></div>
+								<a href="/login">登陆账号</a>
 							</div>
 						</Form.Item>
 					</Form>
@@ -126,4 +113,4 @@ class Login extends Vue {
 	}
 }
 
-export default Form.create({})(Login)
+export default Form.create({})(Register)
