@@ -2,7 +2,7 @@
  * @Date: 2020-03-30 14:04:31
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-03 16:42:16
+ * @LastEditTime: 2020-06-29 10:56:46
  * @Description: 系统设置组件
  */
 
@@ -170,24 +170,26 @@ export default class Setting extends Vue {
 										</List.Item.Meta>
 									</List.Item>
 
-									<List.Item>
-										<Switch
-											slot="actions"
-											size="small"
-											disabled={!this.headerfixed}
-											defaultChecked={this.noneheader}
-											onChange={this.onChangeNoneHeader}
-										/>
+									{false && (
+										<List.Item>
+											<Switch
+												slot="actions"
+												size="small"
+												disabled={!this.headerfixed}
+												defaultChecked={this.noneheader}
+												onChange={this.onChangeNoneHeader}
+											/>
 
-										<List.Item.Meta>
-											<Tooltip slot="title" placement="left">
-												<div slot="title">固定 Header 时可配置</div>
-												<div style={{ opacity: !this.headerfixed ? '0.5' : 1 }}>
-													下滑时隐藏 Header
-												</div>
-											</Tooltip>
-										</List.Item.Meta>
-									</List.Item>
+											<List.Item.Meta>
+												<Tooltip slot="title" placement="left">
+													<div slot="title">固定 Header 时可配置</div>
+													<div style={{ opacity: !this.headerfixed ? '0.5' : 1 }}>
+														下滑时隐藏 Header
+													</div>
+												</Tooltip>
+											</List.Item.Meta>
+										</List.Item>
+									)}
 
 									<List.Item>
 										<Switch

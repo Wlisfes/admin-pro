@@ -34,13 +34,13 @@ export default class Header extends Mixins(MixinDevice) {
 		return this.collapsed ? 'create-header-fixed-80' : 'create-header-fixed-256'
 	}
 
-	mounted() {
-		document.addEventListener('scroll', this.handleScroll, { passive: true })
-	}
+	// mounted() {
+	// 	document.addEventListener('scroll', this.handleScroll, { passive: true })
+	// }
 
-	beforeDestroy() {
-		document.body.removeEventListener('scroll', this.handleScroll, true)
-	}
+	// beforeDestroy() {
+	// 	document.body.removeEventListener('scroll', this.handleScroll, true)
+	// }
 
 	//手动更改响应式布局
 	public handelcollapsed() {
