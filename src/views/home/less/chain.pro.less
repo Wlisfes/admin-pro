@@ -1,8 +1,11 @@
 .root-chain-pro {
 	.ant-card-grid {
 		width: 33.33%;
-		@media (max-width: 1680px) {
+		@media (max-width: 1280px) {
 			width: 50%;
+		}
+		@media (max-width: 780px) {
+			width: 100%;
 		}
 	}
 	.card-title {
@@ -22,8 +25,11 @@
 	}
 	.card-description {
 		color: rgba(0, 0, 0, 0.45);
-		height: 44px;
+		height: 66px;
 		line-height: 22px;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
 		overflow: hidden;
 	}
 	.project-item {

@@ -2,7 +2,7 @@
  * @Date: 2020-06-09 14:24:01
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-10 17:15:33
+ * @LastEditTime: 2020-06-29 15:56:16
  * @Description: 项目模块接口
  */
 
@@ -19,6 +19,7 @@ export interface ProjectType {
 	description: string
 	picUrl: string
 	github: string
+	createTime: string
 	accessUrl: string | null
 	user: UserType
 	tag: TAGType[]

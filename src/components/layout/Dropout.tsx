@@ -2,7 +2,7 @@
  * @Date: 2020-06-03 16:01:37
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-03 17:22:45
+ * @LastEditTime: 2020-06-29 14:01:17
  * @Description: 头部user组件
  */
 
@@ -34,7 +34,7 @@ export default class Dropout extends Vue {
 			<div class="user-drop">
 				<Dropdown>
 					<div style={{ cursor: 'pointer', padding: '0 12px' }}>
-						<Avatar src={this.user?.avatar} />
+						<Avatar src={`${this.user?.avatar}?x-oss-process=style/resize`} />
 						<span class="user-name">{this.user?.nickname}</span>
 					</div>
 					<Menu slot="overlay" onClick={this.onMenuClick}>

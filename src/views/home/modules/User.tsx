@@ -2,7 +2,7 @@
  * @Date: 2020-06-28 14:55:09
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-28 16:36:11
+ * @LastEditTime: 2020-06-29 14:00:21
  * @Description: 首页用户信息
  */
 
@@ -59,7 +59,11 @@ export default class User extends Vue {
 			<div class="root-user">
 				<Row>
 					<Col xl={14} lg={24} md={24} sm={24} xs={24} style={{ display: 'flex' }}>
-						<Avatar src={this.user.avatar} size={64} style={{ cursor: 'pointer' }} />
+						<Avatar
+							src={`${this.user.avatar}?x-oss-process=style/resize`}
+							size={64}
+							style={{ cursor: 'pointer' }}
+						/>
 						<div class="nicke">
 							<div class="nicke-nickname">{`${this.timeFix}，${this.user.nickname}，${this.welcome}`}</div>
 							<p>菜鸟前端工程师 | XXXX集团 - 某某某事业群 - VUE平台</p>
