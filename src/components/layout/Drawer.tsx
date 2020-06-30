@@ -42,7 +42,7 @@ export default class CreateDrawer extends Mixins(MixinDevice) {
 					wrapClassName="create-drawer"
 					placement="left"
 					closable={false}
-					visible={!this.collapsed}
+					visible={this.collapsed}
 					onClose={this.onClose}
 				>
 					<Menu onMenuClick={this.onMenuClick}></Menu>

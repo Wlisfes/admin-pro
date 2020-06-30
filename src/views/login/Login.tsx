@@ -2,7 +2,7 @@
  * @Date: 2020-03-27 13:14:26
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-30 14:50:53
+ * @LastEditTime: 2020-06-30 14:59:28
  * @Description: 登陆界面
  */
 
@@ -40,7 +40,6 @@ class Login extends Vue {
 		const form = this.$ls.get('keep')
 
 		if (form) {
-			console.log(form)
 			this.keep.checked = form.checked
 			this.keep.username = form.username
 			this.keep.password = form.password
