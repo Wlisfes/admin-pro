@@ -2,7 +2,7 @@
  * @Date: 2020-03-27 17:18:44
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-29 16:38:05
+ * @LastEditTime: 2020-06-30 13:14:16
  * @Description:
  */
 import Vue from 'vue'
@@ -69,10 +69,11 @@ const mutations: MutationTree<AppState> = {
 }
 
 const actions: ActionTree<AppState, any> = {
-	login: async ({ commit }, form: { username: string; password: string }) => {
+	login: async ({ commit }, form: { username: string; password: string; code: string }) => {
 		const response = await login({
 			username: form.username,
-			password: form.password
+			password: form.password,
+			code: form.code
 		})
 
 		if (response.code === 200) {
@@ -93,7 +94,7 @@ const actions: ActionTree<AppState, any> = {
 							resetStore()
 							resolve(true)
 							router
-								.replace('/login')
+								.replace('/main/login')
 								.then(() => {})
 								.catch(() => {})
 						}, 1000)

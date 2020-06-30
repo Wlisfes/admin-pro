@@ -21,7 +21,7 @@ router.beforeEach(async (to, from, next) => {
 		if (whiteList.includes(to.name as string)) {
 			next()
 		} else {
-			next({ path: '/login', replace: true })
+			next({ path: '/main/login', replace: true })
 			NProgress.done()
 		}
 	}

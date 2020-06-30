@@ -26,8 +26,23 @@ export interface UserType {
 	auth?: AuthType[] | null
 }
 
+//注册
+export const register = (params: { username: string; nickname: string; password: string; code: string }) => {
+	return http<UserType>({
+		url: `/v2/user/create`,
+		method: 'POST',
+		data: params
+	})
+}
+
 //登录
-export const login = (params: { username?: string; email?: string; mobile?: string | number; password: string }) => {
+export const login = (params: {
+	username?: string
+	email?: string
+	mobile?: string | number
+	password: string
+	code: string
+}) => {
 	return http<UserType>({
 		url: `/v2/user/login`,
 		method: 'POST',

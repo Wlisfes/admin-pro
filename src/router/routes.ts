@@ -2,23 +2,32 @@
  * @Date: 2020-03-31 15:16:00
  * @Author: 情雨随风
  * @LastEditors: 情雨随风
- * @LastEditTime: 2020-06-29 17:25:05
+ * @LastEditTime: 2020-06-30 12:24:04
  * @Description: page配置
  */
 
 import { RouteConfig } from 'vue-router'
 import Layout from '@/components/layout'
+import Main from '@/views/login/Main'
 
 const routes: RouteConfig[] = [
 	{
-		path: '/login',
-		name: 'login',
-		component: () => import('@/views/login/Login')
-	},
-	{
-		path: '/register',
-		name: 'register',
-		component: () => import('@/views/login/Register')
+		path: '/main',
+		name: 'main',
+		redirect: '/main/logio',
+		component: Main,
+		children: [
+			{
+				path: '/main/login',
+				name: 'login',
+				component: () => import('@/views/login/Login')
+			},
+			{
+				path: '/main/register',
+				name: 'register',
+				component: () => import('@/views/login/Register')
+			}
+		]
 	},
 	{
 		path: '/',
