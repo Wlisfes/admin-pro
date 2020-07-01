@@ -1,0 +1,26 @@
+@import '~ant-design-vue/es/style/themes/default.less';
+
+.root-user-drop {
+	float: right;
+	margin-right: 12px;
+	display: flex;
+	align-items: center;
+	.user-name {
+		margin-left: 12px;
+	}
+	.full {
+		height: 64px;
+		font-size: 24px;
+		padding: 5px 12px 0;
+		cursor: pointer;
+		transition: color 0.3s;
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		justify-content: center;
+		align-items: center;
+		&:hover {
+			color: @primary-color;
+		}
+	}
+}
