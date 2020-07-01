@@ -1,0 +1,47 @@
+@import '~ant-design-vue/es/style/themes/index.less';
+
+.root-logger {
+	margin-top: 24px;
+	background-color: #ffffff;
+	.ant-card-head-title {
+		display: flex;
+		align-items: center;
+	}
+	.logger-container {
+		min-height: 420px;
+		padding: 0 24px;
+	}
+	.logger-item {
+		height: 88px;
+		border-bottom: 1px solid #e8e8e8;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		&:hover {
+			background-color: @menu-item-active-bg;
+		}
+		&-context {
+			flex: 1;
+		}
+	}
+	.context {
+		margin-bottom: 5px;
+		display: flex;
+		align-items: center;
+		.logger-user {
+			font-size: 16px;
+			color: #515a6e;
+			font-weight: bold;
+			margin-right: 8px;
+		}
+		.logger-content {
+			margin-right: 8px;
+			font-size: 16px;
+			color: #f5222d;
+		}
+		.logger-context {
+			font-size: 16px;
+			color: #515a6e;
+		}
+	}
+}

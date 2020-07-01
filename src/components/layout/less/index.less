@@ -1,0 +1,145 @@
+.create-layout {
+	height: auto;
+	min-height: 100vh;
+	overflow-x: hidden;
+	.trigger {
+		font-size: 18px;
+		line-height: 64px;
+		padding: 0 24px;
+		cursor: pointer;
+		transition: color 0.3s;
+		&:hover {
+			color: #1890ff;
+		}
+	}
+	.ant-menu {
+		height: 100%;
+	}
+}
+
+/***侧边栏菜单***************************************/
+.ant-layout-sider {
+	z-index: 9;
+}
+.ant-layout-sider.ant-fixed-sider {
+	overflow: auto;
+	height: 100vh;
+	position: fixed;
+	left: 0;
+}
+
+/***头部导航***************************************/
+.create-header {
+	position: relative;
+	// z-index: 105;
+	.ant-layout-header {
+		background: #ffffff;
+		padding: 0;
+		transition: width 200ms;
+		z-index: 99;
+		box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+	}
+	&-fixed {
+		position: fixed;
+		z-index: 1;
+		top: 0;
+		right: 0;
+		width: 100%;
+		height: 64px;
+		transform: translate3d(0, 0, 0);
+	}
+	&-fixed-100 {
+		width: 100%;
+	}
+	&-fixed-80 {
+		width: calc(100% - 80px);
+	}
+	&-fixed-256 {
+		width: calc(100% - 256px);
+	}
+}
+
+/***手机端菜单***************************************/
+.create-drawer {
+	.ant-drawer-body {
+		padding: 0;
+		height: 100%;
+	}
+	.ant-menu {
+		height: 100%;
+	}
+}
+
+.setting-drawer {
+	&-proStyle {
+		.setting-drawer-tooltip {
+			display: flex;
+		}
+		.setting-drawer-tooltip-item {
+			position: relative;
+			margin-right: 16px;
+			cursor: pointer;
+		}
+		.setting-drawer-index-selectIcon {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 100%;
+			padding-top: 15px;
+			padding-left: 24px;
+			height: 100%;
+		}
+	}
+	&-theme {
+		margin-top: 16px;
+		.theme-tags {
+			height: 20px;
+		}
+		.ant-tag {
+			width: 20px;
+			height: 20px;
+			border-radius: 2px;
+			float: left;
+			cursor: pointer;
+			margin-right: 8px;
+			padding-left: 0;
+			padding-right: 0;
+			text-align: center;
+			color: #fff;
+			font-weight: 700;
+		}
+	}
+
+	.setting-drawer-toggle {
+		position: fixed;
+		top: 280px;
+		background: #1890ff;
+		width: 48px;
+		height: 48px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		pointer-events: auto;
+		z-index: 1001;
+		text-align: center;
+		font-size: 16px;
+		border-radius: 4px 0 0 4px;
+		transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1), box-shadow 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+		i {
+			color: rgb(255, 255, 255);
+			font-size: 20px;
+		}
+	}
+}
+
+.showHeader-enter-active {
+	transition: all 0.25s ease;
+}
+.showHeader-leave-active {
+	transition: all 0.5s ease;
+}
+.showHeader-enter,
+.showHeader-leave-to {
+	opacity: 0;
+}

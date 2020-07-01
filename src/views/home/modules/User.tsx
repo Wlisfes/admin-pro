@@ -7,8 +7,8 @@
  */
 
 import '../less/user.less'
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Row, Col, Avatar } from 'ant-design-vue'
+import { Vue, Component } from 'vue-property-decorator'
+import { Row, Col, Avatar, Icon } from 'ant-design-vue'
 import { namespace } from 'vuex-class'
 import { AppUser } from '@/store/modules/app/types'
 import { AppCount } from '@/api'
@@ -58,7 +58,7 @@ export default class User extends Vue {
 		return (
 			<div class="root-user">
 				<Row>
-					<Col xl={14} lg={24} md={24} sm={24} xs={24} style={{ display: 'flex' }}>
+					<Col xl={14} lg={24} md={24} sm={24} xs={24} style={{ display: 'flex', marginBottom: '24px' }}>
 						<Avatar
 							src={`${this.user.avatar}?x-oss-process=style/resize`}
 							size={64}
@@ -71,21 +71,69 @@ export default class User extends Vue {
 					</Col>
 					<Col xl={10} lg={24} md={24} sm={24} xs={24}>
 						<Row class="user-row">
-							<Col span={6}>
-								<span>项目</span>
-								<div>{this.total.project || '---'}</div>
+							<Col span={6} style={{ cursor: 'pointer' }}>
+								<div class="user-row-label">
+									<Avatar
+										style={{
+											backgroundColor: 'rgba(24, 144, 255, 0.15)',
+											color: '#1890ff',
+											margin: 0,
+											fontSize: '18px'
+										}}
+										size={34}
+										icon="profile"
+									/>
+									<span>项目</span>
+								</div>
+								<div class="user-row-number">{this.total.project || '---'}</div>
 							</Col>
-							<Col span={6}>
-								<span>标签</span>
-								<div>{this.total.tag || '---'}</div>
+							<Col span={6} style={{ cursor: 'pointer' }}>
+								<div class="user-row-label">
+									<Avatar
+										style={{
+											backgroundColor: 'rgba(250, 84, 28, 0.15)',
+											color: '#fa541c',
+											margin: 0,
+											fontSize: '18px'
+										}}
+										size={34}
+										icon="yuque"
+									/>
+									<span>标签</span>
+								</div>
+								<div class="user-row-number">{this.total.tag || '---'}</div>
 							</Col>
-							<Col span={6}>
-								<span>文章</span>
-								<div>{this.total.article || '---'}</div>
+							<Col span={6} style={{ cursor: 'pointer' }}>
+								<div class="user-row-label">
+									<Avatar
+										style={{
+											backgroundColor: 'rgba(19, 194, 194, 0.15)',
+											color: '#13c2c2',
+											margin: 0,
+											fontSize: '18px'
+										}}
+										size={34}
+										icon="read"
+									/>
+									<span>文章</span>
+								</div>
+								<div class="user-row-number">{this.total.article || '---'}</div>
 							</Col>
-							<Col span={6}>
-								<span>笔记</span>
-								<div>{this.total.notes || '---'}</div>
+							<Col span={6} style={{ cursor: 'pointer' }}>
+								<div class="user-row-label">
+									<Avatar
+										style={{
+											backgroundColor: 'rgba(82, 196, 26, 0.15)',
+											color: '#52c41a',
+											margin: 0,
+											fontSize: '18px'
+										}}
+										size={34}
+										icon="schedule"
+									/>
+									<span>笔记</span>
+								</div>
+								<div class="user-row-number">{this.total.notes || '---'}</div>
 							</Col>
 						</Row>
 					</Col>

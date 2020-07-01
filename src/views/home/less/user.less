@@ -1,5 +1,5 @@
 .root-user {
-	padding: 16px 24px;
+	padding: 24px 24px 0;
 	background-color: #ffffff;
 	.nicke {
 		margin-left: 24px;
@@ -9,23 +9,31 @@
 		justify-content: center;
 		&-nickname {
 			font-size: 20px;
-			color: #262626;
+			color: #515a6e;
+			font-weight: bold;
 		}
 		p {
 			font-size: 14px;
 			color: #999;
-			margin: 5px 0 0;
+			margin: 10px 0 0;
 		}
 	}
 	.user-row {
-		margin-top: 10px;
-		span {
-			color: #999;
-			font-size: 16px;
+		margin-bottom: 14px;
+		&-label {
+			display: flex;
+			align-items: center;
+			span {
+				color: #515a6e;
+				font-size: 16px;
+				margin-left: 10px;
+			}
 		}
-		div {
+		&-number {
 			font-size: 20px;
-			color: #262626;
+			color: #515a6e;
+			margin-left: 5px;
+			margin-top: 8px;
 		}
 	}
 }
