@@ -16,6 +16,7 @@ export enum Color {
 	update = 'orange',
 	query = 'green',
 	get = 'cyan',
+	blue = 'blue',
 	import = 'blue',
 	export = 'purple'
 }

@@ -8,7 +8,7 @@
 
 import '../less/chain.pro.less'
 import { Vue, Component } from 'vue-property-decorator'
-import { Card, Avatar, Badge } from 'ant-design-vue'
+import { Card, Avatar, Badge, Skeleton, Empty } from 'ant-design-vue'
 import { projectAll, ProjectType } from '@/api/project'
 import moment from 'moment'
 
@@ -46,7 +46,7 @@ export default class ChainPro extends Vue {
 
 	protected render() {
 		return (
-			<Card class="root-chain-pro" loading={this.chain.loading} bordered={false} body-style={{ padding: '0' }}>
+			<Card class="root-chain-pro" bordered={false} body-style={{ padding: '0' }}>
 				<div slot="title" style={{ display: 'flex', alignItems: 'center' }}>
 					<Avatar
 						style={{
@@ -60,38 +60,50 @@ export default class ChainPro extends Vue {
 					/>
 					<span>项目列表</span>
 				</div>
-				<div>
-					{this.chain.all.map(k => {
-						return (
-							<Card.Grid key={k.id} style={{ cursor: 'pointer' }}>
-								<Card.Meta>
-									<div slot="title" class="card-title">
-										<Avatar src={`${k.user.avatar}?x-oss-process=style/resize`} />
-										<a href={k.github} target="_blank">
-											{k.title}
-										</a>
-									</div>
-									<div slot="description" class="card-description">
-										<img src={`${k.picUrl}?x-oss-process=style/resize`} alt="" />
-										<div class="description-transform">
-											<div>{k.description}</div>
+				{this.chain.loading ? (
+					<div style={{ margin: '0 24px' }}>
+						<Skeleton active paragraph={{ rows: 4 }} />
+						<Skeleton active paragraph={{ rows: 4 }} />
+					</div>
+				) : this.chain.all.length === 0 ? (
+					<Empty image={(Empty as any).PRESENTED_IMAGE_SIMPLE} style={{ margin: '142px 24px' }} />
+				) : (
+					<div>
+						{this.chain.all.map(k => {
+							return (
+								<Card.Grid key={k.id} style={{ cursor: 'pointer' }}>
+									<Card.Meta>
+										<div slot="title" class="card-title">
+											<Avatar src={`${k.user.avatar}?x-oss-process=style/resize`} />
+											<a href={k.github} target="_blank">
+												{k.title}
+											</a>
 										</div>
+										<div slot="description" class="card-description">
+											<img src={`${k.picUrl}?x-oss-process=style/resize`} alt="" />
+											<div class="description-transform">
+												<div>{k.description}</div>
+											</div>
+										</div>
+									</Card.Meta>
+									<div class="project-item">
+										<a href="javascript:;">{k.user.nickname}</a>
+										<span
+											class="datetime"
+											style="display: flex;align-items: center;margin-right: 12px"
+										>
+											<Badge
+												status={k.status ? 'success' : 'warning'}
+												text={k.status ? '已开放' : '已禁用'}
+											></Badge>
+										</span>
+										<span class="datetime">{this.transform(k.createTime)}</span>
 									</div>
-								</Card.Meta>
-								<div class="project-item">
-									<a href="javascript:;">{k.user.nickname}</a>
-									<span class="datetime" style="display: flex;align-items: center;margin-right: 12px">
-										<Badge
-											status={k.status ? 'success' : 'warning'}
-											text={k.status ? '已开放' : '已禁用'}
-										></Badge>
-									</span>
-									<span class="datetime">{this.transform(k.createTime)}</span>
-								</div>
-							</Card.Grid>
-						)
-					})}
-				</div>
+								</Card.Grid>
+							)
+						})}
+					</div>
+				)}
 			</Card>
 		)
 	}

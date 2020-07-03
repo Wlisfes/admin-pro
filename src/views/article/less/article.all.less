@@ -1,0 +1,104 @@
+@import '~ant-design-vue/es/style/themes/index.less';
+
+.root-article-all {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	background-color: #ffffff;
+	padding: 24px;
+	.spin-container {
+		transition: width 0.3s;
+		.article-picUrl {
+			width: 300px;
+			display: block;
+			border-radius: 4px;
+			margin-left: 16px;
+			transform: translate3d(0, 0, 0);
+			transition: all 0.3s;
+			@media (max-width: 820px) {
+				display: none;
+			}
+		}
+	}
+	.article-more {
+		padding: 24px 0;
+		display: flex;
+		justify-content: center;
+	}
+	.spin-item {
+		position: relative;
+		margin-bottom: 24px;
+		background-color: #fff;
+		padding: 16px;
+		border-radius: 4px;
+		cursor: pointer;
+		transition: margin 0.3s;
+		box-shadow: 0px 0px 8px 0px rgba(15, 35, 47, 0.2);
+		@media (max-width: 680px) {
+			margin: 0 -14px 24px;
+		}
+		&-cursor {
+			display: flex;
+			.cursor-user {
+				display: flex;
+				font-size: 18px;
+				color: #172341;
+				align-items: center;
+				&-avatar {
+					cursor: pointer;
+				}
+				&-nickname {
+					font-weight: bold;
+					margin: 0 10px;
+				}
+				&-createTime {
+					font-size: 14px;
+					color: #808695;
+				}
+			}
+			.cursor-title {
+				font-size: 16px;
+				color: #172341;
+				font-weight: bold;
+				transition: color 0.3s;
+				margin: 10px 0;
+				&:hover {
+					color: @primary-color;
+				}
+			}
+			.cursor-content {
+				font-size: 15px;
+				color: #616776;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 4;
+				overflow: hidden;
+				max-width: 940px;
+			}
+		}
+		&-footer {
+			margin-top: 16px;
+			display: flex;
+			@media (max-width: 820px) {
+				flex-direction: column;
+			}
+			.cursor-tags {
+				flex: 1;
+			}
+			.cursor-active {
+				max-height: 30px;
+				margin-left: 64px;
+				display: flex;
+				align-items: center;
+				@media (max-width: 820px) {
+					width: 100%;
+					margin: 16px 0 0;
+				}
+				&-pointer {
+					flex: 1;
+					display: flex;
+				}
+			}
+		}
+	}
+}

@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 21:20:19
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-01 18:24:03
+ * @Last Modified time: 2020-07-02 18:04:42
  * @Description: 全局api接口
  */
 
@@ -56,14 +56,16 @@ export const AppCount = () => {
 //动态日志
 export interface AppLoggerType {
 	id: number
+	ipv4: string
 	content: string
 	context: string
 	createTime: string
 	user: UserType
 }
-export const AppLogger = () => {
-	return http<Array<AppLoggerType>>({
+export const AppLogger = (params?: { limit: number; offset: number }) => {
+	return http<{ len: number; logger: AppLoggerType[] }>({
 		url: '/v2/logger/all',
-		method: 'GET'
+		method: 'GET',
+		params
 	})
 }

@@ -1,5 +1,5 @@
 import { Component, Mixins } from 'vue-property-decorator'
-import { ConfigProvider } from 'ant-design-vue'
+import { ConfigProvider, BackTop } from 'ant-design-vue'
 import { AppDeviceEnquire } from '@/mixins'
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
 
@@ -11,6 +11,11 @@ export default class App extends Mixins(AppDeviceEnquire) {
 				<ConfigProvider locale={zhCN}>
 					<router-view></router-view>
 				</ConfigProvider>
+				<BackTop>
+					<div class="ant-back-top-content">
+						<div class="ant-back-top-icon"></div>
+					</div>
+				</BackTop>
 			</div>
 		)
 	}

@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-06 11:27:31
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-11 23:22:06
+ * @Last Modified time: 2020-07-03 13:17:21
  * @Description: 表格查找组件
  */
 
@@ -37,6 +37,10 @@ class TermForm extends Vue {
 		!this.one?.replace && this.allUser()
 	}
 
+	protected mounted() {
+		this.$emit('load', this)
+	}
+
 	//所有用户列表
 	public async allUser() {
 		const response = await allUser()
@@ -44,6 +48,23 @@ class TermForm extends Vue {
 			this.all = response.data
 		}
 		this.loading = false
+	}
+
+	//则获取全部组件的值
+	public getValue() {
+		const form = this.form.getFieldsValue()
+		const params: any = {}
+
+		for (const key in form) {
+			if (form[key] !== undefined) {
+				if (key === 'createTime') {
+					params[key] = this.createTime(form[key])
+				} else {
+					params[key] = form[key]
+				}
+			}
+		}
+		return params
 	}
 
 	//新增

@@ -2,13 +2,13 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:38:55
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-21 17:42:16
+ * @Last Modified time: 2020-07-03 15:28:28
  * @Description: 文章列表
  */
 
-import './less/article.less'
+import './less/article.all.less'
 import { Vue, Component } from 'vue-property-decorator'
-import { Table, Tag, Tooltip, Spin, Select, Badge } from 'ant-design-vue'
+import { Button, Avatar, Tag, Spin, Divider, Empty } from 'ant-design-vue'
 import { CommEdit, TermForm } from '@/components/common'
 import { UpdateArticle } from './modules'
 import { articleAll, sortArticle, cutoverArticle, deleteArticle, ArticleType } from '@/api/article'
@@ -18,23 +18,12 @@ import moment from 'moment'
 
 @Component
 class ArticleAll extends Vue {
-	//表格配置
 	private table = {
-		//表头
-		columns: [
-			{ title: '文章标题', width: '20%', dataIndex: 'title', scopedSlots: { customRender: 'renderTitle' } },
-			{ title: '文章作者', width: '12%', dataIndex: 'user', scopedSlots: { customRender: 'user' } },
-			{ title: '标签类别', dataIndex: 'tag', scopedSlots: { customRender: 'tag' } },
-			{ title: '创建时间', width: 120, dataIndex: 'createTime', scopedSlots: { customRender: 'createTime' } },
-			{ title: '状态', width: 95, dataIndex: 'status', scopedSlots: { customRender: 'status' } },
-			{ title: '操作', width: 130, dataIndex: 'action', scopedSlots: { customRender: 'action' } }
-		],
 		loading: true,
-		dataSource: [],
-		pageSize: 10,
-		pageSizeOptions: ['10', '15', '20', '30', '40', '50'],
-		showSizeChanger: true,
-		current: 1
+		more: false,
+		limit: 10,
+		len: 0,
+		dataSource: []
 	}
 
 	private TAG = {
@@ -57,6 +46,7 @@ class ArticleAll extends Vue {
 
 	//查询组件配置
 	private termForm = {
+		self: null,
 		onCreate: () => {
 			this.TAG.show = true
 		},
@@ -71,7 +61,7 @@ class ArticleAll extends Vue {
 	}
 
 	protected created() {
-		this.articleAll()
+		this.articleAll({ limit: 5 })
 		this.TAGAll()
 	}
 
@@ -79,7 +69,9 @@ class ArticleAll extends Vue {
 	public async articleAll(params?: any) {
 		const response = await articleAll(params)
 		if (response.code === 200) {
-			this.table.dataSource = response.data as []
+			const { len, article } = response.data
+			this.table.len = len
+			this.table.dataSource = article as []
 		}
 		this.table.loading = false
 	}
@@ -97,7 +89,11 @@ class ArticleAll extends Vue {
 	public async onChange({ key, props }: { key: string; props: ArticleType }) {
 		this.table.loading = true
 
-		//
+		//获取查询表单数据
+		const params = (this.termForm.self as any).getValue()
+		const limit = this.table.dataSource.length || 5
+
+		//更新文章
 		if (key === 'update') {
 			this.update.id = props.id
 			this.update.visible = true
@@ -107,7 +103,8 @@ class ArticleAll extends Vue {
 		if (key === 'sort') {
 			const response = await sortArticle({ id: props.id })
 			if (response.code === 200) {
-				this.articleAll()
+				//合并查询
+				this.articleAll(Object.assign({}, params, { limit, offset: 0 }))
 				return
 			}
 		}
@@ -116,7 +113,8 @@ class ArticleAll extends Vue {
 		if (key === 'status') {
 			const response = await cutoverArticle({ id: props.id })
 			if (response.code === 200) {
-				this.articleAll()
+				//合并查询
+				this.articleAll(Object.assign({}, params, { limit, offset: 0 }))
 				return
 			}
 		}
@@ -125,7 +123,8 @@ class ArticleAll extends Vue {
 		if (key === 'delete') {
 			const response = await deleteArticle({ id: props.id })
 			if (response.code === 200) {
-				this.articleAll()
+				//合并查询
+				this.articleAll(Object.assign({}, params, { limit, offset: 0 }))
 				return
 			}
 		}
@@ -133,9 +132,38 @@ class ArticleAll extends Vue {
 		this.table.loading = false
 	}
 
+	//时间转换
+	public transform(createTime: string) {
+		return moment(createTime)
+			.startOf('ms')
+			.fromNow()
+	}
+
+	//加载更多
+	public async AppMore() {
+		this.table.more = true
+
+		//获取查询表单数据
+		const params = (this.termForm.self as any).getValue()
+
+		//合并查询
+		const response = await articleAll(
+			Object.assign({}, params, {
+				limit: this.table.limit,
+				offset: this.table.dataSource.length
+			})
+		)
+		if (response.code === 200) {
+			const { len, article } = response.data
+			this.table.len = len
+			this.table.dataSource = this.table.dataSource.concat(article as [])
+		}
+		this.table.more = false
+	}
+
 	protected render() {
 		return (
-			<div class="root-article">
+			<div class="root-article-all">
 				{this.update.visible && (
 					<UpdateArticle
 						{...{ props: this.update }}
@@ -143,129 +171,114 @@ class ArticleAll extends Vue {
 						onSubmit={this.update.onSubmit}
 					></UpdateArticle>
 				)}
-
 				<TermForm
-					{...{
-						props: {
-							two: {
-								replace: true,
-								key: 'tag',
-								label: '类别',
-								render: () => (
-									<Select mode="default" placeholder="请选择">
-										{this.TAG.loading && (
-											<Spin
-												slot="notFoundContent"
-												style={{
-													display: 'flex',
-													justifyContent: 'center',
-													padding: '24px 0'
-												}}
-											/>
-										)}
-										{this.TAG.all.map((k: TAGType) => (
-											<Select.Option key={k.id}>{k.name}</Select.Option>
-										))}
-									</Select>
-								)
-							},
-							there: {
-								replace: true,
-								key: 'status',
-								label: '状态',
-								render: () => (
-									<Select mode="default" placeholder="请选择">
-										<Select.Option key={1}>
-											<Badge color="green" text="已开放" />
-										</Select.Option>
-										<Select.Option key={0}>
-											<Badge color="pink" text="已禁用" />
-										</Select.Option>
-									</Select>
-								)
-							},
-							createHide: true
-						}
-					}}
-					onCreate={this.termForm.onCreate}
+					{...{ props: { createHide: true } }}
+					onLoad={(self: any) => (this.termForm.self = self)}
 					onReply={this.termForm.onReply}
 					onSubmit={this.termForm.onSubmit}
 				></TermForm>
-				<Table
-					class="root-table"
-					bordered={false}
-					columns={this.table.columns}
-					dataSource={this.table.dataSource}
-					loading={this.table.loading}
-					rowKey={(record: any) => record.id}
-					scroll={{ x: 1100 }}
-					{...{
-						scopedSlots: {
-							expandedRowRender: (props: ArticleType) => <div>{props.description}</div>,
-							renderTitle: (title: string) => (
-								<div class="root-table-content">
-									<Tooltip placement="top" title={title}>
-										<span class="row-ellipsis">{title}</span>
-									</Tooltip>
+				<Spin
+					size="large"
+					spinning={this.table.loading}
+					style={{ flex: 1, margin: '12px 0 0', maxWidth: '1400px' }}
+				>
+					<div class="spin-container">
+						{this.table.dataSource.length === 0 ? (
+							<Empty image={(Empty as any).PRESENTED_IMAGE_SIMPLE} style={{ margin: '64px 24px' }} />
+						) : (
+							<div class="article">
+								{this.table.dataSource.map((k: ArticleType) => (
+									<div class="spin-item">
+										<div class="spin-item-cursor">
+											<div style={{ flex: 1 }}>
+												<div class="cursor-user">
+													<Avatar class="cursor-user-avatar" src={k.user.avatar} size={40} />
+													<div class="cursor-user-nickname">{k.user.nickname}</div>
+													<div class="cursor-user-createTime">
+														{this.transform(k.createTime)}
+													</div>
+													<Tag
+														style={{ cursor: 'pointer', margin: '0 0 0 8px' }}
+														color={k.status ? 'green' : 'pink'}
+													>
+														{k.status ? '正常' : '已禁用'}
+													</Tag>
+												</div>
+												<div class="cursor-title">{k.title}</div>
+												<div class="cursor-content">{k.description}</div>
+											</div>
+											<div>
+												<img
+													class="article-picUrl"
+													src={`${k.picUrl}?x-oss-process=style/resize_50`}
+													alt=""
+												/>
+											</div>
+										</div>
+										<div class="spin-item-footer">
+											<div class="cursor-tags">
+												{k.tag.map(x => (
+													<Tag
+														key={x.id}
+														color={x.color}
+														style={{ cursor: 'pointer', marginTop: '8px' }}
+													>
+														{x.name}
+													</Tag>
+												))}
+											</div>
+											<div class="cursor-active">
+												<div class="cursor-active-pointer"></div>
+												<CommEdit
+													params={{
+														props: k,
+														first: { key: 'update', name: '编辑' },
+														last: { key: 'more', name: '更多', more: true },
+														menu: [
+															{
+																key: 'sort',
+																name: '置顶',
+																icon: 'arrow-up',
+																color: Color.import
+															},
+															{
+																key: 'status',
+																name: k.status ? '禁用' : '开放',
+																icon: k.status ? 'stop' : 'check-circle',
+																color: k.status ? Color.warn : Color.ok
+															},
+															{
+																key: 'delete',
+																name: '删除',
+																icon: 'rest',
+																color: Color.delete
+															}
+														]
+													}}
+													onChange={this.onChange}
+												/>
+											</div>
+										</div>
+									</div>
+								))}
+
+								<div class="article-more">
+									{this.table.len === this.table.dataSource.length ? (
+										<Divider dashed>没有更多了</Divider>
+									) : (
+										<Button
+											loading={this.table.more}
+											style={{ cursor: 'pointer' }}
+											onClick={this.AppMore}
+										>
+											加载更多
+										</Button>
+									)}
 								</div>
-							),
-							user: (user: any) => (
-								<div class="root-table-content">
-									<Tooltip placement="top" title={user.nickname}>
-										<span class="row-ellipsis">{user.nickname}</span>
-									</Tooltip>
-								</div>
-							),
-							tag: (tag: any, props: ArticleType) => (
-								<div class="root-table-content">
-									{props.tag.map(k => (
-										<Tooltip placement="top" title={k.name}>
-											<Tag style={{ cursor: 'pointer' }} color={k.color}>
-												{k.name}
-											</Tag>
-										</Tooltip>
-									))}
-								</div>
-							),
-							createTime: (createTime: string) => <div>{moment(createTime).format('YYYY-MM-DD')}</div>,
-							status: (status: number) => (
-								<Tag style={{ cursor: 'pointer' }} color={status ? 'green' : 'pink'}>
-									{status ? '正常' : '已禁用'}
-								</Tag>
-							),
-							action: (action: any, props: ArticleType) => (
-								<CommEdit
-									params={{
-										props,
-										first: { key: 'update', name: '编辑' },
-										last: { key: 'more', name: '更多', more: true },
-										menu: [
-											{ key: 'sort', name: '置顶', icon: 'arrow-up', color: Color.import },
-											{
-												key: 'status',
-												name: props.status ? '禁用' : '开放',
-												icon: props.status ? 'stop' : 'check-circle',
-												color: props.status ? Color.warn : Color.ok
-											},
-											{ key: 'delete', name: '删除', icon: 'rest', color: Color.delete }
-										]
-									}}
-									onChange={this.onChange}
-								/>
-							)
-						}
-					}}
-					pagination={{
-						pageSize: this.table.pageSize,
-						pageSizeOptions: this.table.pageSizeOptions,
-						showSizeChanger: this.table.showSizeChanger,
-						current: this.table.current
-					}}
-					onChange={(ops: any) => {
-						this.table.current = ops.current
-						this.table.pageSize = ops.pageSize
-					}}
-				></Table>
+							</div>
+						)}
+					</div>
+				</Spin>
 			</div>
 		)
 	}

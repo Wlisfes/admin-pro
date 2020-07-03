@@ -74,7 +74,11 @@ export default class Dropout extends Vue {
 				/>
 				<Dropdown>
 					<div style={{ cursor: 'pointer', padding: '0 12px' }}>
-						<Avatar src={`${this.user?.avatar}?x-oss-process=style/resize`} />
+						{this.user && this.user.avatar ? (
+							<Avatar src={`${this.user.avatar}?x-oss-process=style/resize`} />
+						) : (
+							<Avatar src="user" />
+						)}
 						<span class="user-name">{this.user?.nickname}</span>
 					</div>
 					<Menu slot="overlay" onClick={this.onMenuClick}>

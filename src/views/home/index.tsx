@@ -10,7 +10,7 @@ import './less/home.less'
 import { Mixins, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { MixinDevice } from '@/mixins'
-import { User, ChainPro, ChartPro, Logger } from './modules'
+import { User, ChainPro, CountChart, Logger } from './modules'
 import { AppUser } from '@/store/modules/app/types'
 
 const AppModule = namespace('app')
@@ -26,17 +26,16 @@ export default class Home extends Mixins(MixinDevice) {
 				<div class="container" style={{ margin: this.isMobile() ? '24px 0 0' : '24px' }}>
 					<div class="home-container">
 						<div class="chain-container">
-							<ChainPro></ChainPro>
-							<Logger></Logger>
-							{/* <div
-								domPropsInnerHTML={`<span class="ant-tag ant-tag-has-color" style="background-color: rgb(65, 184, 131); cursor: pointer;">Vue</span>`}
-							></div> */}
+							<ChainPro />
+							<Logger />
 						</div>
 						<div class="chart-container">
 							<div class="chart">
-								<ChartPro></ChartPro>
+								<CountChart />
 							</div>
-							<div class="chart"></div>
+							<div class="chart">
+								<CountChart />
+							</div>
 						</div>
 					</div>
 				</div>

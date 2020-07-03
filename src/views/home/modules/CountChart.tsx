@@ -7,11 +7,15 @@
  */
 
 import { Vue, Component } from 'vue-property-decorator'
+import { Skeleton, Empty } from 'ant-design-vue'
 import { Chart } from '@antv/g2'
 import { AppCount } from '@/api'
 
 @Component
-export default class ChartPro extends Vue {
+export default class CountChart extends Vue {
+	private loading: boolean = true
+	private success: boolean = true
+
 	protected mounted() {
 		this.CreateChart()
 	}
@@ -28,7 +32,7 @@ export default class ChartPro extends Vue {
 				{ name: '项目', value: response.data.project }
 			]
 			const chart = new Chart({
-				container: 'chart-pro',
+				container: this.$refs.chart as HTMLElement,
 				autoFit: true,
 				height: 500
 			})
@@ -43,10 +47,27 @@ export default class ChartPro extends Vue {
 				.position('name*value')
 				.color('name')
 			chart.render()
+			this.success = false
 		}
+		this.loading = false
 	}
 
 	protected render() {
-		return <div id="chart-pro" style={{ height: '100%', width: '100%' }}></div>
+		return (
+			<div ref="chart" style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>
+				{this.loading ? (
+					<div style={{ margin: 'auto 0' }}>
+						<Skeleton active paragraph={{ rows: 4 }} />
+						<Skeleton active paragraph={{ rows: 4 }} />
+					</div>
+				) : (
+					this.success && (
+						<div style={{ overflow: 'hidden' }}>
+							<Empty image={(Empty as any).PRESENTED_IMAGE_SIMPLE} style={{ margin: '142px 24px' }} />
+						</div>
+					)
+				)}
+			</div>
+		)
 	}
 }
