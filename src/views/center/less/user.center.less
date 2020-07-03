@@ -1,0 +1,25 @@
+.root-user-center {
+	flex: 1;
+	display: flex;
+	@media (max-width: 1400px) {
+		flex-direction: column;
+	}
+	.user-cursor {
+		width: 340px;
+		background-color: #ffffff;
+		border-radius: 4px;
+		box-sizing: border-box;
+		padding: 16px;
+		@media (max-width: 1400px) {
+			width: 100%;
+		}
+	}
+	.user-pointer {
+		flex: 1;
+		background-color: #ffffff;
+		margin-left: 24px;
+		@media (max-width: 1400px) {
+			margin-left: 0;
+		}
+	}
+}
