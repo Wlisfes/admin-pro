@@ -24,7 +24,14 @@ export default class CreateNotes extends Vue {
 		//表单加载完成触发onReady事件，返回表单实例
 		onReady: (self: any) => (this.form.self = self),
 		//表单保存事件
-		onSubmit: (params: { title: string; picUrl: string; status: number; tag: number[]; timeout: Function }) => {
+		onSubmit: (params: {
+			title: string
+			description: string
+			picUrl: string
+			status: number
+			tag: number[]
+			timeout: Function
+		}) => {
 			const { currentValue, html, themeName } = (this.meditor.self as any).handleSave()
 			if (!currentValue || !html) {
 				this.$notification.error({ message: '文章内容不可为空', description: '' })
@@ -34,6 +41,7 @@ export default class CreateNotes extends Vue {
 			this.create(
 				{
 					title: params.title,
+					description: params.description,
 					tag: params.tag,
 					picUrl: params.picUrl,
 					status: params.status,
@@ -78,7 +86,7 @@ export default class CreateNotes extends Vue {
 
 	protected render() {
 		return (
-			<div class="root-notes">
+			<div class="root-notes" style={{ padding: '24px' }}>
 				<NotesForm {...{ props: this.form.props }} onSubmit={this.form.onSubmit} onReady={this.form.onReady} />
 				<Meditor
 					class="root-meditor"

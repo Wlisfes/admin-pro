@@ -15,6 +15,7 @@ export interface NotesType {
 	sort: number
 	status: number
 	title: string
+	description: string
 	content: string
 	picUrl: string
 	html: string
@@ -24,6 +25,7 @@ export interface NotesType {
 }
 export interface CreateType {
 	title: string
+	description: string
 	content: string
 	html: string
 	picUrl: string
@@ -64,7 +66,7 @@ export const updateNotes = (params: UpdateType) => {
 
 //笔记列表
 export const notesAll = (params?: { uid?: number; status?: number; tag?: number; createTime?: string }) => {
-	return http<Array<NotesType>>({
+	return http<{ len: number; notes: NotesType[] }>({
 		url: `/v2/notes/all`,
 		method: 'GET',
 		params

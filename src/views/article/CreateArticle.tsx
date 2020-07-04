@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:28:59
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-02 22:01:53
+ * @Last Modified time: 2020-07-04 12:34:14
  * @Description: 新增文章
  */
 
@@ -86,19 +86,21 @@ export default class CreateArticle extends Vue {
 
 	protected render() {
 		return (
-			<div class="root-article">
-				<ArticleForm
-					{...{ props: this.form.props }}
-					onSubmit={this.form.onSubmit}
-					onReady={this.form.onReady}
-				/>
-				<Meditor
-					class="root-meditor"
-					height={800}
-					toolbars={{ clear: true }}
-					onReady={(e: any) => (this.meditor.self = e.self)}
-					onUpload={this.meditor.onUpload}
-				></Meditor>
+			<div class="root-article" style={{ padding: '24px' }}>
+				<div style={{ maxWidth: '1360px' }}>
+					<ArticleForm
+						{...{ props: this.form.props }}
+						onSubmit={this.form.onSubmit}
+						onReady={this.form.onReady}
+					/>
+					<Meditor
+						class="root-meditor"
+						height={800}
+						toolbars={{ clear: true }}
+						onReady={(e: any) => (this.meditor.self = e.self)}
+						onUpload={this.meditor.onUpload}
+					></Meditor>
+				</div>
 			</div>
 		)
 	}

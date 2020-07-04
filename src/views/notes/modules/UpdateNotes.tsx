@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-20 23:29:43
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-03 15:31:56
+ * @Last Modified time: 2020-07-04 14:31:07
  * @Description: 修改笔记
  */
 
@@ -49,6 +49,7 @@ export default class UpdateNotes extends Vue {
 	//修改配置
 	private update = {
 		title: '',
+		description: '',
 		picUrl: '',
 		status: 5,
 		tag: [],
@@ -56,7 +57,14 @@ export default class UpdateNotes extends Vue {
 		content: '',
 		loading: true,
 		reply: true,
-		onSubmit: (params: { title: string; picUrl: string; status: number; tag: number[]; timeout: Function }) => {
+		onSubmit: (params: {
+			title: string
+			description: string
+			picUrl: string
+			status: number
+			tag: number[]
+			timeout: Function
+		}) => {
 			const { currentValue, html, themeName } = (this.meditor.self as any).handleSave()
 			if (!currentValue || !html) {
 				this.$notification.error({ message: '文章内容不可为空', description: '' })
@@ -68,6 +76,7 @@ export default class UpdateNotes extends Vue {
 				{
 					id: this.id,
 					title: params.title,
+					description: params.description,
 					tag: params.tag,
 					picUrl: params.picUrl,
 					status: params.status,
@@ -85,6 +94,7 @@ export default class UpdateNotes extends Vue {
 		const response = await updateNotes({
 			id: form.id,
 			title: form.title,
+			description: form.description,
 			tag: form.tag,
 			picUrl: form.picUrl,
 			status: form.status,
@@ -108,9 +118,10 @@ export default class UpdateNotes extends Vue {
 	public async getNotes() {
 		const response = await getNotes({ id: this.id })
 		if (response.code === 200) {
-			const { title, tag, picUrl, status, themeName, content } = response.data
+			const { title, description, tag, picUrl, status, themeName, content } = response.data
 
 			this.update.title = title
+			this.update.description = description
 			this.update.picUrl = picUrl
 			this.update.status = status
 			this.update.themeName = themeName

@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-03-28 18:09:21
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-11 21:42:40
+ * @Last Modified time: 2020-07-03 22:13:06
  * @Description: 菜单组件
  */
 
@@ -15,11 +15,11 @@ const AppModule = namespace('app')
 const menu = [
 	{
 		key: 'home',
-		icon: 'home',
-		title: '主页',
+		icon: 'dashboard',
+		title: '控制台',
 		children: [
 			{
-				key: 'home-index',
+				key: 'home',
 				title: '首页',
 				path: '/'
 			}
@@ -28,80 +28,97 @@ const menu = [
 	{
 		key: 'admin',
 		icon: 'user',
-		title: '管理员/权限',
+		title: '管理中心',
 		children: [
 			{
 				key: 'admin-user',
 				title: '用户管理',
-				path: '/admin-user'
+				path: '/admin/user'
 			},
 			{
 				key: 'admin-role',
 				title: '角色管理',
-				path: '/admin-role'
+				path: '/admin/role'
 			},
 			{
 				key: 'admin-auth',
 				title: '权限管理',
-				path: '/admin-auth'
+				path: '/admin/auth'
 			}
 		]
 	},
 	{
-		key: 'tag',
+		key: 'label',
 		icon: 'yuque',
-		title: '标签管理',
+		title: '标签页',
 		children: [
 			{
-				key: 'tag-all',
+				key: 'label',
 				title: '标签列表',
-				path: '/tag-all'
+				path: '/label/list'
 			}
 		]
 	},
 	{
 		key: 'article',
 		icon: 'read',
-		title: '文章管理',
+		title: '文章页',
 		children: [
 			{
-				key: 'create-article',
-				title: '新增文章',
-				path: '/create-article'
+				key: 'article-list',
+				title: '文章列表',
+				path: '/article/list'
 			},
 			{
-				key: 'article-all',
-				title: '文章列表',
-				path: '/article-all'
+				key: 'article-create',
+				title: '新增文章',
+				path: '/article/create'
 			}
 		]
 	},
 	{
 		key: 'notes',
 		icon: 'schedule',
-		title: '笔记管理',
+		title: '笔记页',
 		children: [
 			{
-				key: 'create-notes',
-				title: '新增笔记',
-				path: '/create-notes'
+				key: 'notes-list',
+				title: '笔记列表',
+				path: '/notes/list'
 			},
 			{
-				key: 'notes-all',
-				title: '笔记列表',
-				path: '/notes-all'
+				key: 'notes-create',
+				title: '新增笔记',
+				path: '/notes/create'
 			}
 		]
 	},
 	{
 		key: 'project',
 		icon: 'profile',
-		title: '项目管理',
+		title: '项目页',
 		children: [
 			{
-				key: 'profile-all',
+				key: 'profile-list',
 				title: '项目列表',
-				path: '/project-all'
+				path: '/project/list'
+			}
+		]
+	},
+	{
+		key: 'center',
+		icon: 'setting',
+		title: '设置中心',
+		children: [
+			{
+				key: 'user-center',
+				title: '个人中心',
+				path: '/user/center'
+			},
+			{
+				key: 'user-setting',
+				title: '个人设置',
+				path: '/user/setting'
 			}
 		]
 	}

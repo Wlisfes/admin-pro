@@ -2,13 +2,13 @@
  * @Author: 情雨随风
  * @Date: 2020-07-03 22:50:09
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-04 00:12:31
+ * @Last Modified time: 2020-07-04 12:04:34
  * @Description: 用户文章
  */
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Spin, Empty } from 'ant-design-vue'
-import { ArticleSpin, ArticleMore } from '@/components/common'
+import { ArticleSpin, More } from '@/components/common'
 import { articleAll, sortArticle, cutoverArticle, deleteArticle, ArticleType } from '@/api/article'
 
 @Component
@@ -28,12 +28,16 @@ export default class Article extends Vue {
 	}
 
 	//文章列表
-	public async articleAll(params?: any) {
+	public async articleAll(params?: any, merge?: boolean) {
 		const response = await articleAll(params)
 		if (response.code === 200) {
 			const { len, article } = response.data
 			this.table.len = len
-			this.table.dataSource = this.table.dataSource.concat(article as [])
+			if (merge) {
+				this.table.dataSource = this.table.dataSource.concat(article as [])
+			} else {
+				this.table.dataSource = article as []
+			}
 		}
 		this.table.loading = false
 		return true
@@ -79,11 +83,14 @@ export default class Article extends Vue {
 	//加载更多
 	public async AppMore() {
 		this.table.more = true
-		await this.articleAll({
-			uid: this.uid,
-			limit: this.table.limit,
-			offset: this.table.dataSource.length
-		})
+		await this.articleAll(
+			{
+				uid: this.uid,
+				limit: this.table.limit,
+				offset: this.table.dataSource.length
+			},
+			true
+		)
 		this.table.more = false
 	}
 
@@ -101,11 +108,11 @@ export default class Article extends Vue {
 									onChange={this.onChange}
 								></ArticleSpin>
 							))}
-							<ArticleMore
+							<More
 								more={this.table.len === this.table.dataSource.length}
 								loading={this.table.more}
 								onMore={this.AppMore}
-							></ArticleMore>
+							></More>
 						</div>
 					)}
 				</div>

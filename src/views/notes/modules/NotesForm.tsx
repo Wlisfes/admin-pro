@@ -19,6 +19,7 @@ import { TAGAll, TAGType } from '@/api/tag'
 })
 class NotesForm extends Vue {
 	@Prop() title!: string
+	@Prop() description!: string
 	@Prop() tag!: []
 	@Prop() picUrl!: string
 	@Prop() status!: number
@@ -123,7 +124,20 @@ class NotesForm extends Vue {
 								)}
 							</Form.Item>
 						</div>
-
+						<div class="form-item">
+							<Form.Item label="笔记描述" hasFeedback={true}>
+								{getFieldDecorator('description', {
+									initialValue: this.description,
+									rules: [{ required: true, message: '请输入笔记描述' }],
+									validateTrigger: 'change'
+								})(
+									<Input.TextArea
+										autoSize={{ minRows: 4, maxRows: 6 }}
+										placeholder="请输入笔记描述"
+									/>
+								)}
+							</Form.Item>
+						</div>
 						<div class="form-item">
 							<Form.Item label="笔记封面" hasFeedback={false}>
 								{getFieldDecorator('picUrl', {
@@ -189,6 +203,7 @@ class NotesForm extends Vue {
 export default Form.create({
 	props: {
 		title: { type: String },
+		description: { type: String },
 		tag: { type: Array },
 		picUrl: { type: String },
 		status: { type: Number },

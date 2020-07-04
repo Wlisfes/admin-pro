@@ -1,12 +1,12 @@
 /*
  * @Author: 情雨随风
- * @Date: 2020-07-03 23:08:51
+ * @Date: 2020-07-04 11:25:08
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-04 09:54:22
- * @Description: 文章组件
+ * @Last Modified time: 2020-07-04 11:49:02
+ * @Description: 笔记组件
  */
 
-import './less/article.spin.less'
+import './less/notes.spin.less'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { Avatar, Tag } from 'ant-design-vue'
 import { CommEdit } from '@/components/common'
@@ -14,7 +14,7 @@ import { Color } from '@/interface'
 import moment from 'moment'
 
 @Component
-export default class ArticleSpin extends Vue {
+export default class NotesSpin extends Vue {
 	@Prop() picUrl!: string
 	@Prop() title!: string
 	@Prop() description!: string
@@ -26,8 +26,8 @@ export default class ArticleSpin extends Vue {
 
 	protected render() {
 		return (
-			<div class="article-spin-item">
-				<div class="article-spin-item-cursor">
+			<div class="notes-spin-item">
+				<div class="notes-spin-item-cursor">
 					<div style={{ flex: 1 }}>
 						<div class="cursor-user">
 							<Avatar class="cursor-user-avatar" src={this.user.avatar} size={40} />
@@ -47,7 +47,7 @@ export default class ArticleSpin extends Vue {
 						<img class="cursor-picUrl" src={`${this.picUrl}?x-oss-process=style/resize_50`} alt="" />
 					</div>
 				</div>
-				<div class="article-spin-item-footer">
+				<div class="notes-spin-item-footer">
 					<div class="cursor-tags">
 						{this.tag.map((x: any) => (
 							<Tag key={x.id} color={x.color} style={{ cursor: 'pointer', marginTop: '8px' }}>

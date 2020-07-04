@@ -79,7 +79,7 @@ const routes: RouteConfig[] = [
 				path: '/article/list',
 				name: 'article-list',
 				meta: { title: '文章列表' },
-				component: () => import('@/views/article/ArticleAll')
+				component: () => import('@/views/article/Article')
 			},
 			{
 				path: '/article/create',
@@ -92,7 +92,7 @@ const routes: RouteConfig[] = [
 				path: '/notes/list',
 				name: 'notes-list',
 				meta: { title: '笔记列表' },
-				component: () => import('@/views/notes/NotesAll')
+				component: () => import('@/views/notes/Notes')
 			},
 			{
 				path: '/notes/create',

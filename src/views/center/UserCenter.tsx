@@ -2,15 +2,14 @@
  * @Author: 情雨随风
  * @Date: 2020-07-03 17:06:27
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-03 23:36:17
+ * @Last Modified time: 2020-07-04 11:53:23
  * @Description: 个人中心
  */
 
 import './less/user.center.less'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { Tabs } from 'ant-design-vue'
 import { Article, Project, Notes } from './modules'
-import { articleAll, sortArticle, cutoverArticle, deleteArticle, ArticleType } from '@/api/article'
 import { namespace } from 'vuex-class'
 import { AppUser } from '@/store/modules/app/types'
 
@@ -25,7 +24,7 @@ export default class UserCenter extends Vue {
 			<div class="root-user-center">
 				<div class="user-cursor">123456</div>
 				<div class="user-pointer">
-					<Tabs style={{ minHeight: '100%' }}>
+					<Tabs style={{ minHeight: '100%' }} defaultActiveKey={'notes'} tabBarGutter={16}>
 						<Tabs.TabPane key="article" tab="文章">
 							<Article uid={this.user.uid}></Article>
 						</Tabs.TabPane>
