@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-20 23:29:43
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-04 14:31:07
+ * @Last Modified time: 2020-07-04 15:34:45
  * @Description: 修改笔记
  */
 
@@ -21,7 +21,7 @@ export default class UpdateNotes extends Vue {
 
 	private modal = {
 		...CommonModal,
-		width: 1400,
+		width: '95%',
 		centered: false,
 		maskClosable: false,
 		title: '修改笔记'
@@ -139,6 +139,7 @@ export default class UpdateNotes extends Vue {
 		return (
 			<Modal
 				getContainer={() => document.querySelector('.root-notes')}
+				style={{ maxWidth: '1400px' }}
 				wrapClassName="update-notes-modal"
 				visible={this.visible}
 				title={this.modal.title}

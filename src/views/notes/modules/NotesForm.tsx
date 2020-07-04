@@ -77,7 +77,7 @@ class NotesForm extends Vue {
 		return (
 			<div class="root-notes-form">
 				<Upload
-					title="文章封面"
+					title="笔记封面"
 					auto={{ w: 480, h: 270 }}
 					visible={this.upload.visible}
 					onCancel={() => (this.upload.visible = false)}

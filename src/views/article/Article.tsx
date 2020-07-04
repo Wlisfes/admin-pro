@@ -2,7 +2,7 @@
  * @Author: 情雨随风
  * @Date: 2020-06-11 21:38:55
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-04 12:27:59
+ * @Last Modified time: 2020-07-04 15:36:07
  * @Description: 文章列表
  */
 
@@ -32,7 +32,12 @@ export default class Article extends Vue {
 		onSubmit: () => {
 			this.table.loading = true
 			this.update.visible = false
-			setTimeout(() => this.articleAll(), 300)
+			const params = (this.termForm.self as any).getValue()
+			const limit = this.table.dataSource.length || 5
+			console.log(params, limit)
+			setTimeout(() => {
+				this.articleAll(Object.assign({}, params, { limit, offset: 0 }))
+			}, 300)
 		}
 	}
 

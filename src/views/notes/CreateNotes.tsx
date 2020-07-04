@@ -87,14 +87,20 @@ export default class CreateNotes extends Vue {
 	protected render() {
 		return (
 			<div class="root-notes" style={{ padding: '24px' }}>
-				<NotesForm {...{ props: this.form.props }} onSubmit={this.form.onSubmit} onReady={this.form.onReady} />
-				<Meditor
-					class="root-meditor"
-					height={800}
-					toolbars={{ clear: true }}
-					onReady={(e: any) => (this.meditor.self = e.self)}
-					onUpload={this.meditor.onUpload}
-				></Meditor>
+				<div style={{ maxWidth: '1360px' }}>
+					<NotesForm
+						{...{ props: this.form.props }}
+						onSubmit={this.form.onSubmit}
+						onReady={this.form.onReady}
+					/>
+					<Meditor
+						class="root-meditor"
+						height={800}
+						toolbars={{ clear: true }}
+						onReady={(e: any) => (this.meditor.self = e.self)}
+						onUpload={this.meditor.onUpload}
+					></Meditor>
+				</div>
 			</div>
 		)
 	}

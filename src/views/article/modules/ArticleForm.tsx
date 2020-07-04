@@ -135,7 +135,7 @@ class ArticleForm extends Vue {
 								})(
 									<Input.TextArea
 										autoSize={{ minRows: 4, maxRows: 6 }}
-										placeholder="请输入项目描述"
+										placeholder="请输入文章描述"
 									/>
 								)}
 							</Form.Item>

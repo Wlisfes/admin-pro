@@ -12,9 +12,6 @@ import { Spin, Empty } from 'ant-design-vue'
 import { NotesSpin, More, TermForm } from '@/components/common'
 import { UpdateNotes } from './modules'
 import { notesAll, sortNotes, cutoverNotes, deleteNotes, NotesType } from '@/api/notes'
-import { TAGAll, TAGType } from '@/api/tag'
-import { Color } from '@/interface'
-import moment from 'moment'
 
 @Component
 export default class NotesAll extends Vue {
@@ -35,7 +32,12 @@ export default class NotesAll extends Vue {
 		onSubmit: () => {
 			this.table.loading = true
 			this.update.visible = false
-			setTimeout(() => this.notesAll(), 300)
+			const params = (this.termForm.self as any).getValue()
+			const limit = this.table.dataSource.length || 5
+			console.log(params, limit)
+			setTimeout(() => {
+				this.notesAll(Object.assign({}, params, { limit, offset: 0 }))
+			}, 300)
 		}
 	}
 
@@ -78,7 +80,6 @@ export default class NotesAll extends Vue {
 		//获取查询表单数据
 		const params = (this.termForm.self as any).getValue()
 		const limit = this.table.dataSource.length || 5
-		const Refresh = this.notesAll(Object.assign({}, params, { limit, offset: 0 }))
 
 		//更新
 		if (key === 'update') {

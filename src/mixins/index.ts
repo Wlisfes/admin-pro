@@ -1,12 +1,14 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import { deviceEnquire, DEVICE_TYPE } from '@/mixins/device'
+import { AppUser as User } from '@/store/modules/app/types'
 
 const AppModule = namespace('app')
 
+//用户数据共享
 @Component
-export class AppStore extends Vue {
-	
+export class AppUser extends Vue {
+	@AppModule.State(state => state.user) user!: User
 }
 
 //多端监听
