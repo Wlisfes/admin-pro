@@ -1,3 +1,11 @@
+export interface AppUserRole {
+	createTime: string
+	id: number
+	role_key: string
+	role_name: string
+	status: number
+}
+
 export interface AppUser {
 	id: number
 	uid: number
@@ -9,6 +17,7 @@ export interface AppUser {
 	mobile: number | null
 	status: number
 	createTime: string
+	role: AppUserRole
 }
 
 export interface AppState {

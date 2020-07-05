@@ -9,6 +9,18 @@ const AppModule = namespace('app')
 @Component
 export class AppUser extends Vue {
 	@AppModule.State(state => state.user) user!: User
+
+	public get isAdmin(): boolean {
+		//是否为超级管理员
+		return this.user.username === 'admin' && this.user.role.role_key === 'admin'
+	}
+
+	public get actionRender() {
+		//超级管理员才能显示表格操作部分
+		return this.isAdmin
+			? ([{ title: '操作', width: 130, dataIndex: 'action', scopedSlots: { customRender: 'action' } }] as any)
+			: []
+	}
 }
 
 //多端监听

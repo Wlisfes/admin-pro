@@ -2,21 +2,22 @@
  * @Author: 情雨随风
  * @Date: 2020-04-06 13:07:44
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-06-10 23:28:24
+ * @Last Modified time: 2020-07-05 13:32:35
  * @Description: 角色管理界面
  */
 
 import './less/user.less'
-import { Vue, Component } from 'vue-property-decorator'
+import { Mixins, Component } from 'vue-property-decorator'
 import { Table, Tag, Avatar, Tooltip, Input } from 'ant-design-vue'
 import { AvaterUpload, CommEdit, TermForm } from '@/components/common'
 import { UpdateUser, UpdateUserAuth } from './modules'
 import { allUser, deleteUser, cutoverUser, updateUserAvatar, UserType } from '@/api/user'
 import { Color } from '@/interface'
+import { AppUser } from '@/mixins'
 import moment from 'moment'
 
 @Component
-export default class User extends Vue {
+export default class User extends Mixins(AppUser) {
 	//表格配置
 	private table = {
 		columns: [

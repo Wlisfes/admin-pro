@@ -2,13 +2,13 @@
  * @Author: 情雨随风
  * @Date: 2020-07-03 23:08:51
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-07-04 09:54:22
+ * @Last Modified time: 2020-07-05 12:22:54
  * @Description: 文章组件
  */
 
 import './less/article.spin.less'
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { Avatar, Tag } from 'ant-design-vue'
+import { Avatar, Tag, Tooltip } from 'ant-design-vue'
 import { CommEdit } from '@/components/common'
 import { Color } from '@/interface'
 import moment from 'moment'
@@ -21,6 +21,8 @@ export default class ArticleSpin extends Vue {
 	@Prop() user!: any
 	@Prop() createTime!: string
 	@Prop() status!: number
+	@Prop() reading!: number
+	@Prop() star!: number
 	@Prop({ default: () => [] }) tag!: []
 	@Prop() params!: any
 
@@ -56,7 +58,42 @@ export default class ArticleSpin extends Vue {
 						))}
 					</div>
 					<div class="cursor-active">
-						<div class="cursor-active-pointer"></div>
+						<div class="cursor-active-pointer">
+							<div class="pointer-icon">
+								<Tooltip title={`阅读数：${this.star}`}>
+									<div style={{ marginRight: '20px' }}>
+										<Avatar
+											style={{
+												backgroundColor: 'rgba(19, 194, 194, 0.15)',
+												color: '#13c2c2',
+												marginRight: '8px',
+												fontSize: '14px'
+											}}
+											size={24}
+											icon="eye"
+										/>
+										<a>{this.star}</a>
+									</div>
+								</Tooltip>
+							</div>
+							<div class="pointer-icon">
+								<Tooltip title={`点赞数：${this.star}`}>
+									<div style={{ marginRight: '24px' }}>
+										<Avatar
+											style={{
+												backgroundColor: 'rgba(19, 194, 194, 0.15)',
+												color: '#13c2c2',
+												marginRight: '8px',
+												fontSize: '14px'
+											}}
+											size={24}
+											icon="like"
+										/>
+										<a>{this.star}</a>
+									</div>
+								</Tooltip>
+							</div>
+						</div>
 						<CommEdit
 							params={{
 								props: this.params,
