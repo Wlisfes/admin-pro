@@ -16,7 +16,7 @@
 		"core-js": "^3.6.4",
 		"element-ui": "^2.13.2",
 		"enquire.js": "^2.1.6",
-		"moment": "^2.25.3",
+		"moment": "^2.29.2",
 		"nprogress": "^0.2.0",
 		"screenfull": "^5.0.2",
 		"vue": "^2.6.11",
